@@ -7,13 +7,18 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, StringVar
 from GradientFrame import GradientFrame                       # add for gradient color background
 
+import page_home
+import sqlite3
 
 class PageLogin(Frame):
 
     # user data
+    uname_input = ""
+    pwd_input = ""
+
 
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_login")
@@ -26,6 +31,8 @@ class PageLogin(Frame):
         self.controller = controller
 
         # set user data
+        self.uname_input = StringVar(self, "ENTER USER NAME")
+        self.pwd_input = StringVar(self, "ENTER PASSWORD")
 
         # set window size
         width = 1024
@@ -71,10 +78,9 @@ class PageLogin(Frame):
             bg="#EAEAEA",
             fg="#7E8DA8", # "#17171B",
             highlightthickness=0,
-            font = ("Noto Sans", 24 * -1)
+            font = ("Noto Sans", 24 * -1),
+            textvariable = self.uname_input
         )
-
-        self.entry_1.insert(0, "ENTER USER NAME")
 
         self.entry_1.place(
             x=217.0,
@@ -82,6 +88,7 @@ class PageLogin(Frame):
             width=330,
             height=84.0
         )
+        self.entry_1.bind("<1>", self.Focus_entry_uname)
 
         self.entry_image_2 = PhotoImage(
             file=self.relative_to_assets("entry_1.png"))
@@ -96,9 +103,9 @@ class PageLogin(Frame):
             fg="#7E8DA8", # "#17171B",
             highlightthickness=0,
             font = ("Noto Sans", 24 * -1),
+            textvariable = self.pwd_input
         )
 
-        self.entry_2.insert(0, "ENTER PASSWORD")
 
         self.entry_2.place(
             x=217.0,
@@ -106,6 +113,7 @@ class PageLogin(Frame):
             width=330,
             height=84.0
         )
+        self.entry_2.bind("<1>", self.Focus_entry_pwd)
 
 
         self.error_password = self.canvas.create_text(
@@ -140,21 +148,88 @@ class PageLogin(Frame):
 
         self.button_image_1 = PhotoImage(
             file=self.relative_to_assets("button_1.png"))
+        self.button_image_1_click = PhotoImage(
+            file=self.relative_to_assets("button_1_click.png"))
         self.button_1 = Button(self,
             image=self.button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=0, #lambda: print("button_1 clicked"),
             relief="flat",
             font=("Noto Sans", 24 * -1),
         )
 
         self.button_1.place(
-            x=185.0,
             y=397.0,
+            x=185.0,
             width=680.0,
             height=86.0
         )
+
+        #self.button_1['state']="disabled"
+        
+
+
+    def Cmd_btn_login(self):
+        # change login btn image
+        #self.button_1['state']="disabled"
+        self.button_1['image']=self.button_image_1
+        self.button_1['command']=0
+
+        # get uname and pwd
+        uname = self.uname_input.get()
+        pwd = self.pwd_input.get()
+
+        if uname == "":
+            self.canvas.itemconfigure(self.error_username, state="normal")
+        elif pwd == "":
+            self.canvas.itemconfigure(self.error_password, state="normal")
+        else:
+            conn = sqlite3.connect('data.db')
+            with conn:
+                cursor = conn.cursor()
+            cursor.execute('SELECT * from USERDATA where USERNAME="%s" and PASSWORD="%s"' % (uname, pwd))
+        
+            if cursor.fetchone():
+                # set current username
+                # TBD: fetch user's mode
+                # go to home page
+                #self.controller.frames[page_home.PageHome].UserInfoMsg.set("Username: %s" % uname)
+
+                # modify page_menu's text
+                #self.controller.frames[page_menu.PageMenu].BTNLoginout["text"] = "Logout"
+                self.controller.show_frame(page_home.PageHome)
+            else:
+                cursor.execute('SELECT * from USERDATA where USERNAME="%s"' % (uname))
+                if cursor.fetchone():
+                    # username exists, password wrong
+                    self.canvas.itemconfigure(self.error_username, state="hidden")
+                    self.canvas.itemconfigure(self.error_password, state="normal")
+                else:
+                    # username not exist, password unknown
+                    self.canvas.itemconfigure(self.error_username, state="normal")
+                    self.canvas.itemconfigure(self.error_password, state="hidden")
+
+    def Focus_entry_uname(self, event):
+        # clear uname
+        self.uname_input.set("")
+        # change font color
+        self.entry_1['fg']="#17171B"
+        # change login btn image
+        #self.button_1['state']="normal"
+        self.button_1['image']=self.button_image_1_click
+        self.button_1['command']=self.Cmd_btn_login
+
+    def Focus_entry_pwd(self, event):
+        # clear pwd
+        self.pwd_input.set("")
+        # change font color
+        self.entry_2['fg']="#17171B"
+        self.entry_2['show']="*"
+        # change login btn image
+        #self.button_1['state']="normal"
+        self.button_1['image']=self.button_image_1_click
+        self.button_1['command']=self.Cmd_btn_login
 
 
 
