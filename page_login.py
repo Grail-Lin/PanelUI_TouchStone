@@ -12,12 +12,14 @@ from GradientFrame import GradientFrame                       # add for gradient
 
 import page_home
 import sqlite3
+import win_popup_kb
 
 class PageLogin(Frame):
 
     # user data
     uname_input = ""
     pwd_input = ""
+    value_vk_on = False
 
 
     OUTPUT_PATH = Path(__file__).parent
@@ -176,6 +178,12 @@ class PageLogin(Frame):
         self.button_1['image']=self.button_image_1
         self.button_1['command']=0
 
+        # close kb
+        if self.value_vk_on == True:
+            self.value_vk_on = False
+            win_popup_kb.popup_keyboard(self)
+
+
         # get uname and pwd
         uname = self.uname_input.get()
         pwd = self.pwd_input.get()
@@ -220,6 +228,12 @@ class PageLogin(Frame):
         self.button_1['image']=self.button_image_1_click
         self.button_1['command']=self.Cmd_btn_login
 
+        if self.value_vk_on == False:
+            self.value_vk_on = True
+            win_popup_kb.popup_keyboard(self)
+
+
+
     def Focus_entry_pwd(self, event):
         # clear pwd
         self.pwd_input.set("")
@@ -230,6 +244,10 @@ class PageLogin(Frame):
         #self.button_1['state']="normal"
         self.button_1['image']=self.button_image_1_click
         self.button_1['command']=self.Cmd_btn_login
+        if self.value_vk_on == False:
+            self.value_vk_on = True
+            win_popup_kb.popup_keyboard(self)
+
 
 
 
