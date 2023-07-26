@@ -46,23 +46,22 @@ class PageLogin(Frame):
         controller.geometry(alignstr)
         controller.resizable(width=False, height=False)
 
-
-        #self.canvas = GradientFrame(parent, colors = ("white", "#F0F0F0"), width = 1024, height = 600)
-        #self.canvas.config(direction = self.canvas.top2bottom)
-        #self.canvas.grid(row = 0, column = 0, sticky = "nsew")
-        #self.canvas.pack()
-
-        self.canvas = Canvas(
-            self,
-            bg = "#FFFFFF",
-            height = 600,
-            width = 1024,
-            bd = 0,
-            highlightthickness = 0,
-            relief = "ridge"
-        )
-
-        self.canvas.place(x = 0, y = 0)
+        # gradient background
+        self.canvas = GradientFrame(self, colors = ("white", "#F0F0F0"), width = 1024, height = 600)
+        self.canvas.config(direction = self.canvas.top2bottom)
+        self.canvas.grid(row = 0, column = 0, sticky = "nsew")
+        
+        # flat background
+        #self.canvas = Canvas(
+        #    self,
+        #    bg = "#FFFFFF",
+        #    height = 600,
+        #    width = 1024,
+        #    bd = 0,
+        #    highlightthickness = 0,
+        #    relief = "ridge"
+        #)
+        #self.canvas.place(x = 0, y = 0)
 
 
         self.entry_image_1 = PhotoImage(
