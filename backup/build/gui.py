@@ -117,11 +117,11 @@ button_4.place(
 
 canvas.create_text(
     148.0,
-    24.0,
+    16.0,   # 24.0,
     anchor="nw",
     text="PROCESS",
     fill="#569FCB",
-    font=("Noto Sans", 32 * -1)
+    font=("Noto Sans", 32 * -1, "bold")
 )
 
 canvas.create_rectangle(
@@ -198,7 +198,7 @@ canvas.create_rectangle(
 
 canvas.create_text(
     148.0,
-    128.0,
+    120.0,     # 128.0,
     anchor="nw",
     text="CARTRIDGE ID",
     fill="#7D8CA7",
@@ -215,7 +215,7 @@ canvas.create_rectangle(
 
 canvas.create_text(
     148.0,
-    229.0,
+    221.0,    # 229.0
     anchor="nw",
     text="TEST NAME",
     fill="#7D8CA7",
@@ -232,7 +232,7 @@ canvas.create_rectangle(
 
 canvas.create_text(
     148.0,
-    330.0,
+    322.0,     # 330.0
     anchor="nw",
     text="PROCESS TIME",
     fill="#7D8CA7",
@@ -273,7 +273,7 @@ button_9.place(
 
 canvas.create_text(
     538.0,
-    29.0,
+    21.0,     # 29.0
     anchor="nw",
     text="Status:",
     fill="#7D8CA7",

@@ -117,11 +117,11 @@ button_4.place(
 
 canvas.create_text(
     148.0,
-    24.0,
+    16.0, #24.0,
     anchor="nw",
     text="PROCESS",
     fill="#569FCB",
-    font=("Noto Sans", 32 * -1)
+    font=("Noto Sans", 32 * -1, "bold")
 )
 
 canvas.create_rectangle(
@@ -204,90 +204,120 @@ image_3 = canvas.create_image(
     image=image_image_3
 )
 
+# title of circles
 canvas.create_text(
-    171.0,
-    123.0,
-    anchor="nw",
+    277.0,
+    133.0, #123.0,
+    anchor="center",
     text="PRE-EXTRACT",
     fill="#17171B",
     font=("Noto Sans", 24 * -1)
 )
 
 canvas.create_text(
-    171.0,
-    375.0,
-    anchor="nw",
-    text="2 / 2 STEPS",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
-
-canvas.create_text(
-    195.0,
-    230.0,
-    anchor="nw",
-    text="0:05",
-    fill="#7D8CA7",
-    font=("Noto Sans", 46 * -1)
-)
-
-canvas.create_text(
-    421.0,
-    232.0,
-    anchor="nw",
-    text="0:12",
-    fill="#7D8CA7",
-    font=("Noto Sans", 46 * -1)
-)
-
-canvas.create_text(
-    648.0,
-    230.0,
-    anchor="nw",
-    text="0:25",
-    fill="#7D8CA7",
-    font=("Noto Sans", 46 * -1)
-)
-
-canvas.create_text(
-    397.0,
-    375.0,
-    anchor="nw",
-    text="5 / 8 STEPS",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
-
-canvas.create_text(
-    623.0,
-    375.0,
-    anchor="nw",
-    text="0 / 40 CYCLES",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
-
-canvas.create_text(
-    405.0,
-    123.0,
-    anchor="nw",
+    511.0,
+    133.0, #123.0,
+    anchor="center",
+    #405.0,
+    #115.0, #123.0,
+    #anchor="nw",
     text="EXTRACT",
     fill="#17171B",
     font=("Noto Sans", 24 * -1)
 )
 
 canvas.create_text(
-    623.0,
-    123.0,
-    anchor="nw",
+    729.0,
+    133.0, #123.0,
+    anchor="center",
+    #623.0,
+    #115.0, #123.0,
+    #anchor="nw",
     text="QPCR",
     fill="#17171B",
     font=("Noto Sans", 24 * -1)
 )
 
+# botton of circle
+canvas.create_text(
+    277.0,
+    385.0, #375.0,
+    anchor="center",
+    #171.0,
+    #367.0, #375.0,
+    #anchor="nw",
+    text="2 / 2 STEPS",
+    fill="#7D8CA7",
+    font=("Noto Sans", 24 * -1)
+)
+
+canvas.create_text(
+    503.0,
+    385.0, #375.0,
+    anchor="center",
+    #397.0,
+    #367.0, #375.0,
+    #anchor="nw",
+    text="5 / 8 STEPS",
+    fill="#7D8CA7",
+    font=("Noto Sans", 24 * -1)
+)
+
+canvas.create_text(
+    729.0,
+    385.0, #375.0,
+    anchor="center",
+    #623.0,
+    #367.0, #375.0,
+    #anchor="nw",
+    text="0 / 40 CYCLES",
+    fill="#7D8CA7",
+    font=("Noto Sans", 24 * -1)
+)
+
+# middle of circle
+canvas.create_text(
+    277.0,
+    255.0, #230.0,
+    anchor="center",
+    #195.0,
+    #222.0, #230.0,
+    #anchor="nw",
+    text="0:05",
+    fill="#7D8CA7",
+    font=("Noto Sans", 46 * -1)
+)
+
+canvas.create_text(
+    503.0,
+    255.0, #230.0,
+    anchor="center",
+    #421.0,
+    #224.0, #232.0,
+    #anchor="nw",
+    text="0:12",
+    fill="#7D8CA7",
+    font=("Noto Sans", 46 * -1)
+)
+
+canvas.create_text(
+    730.0,
+    255.0, #230.0,
+    anchor="center",
+    #648.0,
+    #224.0, #230.0,
+    #anchor="nw",
+    text="0:25",
+    fill="#7D8CA7",
+    font=("Noto Sans", 46 * -1)
+)
+
+
+
+
 canvas.create_text(
     427.0,
-    29.0,
+    21.0, #29.0,
     anchor="nw",
     text="Time Remaining:",
     fill="#7D8CA7",
@@ -299,7 +329,17 @@ canvas.create_rectangle(
     25.0,
     828.0,
     69.0,
-    fill="#000000",
-    outline="")
+    fill="#FFFFFF",
+    outline="black")
+
+canvas.create_text(
+    732.0,
+    43.0,
+    anchor="center",
+    text="00:48",
+    fill="#17171B",
+    font=("Noto Sans", 24 * -1)
+)
+
 window.resizable(False, False)
 window.mainloop()

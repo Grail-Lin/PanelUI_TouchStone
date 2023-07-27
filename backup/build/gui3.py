@@ -8,6 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from GradientFrame import GradientFrame                       # add for gradient color background
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -24,6 +25,11 @@ window.geometry("1024x600")
 window.configure(bg = "#FFFFFF")
 
 
+canvas = GradientFrame(window, colors = ("white", "#F0F0F0"), width = 1024, height = 600)
+canvas.config(direction = canvas.top2bottom)
+
+
+'''
 canvas = Canvas(
     window,
     bg = "#FFFFFF",
@@ -33,23 +39,8 @@ canvas = Canvas(
     highlightthickness = 0,
     relief = "ridge"
 )
-
+'''
 canvas.place(x = 0, y = 0)
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#FFFFFF",
-    outline="")
-
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#FFFFFF",
-    outline="")
 
 canvas.create_rectangle(
     130.0,
@@ -57,7 +48,8 @@ canvas.create_rectangle(
     899.0,
     475.0,
     fill="#FFFFFF",
-    outline="")
+    outline="#AFAEAE",
+    )
 
 button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
@@ -76,9 +68,13 @@ button_1.place(
 )
 
 canvas.create_text(
-    333.0,
-    207.0,
-    anchor="nw",
+    515.0,
+    244.0,
+    anchor="center",
+    justify="center",
+    #333.0,
+    #207.0,
+    #anchor="nw",
     text="ERROR: CARTRIDGE ID\nNOT DETECTED",
     fill="#17171B",
     font=("Noto Sans", 32 * -1)

@@ -8,7 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
-
+import round_rect
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"D:\CO_BT\20230718_UI\TDVersion\build\assets\frame1")
@@ -117,7 +117,7 @@ button_4.place(
 
 canvas.create_text(
     148.0,
-    24.0,
+    16.0, #24.0,
     anchor="nw",
     text="PROCESS",
     fill="#569FCB",
@@ -166,7 +166,7 @@ button_6.place(
 
 canvas.create_text(
     148.0,
-    113.0,
+    105.0, #113.0,
     anchor="nw",
     text="PRE-EXTRACT",
     fill="#7D8CA7",
@@ -207,7 +207,7 @@ button_8.place(
 
 canvas.create_text(
     148.0,
-    208.0,
+    200.0, #208.0,
     anchor="nw",
     text="PRE-COOL",
     fill="#7D8CA7",
@@ -248,7 +248,7 @@ button_10.place(
 
 canvas.create_text(
     148.0,
-    301.0,
+    293.0, #301.0,
     anchor="nw",
     text="EXTRACT TIME",
     fill="#7D8CA7",
@@ -257,7 +257,7 @@ canvas.create_text(
 
 canvas.create_text(
     148.0,
-    395.0,
+    387.0, #395.0,
     anchor="nw",
     text="SPIN RPM",
     fill="#7D8CA7",
@@ -378,7 +378,7 @@ button_17.place(
 
 canvas.create_text(
     148.0,
-    488.0,
+    480.0, #488.0,
     anchor="nw",
     text="PCR CYCLE",
     fill="#7D8CA7",
@@ -435,7 +435,7 @@ button_20.place(
 
 canvas.create_text(
     495.0,
-    29.0,
+    21.0, #29.0,
     anchor="nw",
     text="Total Time:",
     fill="#7D8CA7",
@@ -447,7 +447,18 @@ canvas.create_rectangle(
     25.0,
     828.0,
     69.0,
-    fill="#000000",
-    outline="")
+    fill="#FFFFFF",
+    outline="black")
+
+canvas.create_text(
+    732.0,
+    43.0,
+    anchor="center",
+    text="00:48",
+    fill="#17171B",
+    font=("Noto Sans", 24 * -1)
+)
+
+
 window.resizable(False, False)
 window.mainloop()
