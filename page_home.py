@@ -125,6 +125,16 @@ class PageHome(Frame):
             fill="#F9F9F9",
             outline="")
 
+        self.canvas.create_text(
+            148.0,
+            16.0,
+            anchor="nw",
+            text="HOME",
+            fill="#569FCB",
+            font=("Noto Sans", 32 * -1, "bold")
+        )
+
+        '''
         self.image_image_2 = PhotoImage(
             file=self.relative_to_assets("image_2.png"))
         self.image_2 = self.canvas.create_image(
@@ -132,6 +142,7 @@ class PageHome(Frame):
             42.0,
             image=self.image_image_2
         )
+        '''
 
         self.canvas.create_rectangle(
             904.0,
@@ -148,7 +159,7 @@ if __name__ == "__main__":
     window.geometry("1024x600")
     window.configure(bg = "#FFFFFF")
 
-    container = Frame(window, bg="#FFFFBB")
+    container = Frame(window, bg="#FFFFFF")
     container.pack(side = "top", fill = "both", expand = True)
     container.grid_rowconfigure(0, weight = 1)
     container.grid_columnconfigure(0, weight = 1)
@@ -157,7 +168,7 @@ if __name__ == "__main__":
     frame = PageHome(container, window)
 
     window.frames[PageHome] = frame
-    #frame.grid(row = 0, column = 0, sticky ="nsew")
+    frame.grid(row = 0, column = 0, sticky ="nsew")
 
     frame.tkraise()
     window.mainloop()
