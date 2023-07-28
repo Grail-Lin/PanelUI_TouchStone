@@ -262,7 +262,7 @@ if __name__ == "__main__":
 
     window.frames = {}
     frame = PageLogin(container, window)
-    #frame.grid(row = 0, column = 0, sticky ="nsew")
+    frame.grid(row = 0, column = 0, sticky ="nsew")
 
     window.frames[PageLogin] = frame
     frame.tkraise()
