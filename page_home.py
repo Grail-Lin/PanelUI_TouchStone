@@ -8,7 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
-
+import page_process_init
 
 class PageHome(Frame):
 
@@ -72,7 +72,7 @@ class PageHome(Frame):
             image=self.button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=self.Cmd_btn_process,  #lambda: print("button_2 clicked"),
             bg="#FFFFFF",
             relief="flat"
         )
@@ -152,6 +152,12 @@ class PageHome(Frame):
             fill="#E6EFF4",
             outline="")
 
+
+    def Cmd_btn_process(self):
+        # need to check if there is cartridge inside
+        self.controller.frames[page_process_init.PageProcessInit].status = 0
+        self.controller.frames[page_process_init.PageProcessInit].update_status()
+        self.controller.show_frame(page_process_init.PageProcessInit)
 
 
 if __name__ == "__main__":

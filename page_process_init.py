@@ -11,6 +11,10 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, StringVa
 
 import random, string, time
 
+import page_process_play
+import page_home
+import page_process_edit
+
 #class PageProcess
 
 
@@ -18,7 +22,7 @@ class PageProcessInit(Frame):
 
     # user data
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_process_init")
+    ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_process")
 
     # process status
     # 0: not started, no cartridge
@@ -74,7 +78,7 @@ class PageProcessInit(Frame):
         self.button_image_home_off = PhotoImage(file=self.relative_to_assets("button_home_off.png"))
         self.button_home = Button(self, image=self.button_image_home_off,
                                   borderwidth=0, highlightthickness=0,
-                                  command=lambda: print("button_2 clicked"),
+                                  command=self.Cmd_btn_home,
                                   relief="flat")
         self.button_home.place(x=0.0, y=0.0, width=120.0, height=103.0)
 
@@ -153,6 +157,7 @@ class PageProcessInit(Frame):
         self.frame_testname = self.canvas.create_rectangle(381.0, 204.0, 828.0, 290.0,
                                      fill="#EBEBEB", outline="")
         self.str_testname = StringVar(self, "")
+        '''
         self.entry_testname = Entry(self,
             bd=0,
             bg="#FFFFFF",
@@ -163,14 +168,15 @@ class PageProcessInit(Frame):
         )
         self.entry_testname.place(x=419.5, y=224.0, width=350, height=36)
         '''
+        
         self.id_testname = self.canvas.create_text(
             419.5, 222.0, anchor="nw", 
-            text="Respiratory Panel",
+            text=self.str_testname.get(),
             fill="#17171B",
             font=("Noto Sans", 24 * -1),
             #state="hidden"
         )
-        '''
+        
 
         self.frame_processtime = self.canvas.create_rectangle(381.0, 305.0, 828.0, 391.0,
                                      fill="#EBEBEB", outline="")
@@ -178,7 +184,7 @@ class PageProcessInit(Frame):
         self.str_processtime = StringVar(self, time.strftime("%M:%S", time.gmtime(self.var_processtime)))
         self.id_processtime = self.canvas.create_text(
             419.5, 324.0, anchor="nw", 
-            text="00:48",
+            text=self.str_processtime.get(),
             fill="#17171B",
             font=("Noto Sans", 24 * -1),
             #state="hidden"
@@ -256,7 +262,7 @@ class PageProcessInit(Frame):
 
             # empty text values
             self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
-            self.entry_testname['bg']="#EBEBEB"
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
             self.canvas.itemconfig(self.id_processtime, text="")
 
             # update btn image
@@ -275,7 +281,7 @@ class PageProcessInit(Frame):
 
             # update text values
             self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
-            self.entry_testname['bg']="#FFFFFF"
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
             self.canvas.itemconfig(self.id_processtime, text=self.str_processtime.get())
 
             # update btn image
@@ -294,7 +300,7 @@ class PageProcessInit(Frame):
 
             # update text values
             self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
-            self.entry_testname['bg']="#FFFFFF"
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
             self.canvas.itemconfig(self.id_processtime, text=self.str_processtime.get())
 
             # update btn image
@@ -314,7 +320,7 @@ class PageProcessInit(Frame):
 
             # update text values
             self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
-            self.entry_testname['bg']="#FFFFFF"
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
             self.canvas.itemconfig(self.id_processtime, text=self.str_processtime.get())
 
             # update btn image
@@ -353,6 +359,9 @@ class PageProcessInit(Frame):
         self.process_status = 0
         self.update_status()
         return
+
+    def Cmd_btn_home(self):
+        self.controller.show_frame(page_home.PageHome)
 
 if __name__ == "__main__":
     window = Tk()

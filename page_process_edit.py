@@ -16,7 +16,7 @@ class PageProcessEdit(Frame):
     # user data
 
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process_edit")
+    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
 
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
@@ -26,6 +26,13 @@ class PageProcessEdit(Frame):
         self.controller = controller
 
         # set user data
+        self.process_setting = {}
+        self.process_setting['preextract'] = 0
+        self.process_setting['precool'] = 1
+        self.process_setting['extracttime'] = 1
+        self.process_setting['spinrpm'] = 0
+        self.process_setting['pcrcycle'] = 2
+
 
         # set window size
         width = 1024
@@ -54,6 +61,47 @@ class PageProcessEdit(Frame):
         )
         
         self.canvas.grid(row = 0, column = 0, sticky = "nsew")
+
+        # all images here
+        self.img_opt_high_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_high_off.png"))
+        self.img_opt_high_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_high_on.png"))
+        self.img_opt_low_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_low_off.png"))
+        self.img_opt_low_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_low_on.png"))
+        self.img_opt_medium_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_medium_off.png"))
+        self.img_opt_medium_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_medium_on.png"))
+        self.img_opt_none_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_none_off.png"))
+        self.img_opt_none_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_none_on.png"))
+        self.img_opt_normal_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_normal_off.png"))
+        self.img_opt_normal_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_normal_on.png"))
+        self.img_opt_short_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_short_off.png"))
+        self.img_opt_short_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_short_on.png"))
+        self.img_opt_yes_off = PhotoImage(
+            file=self.relative_to_assets("btn_opt_yes_off.png"))
+        self.img_opt_yes_on = PhotoImage(
+            file=self.relative_to_assets("btn_opt_yes_on.png"))
+        self.button_image_process_on = PhotoImage(
+            file=self.relative_to_assets("button_process_on.png"))
+        self.button_image_result_off = PhotoImage(
+            file=self.relative_to_assets("button_result_off.png"))
+        self.button_image_home_off = PhotoImage(
+            file=self.relative_to_assets("button_home_off.png"))
+        self.button_image_setting_off = PhotoImage(
+            file=self.relative_to_assets("button_setting_off.png"))
+        self.button_image_play_off = PhotoImage(file=self.relative_to_assets("button_play_off.png"))
+        self.button_image_stop_off = PhotoImage(file=self.relative_to_assets("button_stop_off.png"))
+        self.button_image_edit_on = PhotoImage(file=self.relative_to_assets("button_edit_on.png"))
         
         # add elements here
 
@@ -65,64 +113,64 @@ class PageProcessEdit(Frame):
             fill="#F9F9F9",
             outline="")
 
-        self.button_image_1 = PhotoImage(
-            file=self.relative_to_assets("button_1.png"))
-        self.button_1 = Button(self,
-            image=self.button_image_1,
+        #self.button_image_1 = PhotoImage(
+        #    file=self.relative_to_assets("button_1.png"))
+        self.button_process = Button(self,
+            image=self.button_image_process_on,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_1 clicked"),
             relief="flat"
         )
-        self.button_1.place(
+        self.button_process.place(
             x=0.0,
             y=103.0,
             width=120.0,
             height=103.0
         )
 
-        self.button_image_2 = PhotoImage(
-            file=self.relative_to_assets("button_2.png"))
-        self.button_2 = Button(self,
-            image=self.button_image_2,
+        #self.button_image_2 = PhotoImage(
+        #    file=self.relative_to_assets("button_2.png"))
+        self.button_home = Button(self,
+            image=self.button_image_home_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_2 clicked"),
             relief="flat"
         )
-        self.button_2.place(
+        self.button_home.place(
             x=0.0,
             y=0.0,
             width=120.0,
             height=103.0
         )
 
-        self.button_image_3 = PhotoImage(
-            file=self.relative_to_assets("button_3.png"))
-        self.button_3 = Button(self,
-            image=self.button_image_3,
+        #self.button_image_3 = PhotoImage(
+        #    file=self.relative_to_assets("button_3.png"))
+        self.button_result = Button(self,
+            image=self.button_image_result_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_3 clicked"),
             relief="flat"
         )
-        self.button_3.place(
+        self.button_result.place(
             x=0.0,
             y=206.0,
             width=120.0,
             height=103.0
         )
 
-        self.button_image_4 = PhotoImage(
-            file=self.relative_to_assets("button_4.png"))
-        self.button_4 = Button(self,
-            image=self.button_image_4,
+        #self.button_image_4 = PhotoImage(
+        #    file=self.relative_to_assets("button_4.png"))
+        self.button_setting = Button(self,
+            image=self.button_image_setting_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_4 clicked"),
             relief="flat"
         )
-        self.button_4.place(
+        self.button_setting.place(
             x=0.0,
             y=497.0,
             width=120.0,
@@ -146,36 +194,36 @@ class PageProcessEdit(Frame):
             fill="#E6EFF4",
             outline="")
 
-        self.button_image_5 = PhotoImage(
-            file=self.relative_to_assets("button_5.png"))
-        self.button_5 = Button(self,
-            image=self.button_image_5,
+        #self.button_image_5 = PhotoImage(
+        #    file=self.relative_to_assets("button_5.png"))
+        self.button_play = Button(self,
+            image=self.button_image_play_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_5 clicked"),
             relief="flat"
         )
-        self.button_5.place(
-            x=938.0,
-            y=130.0,
-            width=52.0,
-            height=52.0
+        self.button_play.place(
+            x=903.0,
+            y=105.0,
+            width=121.0,
+            height=103.0
         )
 
-        self.button_image_6 = PhotoImage(
-            file=self.relative_to_assets("button_6.png"))
-        self.button_6 = Button(self,
-            image=self.button_image_6,
+        #self.button_image_6 = PhotoImage(
+        #    file=self.relative_to_assets("button_6.png"))
+        self.button_stop = Button(self,
+            image=self.button_image_stop_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_6 clicked"),
             relief="flat"
         )
-        self.button_6.place(
-            x=938.0,
-            y=233.0,
-            width=52.0,
-            height=52.0
+        self.button_stop.place(
+            x=903.0,
+            y=208.0,
+            width=121.0,
+            height=103.0
         )
 
         self.canvas.create_text(
@@ -187,32 +235,32 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.button_image_7 = PhotoImage(
-            file=self.relative_to_assets("button_7.png"))
-        self.button_7 = Button(self,
-            image=self.button_image_7,
+        #self.button_image_7 = PhotoImage(
+        #    file=self.relative_to_assets("button_7.png"))
+        self.rbtn_preextract_none = Button(self,
+            image=self.img_opt_none_on,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_7 clicked"),
             relief="flat"
         )
-        self.button_7.place(
+        self.rbtn_preextract_none.place(
             x=354.0,
             y=96.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_8 = PhotoImage(
-            file=self.relative_to_assets("button_8.png"))
-        self.button_8 = Button(self,
-            image=self.button_image_8,
+        #self.button_image_8 = PhotoImage(
+        #    file=self.relative_to_assets("button_8.png"))
+        self.rbtn_preextract_yes = Button(self,
+            image=self.img_opt_yes_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_8 clicked"),
             relief="flat"
         )
-        self.button_8.place(
+        self.rbtn_preextract_yes.place(
             x=522.0,
             y=96.0,
             width=140.0,
@@ -228,32 +276,32 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.button_image_9 = PhotoImage(
-            file=self.relative_to_assets("button_9.png"))
-        self.button_9 = Button(self,
-            image=self.button_image_9,
+        #self.button_image_9 = PhotoImage(
+        #    file=self.relative_to_assets("button_9.png"))
+        self.rbtn_precool_none = Button(self,
+            image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_9 clicked"),
             relief="flat"
         )
-        self.button_9.place(
+        self.rbtn_precool_none.place(
             x=354.0,
             y=191.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_10 = PhotoImage(
-            file=self.relative_to_assets("button_10.png"))
-        self.button_10 = Button(
-            image=self.button_image_10,
+        #self.button_image_10 = PhotoImage(
+        #    file=self.relative_to_assets("button_10.png"))
+        self.rbtn_precool_yes = Button(
+            image=self.img_opt_yes_on,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_10 clicked"),
             relief="flat"
         )
-        self.button_10.place(
+        self.rbtn_precool_yes.place(
             x=522.0,
             y=191.0,
             width=140.0,
@@ -278,112 +326,97 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.button_image_11 = PhotoImage(
-            file=self.relative_to_assets("button_11.png"))
-        self.button_11 = Button(self,
-            image=self.button_image_11,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_11 clicked"),
-            relief="flat"
-        )
-        self.button_11.place(
-            x=522.0,
-            y=284.0,
-            width=140.0,
-            height=70.0
-        )
 
-        self.button_image_12 = PhotoImage(
-            file=self.relative_to_assets("button_12.png"))
-        self.button_12 = Button(self,
-            image=self.button_image_12,
+        #self.button_image_12 = PhotoImage(
+        #    file=self.relative_to_assets("button_12.png"))
+        self.rbtn_extract_none = Button(self,
+            image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_12 clicked"),
             relief="flat"
         )
-        self.button_12.place(
+        self.rbtn_extract_none.place(
             x=352.0,
             y=284.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_13 = PhotoImage(
-            file=self.relative_to_assets("button_13.png"))
-        self.button_13 = Button(self,
-            image=self.button_image_13,
+        #self.button_image_11 = PhotoImage(
+        #    file=self.relative_to_assets("button_11.png"))
+        self.rbtn_extract_short = Button(self,
+            image=self.img_opt_short_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_11 clicked"),
+            relief="flat"
+        )
+        self.rbtn_extract_short.place(
+            x=522.0,
+            y=284.0,
+            width=140.0,
+            height=70.0
+        )
+
+        #self.button_image_13 = PhotoImage(
+        #    file=self.relative_to_assets("button_13.png"))
+        self.rbtn_extract_normal = Button(self,
+            image=self.img_opt_normal_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_13 clicked"),
             relief="flat"
         )
-        self.button_13.place(
+        self.rbtn_extract_normal.place(
             x=688.0,
             y=285.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_14 = PhotoImage(
-            file=self.relative_to_assets("button_14.png"))
-        self.button_14 = Button(self,
-            image=self.button_image_14,
+        #self.button_image_14 = PhotoImage(
+        #    file=self.relative_to_assets("button_14.png"))
+        self.rbtn_rpm_low = Button(self,
+            image=self.img_opt_low_on,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_14 clicked"),
             relief="flat"
         )
-        self.button_14.place(
+        self.rbtn_rpm_low.place(
             x=354.0,
             y=378.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_15 = PhotoImage(
-            file=self.relative_to_assets("button_15.png"))
-        self.button_15 = Button(self,
-            image=self.button_image_15,
+        #self.button_image_15 = PhotoImage(
+        #    file=self.relative_to_assets("button_15.png"))
+        self.rbtn_rpm_medium = Button(self,
+            image=self.img_opt_medium_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_15 clicked"),
             relief="flat"
         )
-        self.button_15.place(
+        self.rbtn_rpm_medium.place(
             x=522.0,
             y=378.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_16 = PhotoImage(
-            file=self.relative_to_assets("button_16.png"))
-        self.button_16 = Button(self,
-            image=self.button_image_16,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_16 clicked"),
-            relief="flat"
-        )
-        self.button_16.place(
-            x=521.0,
-            y=473.0,
-            width=140.0,
-            height=70.0
-        )
-
-        self.button_image_17 = PhotoImage(
-            file=self.relative_to_assets("button_17.png"))
-        self.button_17 = Button(self,
-            image=self.button_image_17,
+        #self.button_image_17 = PhotoImage(
+        #    file=self.relative_to_assets("button_17.png"))
+        self.rbtn_rpm_high = Button(self,
+            image=self.img_opt_high_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_17 clicked"),
             relief="flat"
         )
-        self.button_17.place(
+        self.rbtn_rpm_high.place(
             x=688.0,
             y=378.0,
             width=140.0,
@@ -399,48 +432,64 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.button_image_18 = PhotoImage(
-            file=self.relative_to_assets("button_18.png"))
-        self.button_18 = Button(self,
-            image=self.button_image_18,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_18 clicked"),
-            relief="flat"
-        )
-        self.button_18.place(
-            x=688.0,
-            y=473.0,
-            width=140.0,
-            height=70.0
-        )
-
-        self.button_image_19 = PhotoImage(
-            file=self.relative_to_assets("button_19.png"))
-        self.button_19 = Button(self,
-            image=self.button_image_19,
+        #self.button_image_19 = PhotoImage(
+        #    file=self.relative_to_assets("button_19.png"))
+        self.rbtn_cycle_none = Button(self,
+            image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_19 clicked"),
             relief="flat"
         )
-        self.button_19.place(
+        self.rbtn_cycle_none.place(
             x=355.0,
             y=473.0,
             width=140.0,
             height=70.0
         )
 
-        self.button_image_20 = PhotoImage(
-            file=self.relative_to_assets("button_20.png"))
-        self.button_20 = Button(self,
-            image=self.button_image_20,
+        #self.button_image_16 = PhotoImage(
+        #    file=self.relative_to_assets("button_16.png"))
+        self.rbtn_cycle_short = Button(self,
+            image=self.img_opt_short_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_16 clicked"),
+            relief="flat"
+        )
+        self.rbtn_cycle_short.place(
+            x=521.0,
+            y=473.0,
+            width=140.0,
+            height=70.0
+        )
+
+        #self.button_image_18 = PhotoImage(
+        #    file=self.relative_to_assets("button_18.png"))
+        self.rbtn_cycle_normal = Button(self,
+            image=self.img_opt_normal_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_18 clicked"),
+            relief="flat"
+        )
+        self.rbtn_cycle_normal.place(
+            x=688.0,
+            y=473.0,
+            width=140.0,
+            height=70.0
+        )
+
+        #self.button_image_20 = PhotoImage(
+        #    file=self.relative_to_assets("button_20.png"))
+        self.button_edit = Button(self,
+            image=self.button_image_edit_on,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_20 clicked"),
             relief="flat"
         )
-        self.button_20.place(
+        self.button_edit.place(
             x=903.0,
             y=2.0,
             width=121.0,
@@ -473,6 +522,59 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
+    def update_status(self):
+        if self.process_setting['preextract'] == 1:
+            self.rbtn_preextract_none['image']=self.img_opt_none_off
+            self.rbtn_preextract_yes['image']=self.img_opt_yes_on
+        elif self.process_setting['preextract'] == 0:
+            self.rbtn_preextract_none['image']=self.img_opt_none_on
+            self.rbtn_preextract_yes['image']=self.img_opt_yes_off
+
+        if self.process_setting['precool'] == 1:
+            self.rbtn_precool_none['image']=self.img_opt_none_off
+            self.rbtn_precool_yes['image']=self.img_opt_yes_on
+        elif self.process_setting['precool'] == 0:
+            self.rbtn_precool_none['image']=self.img_opt_none_on
+            self.rbtn_precool_yes['image']=self.img_opt_yes_off
+
+        if self.process_setting['extracttime'] == 2:
+            self.rbtn_extract_none['image']=self.img_opt_none_off
+            self.rbtn_extract_short['image']=self.img_opt_short_off
+            self.rbtn_extract_normal['image']=self.img_opt_normal_on
+        elif self.process_setting['extracttime'] == 1:
+            self.rbtn_extract_none['image']=self.img_opt_none_off
+            self.rbtn_extract_short['image']=self.img_opt_short_on
+            self.rbtn_extract_normal['image']=self.img_opt_normal_off
+        elif self.process_setting['extracttime'] == 0:
+            self.rbtn_extract_none['image']=self.img_opt_none_on
+            self.rbtn_extract_short['image']=self.img_opt_short_off
+            self.rbtn_extract_normal['image']=self.img_opt_normal_off
+
+        if self.process_setting['spinrpm'] == 2:
+            self.rbtn_rpm_low['image']=self.img_opt_low_off
+            self.rbtn_rpm_medium['image']=self.img_opt_medium_off
+            self.rbtn_rpm_high['image']=self.img_opt_high_on
+        elif self.process_setting['spinrpm'] == 1:
+            self.rbtn_rpm_low['image']=self.img_opt_low_off
+            self.rbtn_rpm_medium['image']=self.img_opt_medium_on
+            self.rbtn_rpm_high['image']=self.img_opt_high_off
+        elif self.process_setting['spinrpm'] == 0:
+            self.rbtn_rpm_low['image']=self.img_opt_low_on
+            self.rbtn_rpm_medium['image']=self.img_opt_medium_off
+            self.rbtn_rpm_high['image']=self.img_opt_high_off
+
+        if self.process_setting['pcrcycle'] == 2:
+            self.rbtn_cycle_none['image']=self.img_opt_none_off
+            self.rbtn_cycle_short['image']=self.img_opt_short_off
+            self.rbtn_cycle_normal['image']=self.img_opt_normal_on
+        elif self.process_setting['pcrcycle'] == 1:
+            self.rbtn_cycle_none['image']=self.img_opt_none_off
+            self.rbtn_cycle_short['image']=self.img_opt_short_on
+            self.rbtn_cycle_normal['image']=self.img_opt_normal_off
+        elif self.process_setting['pcrcycle'] == 0:
+            self.rbtn_cycle_none['image']=self.img_opt_none_on
+            self.rbtn_cycle_short['image']=self.img_opt_short_off
+            self.rbtn_cycle_normal['image']=self.img_opt_normal_off
 
 if __name__ == "__main__":
     window = Tk()
@@ -489,6 +591,14 @@ if __name__ == "__main__":
 
     window.frames[PageProcessEdit] = frame
     frame.grid(row = 0, column = 0, sticky ="nsew")
+
+
+    frame.process_setting['preextract'] = 0
+    frame.process_setting['precool'] = 0
+    frame.process_setting['extracttime'] = 0
+    frame.process_setting['spinrpm'] = 1
+    frame.process_setting['pcrcycle'] = 0
+    frame.update_status()
 
     frame.tkraise()
     window.mainloop()

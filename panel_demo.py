@@ -3,6 +3,7 @@ from tkinter import ttk
 import tkinter.font as tkFont
 from page_home import PageHome
 from page_login import PageLogin
+from page_process_init import PageProcessInit
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -34,7 +35,7 @@ class tkinterApp(tk.Tk):
         self.frames = {}
         
         # iterating through a tuple consisting of the different page layouts
-        for F in (PageHome, PageLogin):
+        for F in (PageHome, PageLogin, PageProcessInit):
             frame = F(container, self)
             
             # initializing frame of the object from all pages respectively with for loop
