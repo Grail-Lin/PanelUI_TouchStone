@@ -32,6 +32,8 @@ class PageProcessInit(Frame):
 
     process_status = 0
 
+    process_setting = {}
+
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
 
@@ -137,7 +139,7 @@ class PageProcessInit(Frame):
         self.button_image_edit_off = PhotoImage(file=self.relative_to_assets("button_edit_off.png"))
         self.button_edit = Button(self, image=self.button_image_edit_off,
                                   borderwidth=0, highlightthickness=0,
-                                  command=lambda: print("button_7 clicked"),
+                                  command=self.Cmd_btn_edit,
                                   relief="flat")
         #self.button_edit.place(x=938.0, y=37.0, width=52.0, height=52.0)
         self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
@@ -344,6 +346,13 @@ class PageProcessInit(Frame):
         self.var_processtime = random.randrange(10,3599)
         self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
 
+        self.process_setting['preextract'] = random.randrange(0,2)
+        self.process_setting['precool'] = random.randrange(0,2)
+        self.process_setting['extracttime'] = random.randrange(0,3)
+        self.process_setting['spinrpm'] = random.randrange(0,3)
+        self.process_setting['pcrcycle'] = random.randrange(0,3)
+        self.process_setting['processtime'] = self.str_processtime.get()
+
         self.process_status = 2
         self.update_status()
         return
@@ -362,6 +371,12 @@ class PageProcessInit(Frame):
 
     def Cmd_btn_home(self):
         self.controller.show_frame(page_home.PageHome)
+
+    def Cmd_btn_edit(self):
+        # pass the value of process setting
+        self.controller.frames[page_process_edit.PageProcessEdit].process_setting = self.process_setting
+        self.controller.frames[page_process_edit.PageProcessEdit].update_status()
+        self.controller.show_frame(page_process_edit.PageProcessEdit)
 
 if __name__ == "__main__":
     window = Tk()

@@ -32,7 +32,7 @@ class PageProcessEdit(Frame):
         self.process_setting['extracttime'] = 1
         self.process_setting['spinrpm'] = 0
         self.process_setting['pcrcycle'] = 2
-
+        self.process_setting['processtime'] = "00:45"
 
         # set window size
         width = 1024
@@ -241,7 +241,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_7 clicked"),
+            command=self.Cmd_btn_preextract_none,
             relief="flat"
         )
         self.rbtn_preextract_none.place(
@@ -257,7 +257,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_yes_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_8 clicked"),
+            command=self.Cmd_btn_preextract_yes,
             relief="flat"
         )
         self.rbtn_preextract_yes.place(
@@ -282,7 +282,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_9 clicked"),
+            command=self.Cmd_btn_precool_none,
             relief="flat"
         )
         self.rbtn_precool_none.place(
@@ -294,11 +294,11 @@ class PageProcessEdit(Frame):
 
         #self.button_image_10 = PhotoImage(
         #    file=self.relative_to_assets("button_10.png"))
-        self.rbtn_precool_yes = Button(
+        self.rbtn_precool_yes = Button(self,
             image=self.img_opt_yes_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_10 clicked"),
+            command=self.Cmd_btn_precool_yes,
             relief="flat"
         )
         self.rbtn_precool_yes.place(
@@ -333,7 +333,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_12 clicked"),
+            command=self.Cmd_btn_extracttime_none,
             relief="flat"
         )
         self.rbtn_extract_none.place(
@@ -349,7 +349,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_short_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_11 clicked"),
+            command=self.Cmd_btn_extracttime_short,
             relief="flat"
         )
         self.rbtn_extract_short.place(
@@ -365,7 +365,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_normal_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_13 clicked"),
+            command=self.Cmd_btn_extracttime_normal,
             relief="flat"
         )
         self.rbtn_extract_normal.place(
@@ -381,7 +381,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_low_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_14 clicked"),
+            command=self.Cmd_btn_spinrpm_low,
             relief="flat"
         )
         self.rbtn_rpm_low.place(
@@ -397,7 +397,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_medium_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_15 clicked"),
+            command=self.Cmd_btn_spinrpm_medium,
             relief="flat"
         )
         self.rbtn_rpm_medium.place(
@@ -413,7 +413,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_high_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_17 clicked"),
+            command=self.Cmd_btn_spinrpm_high,
             relief="flat"
         )
         self.rbtn_rpm_high.place(
@@ -438,7 +438,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_19 clicked"),
+            command=self.Cmd_btn_pcrcycle_none,
             relief="flat"
         )
         self.rbtn_cycle_none.place(
@@ -454,7 +454,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_short_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_16 clicked"),
+            command=self.Cmd_btn_pcrcycle_short,
             relief="flat"
         )
         self.rbtn_cycle_short.place(
@@ -470,7 +470,7 @@ class PageProcessEdit(Frame):
             image=self.img_opt_normal_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_18 clicked"),
+            command=self.Cmd_btn_pcrcycle_normal,
             relief="flat"
         )
         self.rbtn_cycle_normal.place(
@@ -513,7 +513,7 @@ class PageProcessEdit(Frame):
             fill="#FFFFFF",
             outline="black")
 
-        self.canvas.create_text(
+        self.id_processtime = self.canvas.create_text(
             732.0,
             43.0,
             anchor="center",
@@ -523,6 +523,10 @@ class PageProcessEdit(Frame):
         )
 
     def update_status(self):
+        # update the time
+        self.canvas.itemconfig(self.id_processtime, text=self.process_setting['processtime'])
+
+        # update options
         if self.process_setting['preextract'] == 1:
             self.rbtn_preextract_none['image']=self.img_opt_none_off
             self.rbtn_preextract_yes['image']=self.img_opt_yes_on
@@ -575,6 +579,51 @@ class PageProcessEdit(Frame):
             self.rbtn_cycle_none['image']=self.img_opt_none_on
             self.rbtn_cycle_short['image']=self.img_opt_short_off
             self.rbtn_cycle_normal['image']=self.img_opt_normal_off
+
+    def Cmd_btn_preextract_none(self):
+        self.process_setting['preextract'] = 0
+        self.update_status()
+    def Cmd_btn_preextract_yes(self):
+        self.process_setting['preextract'] = 1
+        self.update_status()
+
+    def Cmd_btn_precool_none(self):
+        self.process_setting['precool'] = 0
+        self.update_status()
+    def Cmd_btn_precool_yes(self):
+        self.process_setting['precool'] = 1
+        self.update_status()
+
+    def Cmd_btn_extracttime_none(self):
+        self.process_setting['extracttime'] = 0
+        self.update_status()
+    def Cmd_btn_extracttime_short(self):
+        self.process_setting['extracttime'] = 1
+        self.update_status()
+    def Cmd_btn_extracttime_normal(self):
+        self.process_setting['extracttime'] = 2
+        self.update_status()
+
+    def Cmd_btn_spinrpm_low(self):
+        self.process_setting['spinrpm'] = 0
+        self.update_status()
+    def Cmd_btn_spinrpm_medium(self):
+        self.process_setting['spinrpm'] = 1
+        self.update_status()
+    def Cmd_btn_spinrpm_high(self):
+        self.process_setting['spinrpm'] = 2
+        self.update_status()
+
+    def Cmd_btn_pcrcycle_none(self):
+        self.process_setting['pcrcycle'] = 0
+        self.update_status()
+    def Cmd_btn_pcrcycle_short(self):
+        self.process_setting['pcrcycle'] = 1
+        self.update_status()
+    def Cmd_btn_pcrcycle_normal(self):
+        self.process_setting['pcrcycle'] = 2
+        self.update_status()
+
 
 if __name__ == "__main__":
     window = Tk()
