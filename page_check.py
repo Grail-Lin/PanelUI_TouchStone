@@ -11,6 +11,8 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 from GradientFrame import GradientFrame                       # add for gradient color background
 
+import page_process_play
+import page_process_init
 
 class PageCheck(Frame):
 
@@ -58,7 +60,7 @@ class PageCheck(Frame):
         self.button_image_stop_on = PhotoImage(file=self.relative_to_assets("button_stop_on.png"))
         self.button_stop = Button(self, image=self.button_image_stop_on, 
                                   borderwidth=0, highlightthickness=0,
-                                  command=lambda: print("button_1 clicked"),
+                                  command=self.Cmd_btn_stop,
                                   relief="flat")
         self.button_stop.place(
             x=539.0,
@@ -69,7 +71,7 @@ class PageCheck(Frame):
         self.button_image_cancel_off = PhotoImage(file=self.relative_to_assets("button_cancel_off.png"))
         self.button_cancel = Button(self, image=self.button_image_cancel_off, 
                                     borderwidth=0, highlightthickness=0,
-                                    command=lambda: print("button_2 clicked"),
+                                    command=self.Cmd_btn_cancel,
                                     relief="flat")
         self.button_cancel.place(
             x=177.0,
@@ -86,7 +88,17 @@ class PageCheck(Frame):
             fill="#17171B",
             font=("Noto Sans", 32 * -1)
         )
-        
+
+    def Cmd_btn_cancel(self):
+        # return to process play
+        self.controller.show_frame(page_process_play.PageProcessPlay)
+
+    def Cmd_btn_stop(self):
+        # stop all hardware
+        # return to process inital
+        self.controller.frames[page_process_init.PageProcessInit].process_status = -1
+        self.controller.frames[page_process_init.PageProcessInit].update_status()
+        self.controller.show_frame(page_process_init.PageProcessInit)
 
 if __name__ == "__main__":
     window = Tk()

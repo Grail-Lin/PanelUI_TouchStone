@@ -8,14 +8,14 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
-
+import page_check
 
 class PageProcessPlay(Frame):
 
     # user data
 
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process_play")
+    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
 
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
@@ -97,7 +97,7 @@ class PageProcessPlay(Frame):
 
         self.button_image_result_off = PhotoImage(
             file=self.relative_to_assets("button_result_off.png"))
-        self.button_result = Button(
+        self.button_result = Button(self,
             image=self.button_image_result_off,
             borderwidth=0,
             highlightthickness=0,
@@ -144,37 +144,21 @@ class PageProcessPlay(Frame):
             fill="#E6EFF4",
             outline="")
 
-        self.button_image_stop_off = PhotoImage(
-            file=self.relative_to_assets("button_stop_off.png"))
-        self.button_stop = Button(self,
-            image=self.button_image_stop_off,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_5 clicked"),
-            relief="flat"
-        )
-        self.button_stop.place(
-            x=938.0,
-            y=233.0,
-            width=52.0,
-            height=52.0
-        )
+        self.button_image_stop_off = PhotoImage(file=self.relative_to_assets("button_stop_off.png"))
+        self.button_stop = Button(self, image=self.button_image_stop_off,
+                             borderwidth=0, highlightthickness=0,
+                             command=self.Cmd_btn_stop,
+                             relief="flat")
+        #self.button_stop.place(x=938.0, y=243.0, width=52.0, height=52.0)
+        self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
+        self.button_image_edit_off = PhotoImage(file=self.relative_to_assets("button_edit_off.png"))
+        self.button_edit = Button(self, image=self.button_image_edit_off,
+                                  borderwidth=0, highlightthickness=0,
+                                  command=0,
+                                  relief="flat")
+        #self.button_edit.place(x=938.0, y=37.0, width=52.0, height=52.0)
+        self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
 
-        self.button_image_edit_off = PhotoImage(
-            file=self.relative_to_assets("button_edit_off.png"))
-        self.button_edit = Button(self,
-            image=self.button_image_edit_off,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_6 clicked"),
-            relief="flat"
-        )
-        self.button_edit.place(
-            x=938.0,
-            y=27.0,
-            width=52.0,
-            height=52.0
-        )
 
         self.button_image_play_on = PhotoImage(
             file=self.relative_to_assets("button_play_on.png"))
@@ -182,7 +166,7 @@ class PageProcessPlay(Frame):
             image=self.button_image_play_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_7 clicked"),
+            command=0,
             relief="flat"
         )
         self.button_play.place(
@@ -330,6 +314,10 @@ class PageProcessPlay(Frame):
             fill="#17171B",
             font=("Noto Sans", 24 * -1)
         )
+
+    def Cmd_btn_stop(self):
+        # hold the process for hardware
+        self.controller.show_frame(page_check.PageCheck)
 
 
 

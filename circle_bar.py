@@ -9,7 +9,7 @@ except ImportError:  # Python 3
 
 
 class CircularProgressbar(object):
-    def __init__(self, canvas, x0, y0, x1, y1, width=2, start_ang=0, full_extent=360., clockwise=0, fg="#0F0F0F", bg="#FFFFFF"):
+    def __init__(self, canvas, x0, y0, x1, y1, width=2, start_ang=0, full_extent=360., clockwise=0, fg="#0F0F0F", bg="#FFFFFF", fill="#FFFFFF"):
         self.custom_font = tkFont.Font(family="Helvetica", size=12, weight='bold')
         self.canvas = canvas
         self.x0, self.y0, self.x1, self.y1 = x0+width, y0+width, x1-width, y1-width
@@ -19,13 +19,13 @@ class CircularProgressbar(object):
 
         self.fg = fg
         self.bg = bg
-
+        self.fill = fill
         # draw static bar outline
         w2 = width / 2
         self.oval_id1 = self.canvas.create_oval(self.x0-w2, self.y0-w2,
-                                                self.x1+w2, self.y1+w2, fill=self.bg)
+                                                self.x1+w2, self.y1+w2, fill=self.bg, outline=self.fill)
         self.oval_id2 = self.canvas.create_oval(self.x0+w2, self.y0+w2,
-                                                self.x1-w2, self.y1-w2, fill="#FFFFFF")
+                                                self.x1-w2, self.y1-w2, fill="#FFFFFF", outline=self.fill)
         self.running = False
         self.clockwise = clockwise    # 0: counterclockwise, 1: clockwise
 
@@ -74,7 +74,7 @@ class Application(tk.Frame):
         self.canvas = tk.Canvas(self, width=200, height=200, bg='white')
         self.canvas.grid(row=0, column=0, columnspan=2)
 
-        self.progressbar = CircularProgressbar(self.canvas, 0, 0, 200, 200, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB")
+        self.progressbar = CircularProgressbar(self.canvas, 0, 0, 200, 200, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB", fill="#FFFFFF")
 
         self.pauseButton = tk.Button(self, text='Pause', command=self.pause)
         self.pauseButton.grid(row=1, column=0)

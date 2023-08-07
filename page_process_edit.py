@@ -10,6 +10,7 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import round_rect
 
+import page_home
 
 class PageProcessEdit(Frame):
 
@@ -119,7 +120,7 @@ class PageProcessEdit(Frame):
             image=self.button_image_process_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=0,
             relief="flat"
         )
         self.button_process.place(
@@ -135,7 +136,7 @@ class PageProcessEdit(Frame):
             image=self.button_image_home_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=self.Cmd_btn_home,
             relief="flat"
         )
         self.button_home.place(
@@ -200,7 +201,7 @@ class PageProcessEdit(Frame):
             image=self.button_image_play_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_5 clicked"),
+            command=self.Cmd_btn_play,
             relief="flat"
         )
         self.button_play.place(
@@ -241,7 +242,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_on,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_preextract_none,
+            #command=self.Cmd_btn_preextract_none,
+            command=0,
             relief="flat"
         )
         self.rbtn_preextract_none.place(
@@ -257,7 +259,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_yes_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_preextract_yes,
+            #command=self.Cmd_btn_preextract_yes,
+            command=0,
             relief="flat"
         )
         self.rbtn_preextract_yes.place(
@@ -282,7 +285,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_precool_none,
+            #command=self.Cmd_btn_precool_none,
+            command=0,
             relief="flat"
         )
         self.rbtn_precool_none.place(
@@ -298,7 +302,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_yes_on,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_precool_yes,
+            #command=self.Cmd_btn_precool_yes,
+            command=0,
             relief="flat"
         )
         self.rbtn_precool_yes.place(
@@ -333,7 +338,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_extracttime_none,
+            #command=self.Cmd_btn_extracttime_none,
+            command=0,
             relief="flat"
         )
         self.rbtn_extract_none.place(
@@ -349,7 +355,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_short_on,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_extracttime_short,
+            #command=self.Cmd_btn_extracttime_short,
+            command=0,
             relief="flat"
         )
         self.rbtn_extract_short.place(
@@ -365,7 +372,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_normal_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_extracttime_normal,
+            #command=self.Cmd_btn_extracttime_normal,
+            command=0,
             relief="flat"
         )
         self.rbtn_extract_normal.place(
@@ -381,7 +389,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_low_on,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_spinrpm_low,
+            #command=self.Cmd_btn_spinrpm_low,
+            command=0,
             relief="flat"
         )
         self.rbtn_rpm_low.place(
@@ -397,7 +406,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_medium_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_spinrpm_medium,
+            #command=self.Cmd_btn_spinrpm_medium,
+            command=0,
             relief="flat"
         )
         self.rbtn_rpm_medium.place(
@@ -413,7 +423,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_high_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_spinrpm_high,
+            #command=self.Cmd_btn_spinrpm_high,
+            command=0,
             relief="flat"
         )
         self.rbtn_rpm_high.place(
@@ -438,7 +449,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_none_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_pcrcycle_none,
+            #command=self.Cmd_btn_pcrcycle_none,
+            command=0,
             relief="flat"
         )
         self.rbtn_cycle_none.place(
@@ -454,7 +466,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_short_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_pcrcycle_short,
+            #command=self.Cmd_btn_pcrcycle_short,
+            command=0,
             relief="flat"
         )
         self.rbtn_cycle_short.place(
@@ -470,7 +483,8 @@ class PageProcessEdit(Frame):
             image=self.img_opt_normal_on,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_pcrcycle_normal,
+            #command=self.Cmd_btn_pcrcycle_normal,
+            command=0,
             relief="flat"
         )
         self.rbtn_cycle_normal.place(
@@ -486,7 +500,7 @@ class PageProcessEdit(Frame):
             image=self.button_image_edit_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_20 clicked"),
+            command=0,
             relief="flat"
         )
         self.button_edit.place(
@@ -623,6 +637,15 @@ class PageProcessEdit(Frame):
     def Cmd_btn_pcrcycle_normal(self):
         self.process_setting['pcrcycle'] = 2
         self.update_status()
+
+    def Cmd_btn_home(self):
+        self.controller.show_frame(page_home.PageHome)
+
+    def Cmd_btn_play(self):
+        # pass the value of process setting
+        #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
+        #self.controller.frames[page_process_play.PageProcessPlay].update_status()
+        self.controller.show_frame(page_process_play.PageProcessPlay)
 
 
 if __name__ == "__main__":

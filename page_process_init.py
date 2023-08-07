@@ -66,6 +66,9 @@ class PageProcessInit(Frame):
         self.canvas.place(x = 0, y = 0)
 
         # add elements here
+        self.button_image_play_out = PhotoImage(file=self.relative_to_assets("button_play_out.png"))
+        self.button_image_edit_out = PhotoImage(file=self.relative_to_assets("button_edit_out.png"))
+        self.button_image_stop_out = PhotoImage(file=self.relative_to_assets("button_stop_out.png"))
 
         self.canvas.create_rectangle(120.0, 0.0, 904.0, 600.0, fill="#F9F9F9", outline="")
 
@@ -124,7 +127,7 @@ class PageProcessInit(Frame):
         self.button_image_play_off = PhotoImage(file=self.relative_to_assets("button_play_off.png"))
         self.button_play = Button(self, image=self.button_image_play_off,
                                   borderwidth=0, highlightthickness=0,
-                                  command=lambda: print("button_5 clicked"),
+                                  command=self.Cmd_btn_play,
                                   relief="flat")
         #self.button_play.place(x=938.0, y=140.0, width=52.0, height=52.0)
         self.button_play.place(x=903.0, y=105.0, width=121.0, height=103.0)
@@ -273,6 +276,11 @@ class PageProcessInit(Frame):
             self.button_insert['command']=self.Cmd_btn_insert
             self.button_eject['command']=0
 
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_off
+            self.button_play['image']=self.button_image_play_off
+            self.button_stop['image']=self.button_image_stop_off
+
         elif self.process_status == 1:
             self.canvas.itemconfig(self.image_state, image = self.image_state_completed)
 
@@ -291,6 +299,11 @@ class PageProcessInit(Frame):
             self.button_eject['image']=self.button_image_eject_on
             self.button_insert['command']=0
             self.button_eject['command']=self.Cmd_btn_eject
+
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_out
+            self.button_play['image']=self.button_image_play_out
+            self.button_stop['image']=self.button_image_stop_out
 
         elif self.process_status == -1:
             self.canvas.itemconfig(self.image_state, image = self.image_state_aborted)
@@ -311,6 +324,11 @@ class PageProcessInit(Frame):
             self.button_insert['command']=0
             self.button_eject['command']=self.Cmd_btn_eject
 
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_out
+            self.button_play['image']=self.button_image_play_out
+            self.button_stop['image']=self.button_image_stop_out
+
         elif self.process_status == 2:
             # inserted but not process yet
             self.canvas.itemconfig(self.image_state, image = self.image_state_not_started)
@@ -330,6 +348,12 @@ class PageProcessInit(Frame):
             self.button_eject['image']=self.button_image_eject_on
             self.button_insert['command']=0
             self.button_eject['command']=self.Cmd_btn_eject
+
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_off
+            self.button_play['image']=self.button_image_play_off
+            self.button_stop['image']=self.button_image_stop_off
+
 
     # btn insert cartridge
     def Cmd_btn_insert(self):
@@ -374,9 +398,18 @@ class PageProcessInit(Frame):
 
     def Cmd_btn_edit(self):
         # pass the value of process setting
-        self.controller.frames[page_process_edit.PageProcessEdit].process_setting = self.process_setting
-        self.controller.frames[page_process_edit.PageProcessEdit].update_status()
-        self.controller.show_frame(page_process_edit.PageProcessEdit)
+        if self.process_status == 2:
+            self.controller.frames[page_process_edit.PageProcessEdit].process_setting = self.process_setting
+            self.controller.frames[page_process_edit.PageProcessEdit].update_status()
+            self.controller.show_frame(page_process_edit.PageProcessEdit)
+
+    def Cmd_btn_play(self):
+        # pass the value of process setting
+        if self.process_status == 2:
+            #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
+            #self.controller.frames[page_process_play.PageProcessPlay].update_status()
+            self.controller.show_frame(page_process_play.PageProcessPlay)
+
 
 if __name__ == "__main__":
     window = Tk()
