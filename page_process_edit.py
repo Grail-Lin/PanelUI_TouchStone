@@ -11,6 +11,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import round_rect
 
 import page_home
+import page_process_play
 
 class PageProcessEdit(Frame):
 
