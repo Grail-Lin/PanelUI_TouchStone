@@ -76,10 +76,10 @@ class QRCodeReader:
 
         self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
 
-        ser.write(init_package)
-        while ser.in_waiting:
-            data = ser.readline().decode("ascii")
-            if(data == self.init_OK_package):
+        self.ser.write(self.init_package)
+        while self.ser.in_waiting:
+            data = self.ser.readline()
+            if (data == self.init_OK_package):
                 self.state = 1
                 return
             else:
@@ -87,9 +87,23 @@ class QRCodeReader:
                 return
 
     def scan(self, timeout=10):
+        # check if initialized
+        if self.state == 0:
+            return "ERROR: UNINITIALIZED"
         
+        # send start cmd
+        self.ser.write(self.scan_package):
+        while self.ser.in_waiting:
+            data = self.ser.readline()
+                if (data == self.scan_OK_package):
+                    while self.ser.in_waiting:
+                        ret_string = self.ser.readline().decode("utf-8")
+                else:
+                    ret_string = "ERROR: SCAN_FAIL"
+        return ret_string
 
 
+'''
 while 1:
     if(state == 0):          //waits for incoming data
         while ser.in_waiting:
@@ -125,3 +139,5 @@ while 1:
                 state = 0;
                 print("back to the start")
                 ser.write("back to the start").encode()
+
+'''
