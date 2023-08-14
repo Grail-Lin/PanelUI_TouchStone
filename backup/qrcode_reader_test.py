@@ -36,6 +36,20 @@ if ok, do while loop for trigger
 
 '''
 
+'''
+class QRcodeReader:
+
+init:
+    1, connect serial
+	2, init QRcode Reader
+
+scan:
+
+exit:
+	1, leave host mode
+
+'''
+
 import time
 import serial
 

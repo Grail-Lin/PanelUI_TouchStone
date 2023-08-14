@@ -44,7 +44,12 @@ init:
 	2, init QRcode Reader
 
 scan:
-
+	parameter: timeout
+    1, send scan cmd
+	2, wait for qrcode
+	3, if timeout, send stop cmd
+	3, return failed or scanned text
+	
 exit:
 	1, leave host mode
 
@@ -53,25 +58,37 @@ exit:
 import time
 import serial
 
-PORT = 'COM10'
-
-ser = serial.Serial(PORT, 115200, timeout=0.050)
-
-count = 0
-state = 0
-
-init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
-
-init_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
-
-scan_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
-
-scan_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
-
-stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
 
 
-ser.write(init_package)
+class QRCodeReader:
+
+    def __init__(self, port = 'COM10'):
+        self.port = port
+        self.ser = serial.Serial(port, 115200, timeout=0.050)
+
+        #count = 0
+        self.state = 0     # 0 = uninit, 1 = init
+
+        self.init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
+        self.init_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
+        self.scan_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
+        self.scan_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
+
+        self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
+
+        ser.write(init_package)
+        while ser.in_waiting:
+            data = ser.readline().decode("ascii")
+            if(data == self.init_OK_package):
+                self.state = 1
+                return
+            else:
+                self.state = 0
+                return
+
+    def scan(self, timeout=10):
+        
+
 
 while 1:
     if(state == 0):          //waits for incoming data
