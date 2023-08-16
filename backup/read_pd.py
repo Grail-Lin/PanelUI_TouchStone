@@ -4,11 +4,13 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 # add static parameters
 parser.add_argument('voltage', type=float, help='led voltage power, [0-5]')
-parser.add_argument('time', type=int, help='time for led period')
+parser.add_argument('-t', '--time', type=int, default=3, help='time for led period')
+parser.add_argument('-f', '--filepath', type=str, default=None, help='filepath for output data')
+
 args = parser.parse_args()
 
 '''
-triger led voltage = pwn for time = time
+trigger led voltage = pwn for time = time
 read analog input from pin
 '''
 
@@ -27,16 +29,15 @@ class PDReader:
         triger led voltage = pwm for time = time
         read analog input from pin
     '''
-    def __init__(self, pwm=1):
+    def __init__(self, pwm=1, output_file=None):
         
         # output file
-        #self.h_output_file = h_output_file if h_output_file is not None else None
+        self.output_file = output_file if output_file is not None else None
 
         # time
         self.sample_time = 0.00
         self.current_time = time.time()
         self.last_time = self.current_time
-        
 
         self.pwm = pwm
         
@@ -68,7 +69,14 @@ class PDReader:
     def PDreadCallback(self, data):
         data = self.calT(data)
         print("Timestamp: %f, PD_READER: %f" % (self.timestamp_pone, data))
+
+        if self.output_file is not None:
+            print("%f\t%f" % (self.timestamp_pone, data), file=self.output_file)
+
+
         self.timestamp_pone += (1 / self.samplingRate)
+
+
     
     def stop(self):
         self.board.samplingOff()
@@ -88,6 +96,10 @@ class PDReader:
 
 try: 
 
+    if args.filepath != None:
+        output_f = open(args.filepath, 'w')
+    else:
+        output_f = None
 
     print("Let's print data from Arduino's analog pins for N secs.")
     # Let's create an instance
@@ -98,7 +110,7 @@ try:
     if args.voltage >= 5.0:
         value = 1.0
 
-    pd_sensor = PDReader(pwm=value)
+    pd_sensor = PDReader(pwm=value, output_file = output_f)
     # and start DAQ
     pd_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
@@ -109,4 +121,11 @@ try:
 
 except Exception as e:
     print(e)
+    if args.filepath != None:
+        output_f.close()
+
+finally:
+    if args.filepath != None:
+        output_f.close()
+
 
