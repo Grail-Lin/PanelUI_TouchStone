@@ -9,7 +9,7 @@ except ImportError:  # Python 3
 
 
 class CircularProgressbar(object):
-    def __init__(self, canvas, x0, y0, x1, y1, width=2, start_ang=0, full_extent=360., clockwise=0, fg="#0F0F0F", bg="#FFFFFF", fill="#FFFFFF"):
+    def __init__(self, canvas, x0, y0, x1, y1, width=2, start_ang=0, full_extent=360., clockwise=0, fg="#0F0F0F", bg="#FFFFFF", fill="#FFFFFF", total_time=15):
         self.custom_font = tkFont.Font(family="Helvetica", size=12, weight='bold')
         self.canvas = canvas
         self.x0, self.y0, self.x1, self.y1 = x0+width, y0+width, x1-width, y1-width
@@ -28,10 +28,20 @@ class CircularProgressbar(object):
                                                 self.x1-w2, self.y1-w2, fill="#FFFFFF", outline=self.fill)
         self.running = False
         self.clockwise = clockwise    # 0: counterclockwise, 1: clockwise
+        self.total_time = total_time
+
+    '''
+        total_time = N (default 15s)
+        circle bar total arc = full_extent = 360
+        1 sec as interval = 1000 ms
+        every second increment = (total arc)/(total time)
+        a step is 1000/internal second
+    '''
 
     def start(self, interval=100):
         self.interval = interval  # Msec delay between updates.
-        self.increment = self.full_extent / interval
+        #self.increment = self.full_extent / interval
+        self.increment = self.full_extent * self.interval / self.total_time / 1000.0
         self.extent = 0
         self.arc_id = self.canvas.create_arc(self.x0, self.y0, self.x1, self.y1,
                                              start=self.start_ang, extent=self.extent,
@@ -74,7 +84,7 @@ class Application(tk.Frame):
         self.canvas = tk.Canvas(self, width=200, height=200, bg='white')
         self.canvas.grid(row=0, column=0, columnspan=2)
 
-        self.progressbar = CircularProgressbar(self.canvas, 0, 0, 200, 200, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB", fill="#FFFFFF")
+        self.progressbar = CircularProgressbar(self.canvas, 0, 0, 200, 200, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB", fill="#FFFFFF", total_time=10)
 
         self.pauseButton = tk.Button(self, text='Pause', command=self.pause)
         self.pauseButton.grid(row=1, column=0)
