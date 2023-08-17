@@ -8,9 +8,12 @@ except ImportError:  # Python 3
     import tkinter.ttk as ttk
 
 
+import time, math
+
+
 class CircularProgressbar(object):
-    def __init__(self, canvas, x0, y0, x1, y1, width=2, start_ang=0, full_extent=360., clockwise=0, fg="#0F0F0F", bg="#FFFFFF", fill="#FFFFFF", total_time=15):
-        self.custom_font = tkFont.Font(family="Helvetica", size=12, weight='bold')
+    def __init__(self, canvas, x0, y0, x1, y1, width=2, start_ang=0, full_extent=360., clockwise=0, fg="#0F0F0F", bg="#FFFFFF", fill="#FFFFFF", total_time=15, next_bar = None):
+        self.custom_font = ("Noto Sans", 46 * -1)    # tkFont.Font(family="Helvetica", size=12, weight='bold')
         self.canvas = canvas
         self.x0, self.y0, self.x1, self.y1 = x0+width, y0+width, x1-width, y1-width
         self.tx, self.ty = (x1-x0) / 2, (y1-y0) / 2
@@ -30,6 +33,8 @@ class CircularProgressbar(object):
         self.clockwise = clockwise    # 0: counterclockwise, 1: clockwise
         self.total_time = total_time
 
+        self.next_bar = next_bar
+
     '''
         total_time = N (default 15s)
         circle bar total arc = full_extent = 360
@@ -43,20 +48,37 @@ class CircularProgressbar(object):
         #self.increment = self.full_extent / interval
         self.increment = self.full_extent * self.interval / self.total_time / 1000.0
         self.extent = 0
-        self.arc_id = self.canvas.create_arc(self.x0, self.y0, self.x1, self.y1,
-                                             start=self.start_ang, extent=self.extent,
-                                             width=self.width, style='arc', outline=self.fg)
+
+        if self.clockwise == 0:
+            self.arc_id = self.canvas.create_arc(self.x0, self.y0, self.x1, self.y1,
+                start=self.start_ang, extent=self.extent,
+                width=self.width, style='arc', outline=self.fg)
+        elif self.clockwise == 1:
+            self.arc_id = self.canvas.create_arc(self.x0, self.y0, self.x1, self.y1,
+                start=self.start_ang, extent=359.9,
+                width=self.width, style='arc', outline=self.fg)
+
         percent = '0%'
-        self.label_id = self.canvas.create_text(self.tx, self.ty, text=percent,
-                                                font=self.custom_font)
-        self.running = True
+        remain_time_str = time.strftime("%M:%S", time.gmtime(self.total_time))
+        #self.label_id = self.canvas.create_text(self.tx, self.ty, text=percent,
+        #                                        font=self.custom_font, fill='#7D8CA7')
+        self.label_id = self.canvas.create_text((self.x0 + self.x1)/2.0, (self.y0 + self.y1)/2 - 5, text=remain_time_str,
+                                                font=self.custom_font, fill='#7D8CA7', anchor="center")
+        self.running = False
         self.canvas.after(interval, self.step, self.increment)
 
     def step(self, delta):
         """Increment extent and update arc and label displaying how much completed."""
         if self.running:
-            self.extent = (self.extent + delta) % 360
+            #self.extent = (self.extent + delta) % 360
+            self.extent = (self.extent + delta)
 
+            if self.extent >= 360:
+                self.extent = 360
+                self.running = not self.running
+                if self.next_bar is not None:
+                    self.next_bar.running = not self.next_bar.running
+					
             if self.clockwise == 0:
                 self.canvas.itemconfigure(self.arc_id, extent=self.extent)
             elif self.clockwise == 1:
@@ -64,15 +86,23 @@ class CircularProgressbar(object):
 
 
             # Update percentage value displayed.
-            percent = '{:.0f}%'.format(
-                                    round(float(self.extent) / self.full_extent * 100))
-            self.canvas.itemconfigure(self.label_id, text=percent)
+            percent = '{:.0f}%'.format(round(float(self.extent) / self.full_extent * 100))
+            remain_percent = 1 - float(self.extent) / self.full_extent
+            remain_time = math.ceil(remain_percent * self.total_time)
+            remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
+
+            #self.canvas.itemconfigure(self.label_id, text=percent)
+            self.canvas.itemconfigure(self.label_id, text=remain_time_str)
+
+
         self.canvas.after(self.interval, self.step, delta)
 
 
     def toggle_pause(self):
         self.running = not self.running
 
+    def add_next_bar(self, next_bar):
+        self.next_bar = next_bar
 
 class Application(tk.Frame):
     def __init__(self, master=None):

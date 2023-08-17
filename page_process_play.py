@@ -9,6 +9,9 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import page_check
+import time
+
+from circle_bar import CircularProgressbar
 
 class PageProcessPlay(Frame):
 
@@ -176,6 +179,15 @@ class PageProcessPlay(Frame):
             height=104.0
         )
 
+        self.preextract_bar = CircularProgressbar(self.canvas, 178, 162, 378, 362, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB", fill="#FFFFFF", total_time=10)
+        self.extract_bar = CircularProgressbar(self.canvas, 404, 162, 604, 362, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB", fill="#FFFFFF", total_time=20)
+        self.qpcr_bar = CircularProgressbar(self.canvas, 630, 162, 830, 362, 20, start_ang=90, clockwise=1, fg="#CECECE", bg="#569FCB", fill="#FFFFFF", total_time=30)
+
+        self.preextract_bar.add_next_bar(self.extract_bar)
+        self.extract_bar.add_next_bar(self.qpcr_bar)
+
+
+        '''
         self.image_state_full = PhotoImage(
             file=self.relative_to_assets("image_state_full.png"))
         self.image_state_1 = self.canvas.create_image(
@@ -199,6 +211,7 @@ class PageProcessPlay(Frame):
             262.0,
             image=self.image_state_half
         )
+        '''
 
         # title of circles
         self.canvas.create_text(
@@ -262,6 +275,7 @@ class PageProcessPlay(Frame):
 		
 
         # middle of circle
+        '''
         self.canvas.create_text(
             277.0,
             255.0, #230.0,
@@ -287,7 +301,8 @@ class PageProcessPlay(Frame):
             text="0:25",
             fill="#7D8CA7",
             font=("Noto Sans", 46 * -1)
-)
+        )
+        '''
 
         self.canvas.create_text(
             427.0,
@@ -338,6 +353,11 @@ if __name__ == "__main__":
     frame.grid(row = 0, column = 0, sticky ="nsew")
 
     frame.tkraise()
+    frame.preextract_bar.start()
+    frame.extract_bar.start()
+    frame.qpcr_bar.start()
+
+    frame.preextract_bar.toggle_pause()
     window.mainloop()
     
 
