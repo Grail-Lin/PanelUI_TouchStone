@@ -19,6 +19,7 @@ class CircularProgressbar(object):
         self.tx, self.ty = (x1-x0) / 2, (y1-y0) / 2
         self.width = width
         self.start_ang, self.full_extent = start_ang, full_extent
+        self.interval = 100
 
         self.fg = fg
         self.bg = bg
@@ -32,16 +33,19 @@ class CircularProgressbar(object):
         self.running = False
         self.clockwise = clockwise    # 0: counterclockwise, 1: clockwise
         self.total_time = total_time
+        self.remain_time = total_time
 
         self.next_bar = next_bar
+        self.arc_id = None
+        self.label_id = None
 
-    '''
+        '''
         total_time = N (default 15s)
         circle bar total arc = full_extent = 360
         1 sec as interval = 1000 ms
         every second increment = (total arc)/(total time)
         a step is 1000/internal second
-    '''
+        '''
 
     def start(self, interval=100):
         self.interval = interval  # Msec delay between updates.
@@ -77,7 +81,7 @@ class CircularProgressbar(object):
                 self.extent = 360
                 self.running = not self.running
                 if self.next_bar is not None:
-                    self.next_bar.running = not self.next_bar.running
+                    self.next_bar.toggle_pause()
 					
             if self.clockwise == 0:
                 self.canvas.itemconfigure(self.arc_id, extent=self.extent)
@@ -88,8 +92,8 @@ class CircularProgressbar(object):
             # Update percentage value displayed.
             percent = '{:.0f}%'.format(round(float(self.extent) / self.full_extent * 100))
             remain_percent = 1 - float(self.extent) / self.full_extent
-            remain_time = math.ceil(remain_percent * self.total_time)
-            remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
+            self.remain_time = math.ceil(remain_percent * self.total_time)
+            remain_time_str = time.strftime("%M:%S", time.gmtime(self.remain_time))
 
             #self.canvas.itemconfigure(self.label_id, text=percent)
             self.canvas.itemconfigure(self.label_id, text=remain_time_str)
@@ -103,6 +107,28 @@ class CircularProgressbar(object):
 
     def add_next_bar(self, next_bar):
         self.next_bar = next_bar
+
+    def reset(self, total_time):
+        self.running = False
+        self.total_time = total_time
+        self.increment = self.full_extent * self.interval / self.total_time / 1000.0
+        self.extent = 0
+
+        if self.arc_id is not None:
+            if self.clockwise == 0:
+                self.canvas.itemconfigure(self.arc_id, extent=self.extent)
+            elif self.clockwise == 1:
+                self.canvas.itemconfigure(self.arc_id, extent=360.0-self.extent)
+
+        # Update percentage value displayed.
+        self.remain_time = self.total_time
+        remain_time_str = time.strftime("%M:%S", time.gmtime(self.remain_time))
+
+        #self.canvas.itemconfigure(self.label_id, text=percent)
+        if self.label_id is not None:
+            self.canvas.itemconfigure(self.label_id, text=remain_time_str)
+
+
 
 class Application(tk.Frame):
     def __init__(self, master=None):

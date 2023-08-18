@@ -367,7 +367,12 @@ class PageProcessInit(Frame):
         temp_string = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(10)) + " Test"
         self.str_testname.set(temp_string)
 
-        self.var_processtime = random.randrange(10,3599)
+
+        self.var_preextracttime = random.randrange(10,180)
+        self.var_extracttime = random.randrange(10,240)
+        self.var_qpcrtime = random.randrange(10,180)
+
+        self.var_processtime = self.var_preextracttime+ self.var_extracttime + self.var_qpcrtime
         self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
 
         self.process_setting['preextract'] = random.randrange(0,2)
@@ -379,6 +384,12 @@ class PageProcessInit(Frame):
 
         self.process_status = 2
         self.update_status()
+
+        # set the time for play page
+        self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.reset(self.var_preextracttime)
+        self.controller.frames[page_process_play.PageProcessPlay].extract_bar.reset(self.var_extracttime)
+        self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.reset(self.var_qpcrtime)
+
         return
     # btn eject cartridge
     def Cmd_btn_eject(self):
@@ -408,6 +419,12 @@ class PageProcessInit(Frame):
         if self.process_status == 2:
             #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
             #self.controller.frames[page_process_play.PageProcessPlay].update_status()
+            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.start()
+            self.controller.frames[page_process_play.PageProcessPlay].extract_bar.start()
+            self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.start()
+
+            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
+
             self.controller.show_frame(page_process_play.PageProcessPlay)
 
 

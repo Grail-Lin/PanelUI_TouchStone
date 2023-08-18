@@ -321,7 +321,7 @@ class PageProcessPlay(Frame):
         fill="#FFFFFF",
         outline="black")
 
-        self.canvas.create_text(
+        self.remain_time_id = self.canvas.create_text(
             732.0,
             43.0,
             anchor="center",
@@ -330,10 +330,20 @@ class PageProcessPlay(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
+        self.canvas.after(100, self.step)
+
+
     def Cmd_btn_stop(self):
         # hold the process for hardware
         self.controller.show_frame(page_check.PageCheck)
 
+    def step(self):
+        """Increment extent and update arc and label displaying how much completed."""
+        remain_time = self.preextract_bar.remain_time + self.extract_bar.remain_time + self.qpcr_bar.remain_time
+        remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
+
+        self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
+        self.canvas.after(100, self.step)
 
 
 if __name__ == "__main__":
