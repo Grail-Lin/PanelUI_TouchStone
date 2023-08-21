@@ -77,6 +77,7 @@ class QRCodeReader:
         self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
 
         self.ser.write(self.init_package)
+        time.sleep(1)
         while self.ser.in_waiting:
             data = self.ser.readline()
             if (data == self.init_OK_package):
@@ -92,16 +93,41 @@ class QRCodeReader:
             return "ERROR: UNINITIALIZED"
         
         # send start cmd
-        self.ser.write(self.scan_package):
+        self.ser.write(self.scan_package)
+        time.sleep(0.1)
+        nowtime = time.time()
+
+        while self.ser.in_waiting < 20:
+            time.sleep(0.1)
+            difftime = time.time() - nowtime
+            if difftime >= timeout:
+                ret_string = "ERROR: TIMEOUT"
+                self.ser.write(self.stop_package)
+                return ret_string
+
+
+        if self.ser.in_waiting > 19:
+            data = self.ser.readline()
+            print(data)
+            if (data[0:15] == self.scan_OK_package):
+                ret_string = data[-16:].decode("utf-8")
+            else:
+                ret_string = "ERROR: SCAN_FAIL"
+
+        else:
+            ret_string = "ERROR: TOO SHORT"
+
+        '''
         while self.ser.in_waiting:
             data = self.ser.readline()
-                if (data == self.scan_OK_package):
-                    while self.ser.in_waiting:
-                        ret_string = self.ser.readline().decode("utf-8")
-                else:
-                    ret_string = "ERROR: SCAN_FAIL"
+            if (data == self.scan_OK_package):
+                while self.ser.in_waiting:
+                    ret_string = self.ser.readline().decode("utf-8")
+            else:
+                ret_string = "ERROR: SCAN_FAIL"
         return ret_string
-
+        '''
+        return ret_string
 
 '''
 while 1:
