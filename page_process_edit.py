@@ -644,9 +644,14 @@ class PageProcessEdit(Frame):
 
     def Cmd_btn_play(self):
         # pass the value of process setting
-        #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
-        #self.controller.frames[page_process_play.PageProcessPlay].update_status()
-        self.controller.show_frame(page_process_play.PageProcessPlay)
+        if 1:
+            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.start()
+            self.controller.frames[page_process_play.PageProcessPlay].extract_bar.start()
+            self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.start()
+
+            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
+
+            self.controller.show_frame(page_process_play.PageProcessPlay)
 
 
 if __name__ == "__main__":
