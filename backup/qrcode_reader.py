@@ -92,6 +92,10 @@ class QRCodeReader:
         if self.state == 0:
             return "ERROR: UNINITIALIZED"
         
+        # flush the reading data
+        if self.ser.in_waiting > 0:
+            data = self.ser.readline()
+
         # send start cmd
         self.ser.write(self.scan_package)
         time.sleep(0.1)
@@ -110,12 +114,16 @@ class QRCodeReader:
             data = self.ser.readline()
             print(data)
             if (data[0:15] == self.scan_OK_package):
-                ret_string = data[-16:].decode("utf-8")
+
+                try:
+                    ret_string = data[15:].decode("utf-8")
+                except:
+                    ret_string = "ERROR: DECODED_FAIL"
             else:
                 ret_string = "ERROR: SCAN_FAIL"
 
         else:
-            ret_string = "ERROR: TOO SHORT"
+            ret_string = "ERROR: TOO_SHORT"
 
         '''
         while self.ser.in_waiting:
