@@ -7,257 +7,220 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"D:\CO_BT\20230718_UI\TDVersion\build\assets\frame13")
+class PageResultLog(Frame):
+
+    # user data
+    OUTPUT_PATH = Path(__file__).parent
+    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_log")
 
 
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
+    def relative_to_assets(self, path: str) -> Path:
+        return self.ASSETS_PATH / Path(path)
 
 
-window = Tk()
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
 
-window.geometry("1024x600")
-window.configure(bg = "#FFFFFF")
+        # set user data
+
+        # set window size
+        width = 1024
+        height = 600
+
+        screenwidth = controller.winfo_screenwidth()
+        screenheight = controller.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        controller.geometry(alignstr)
+        controller.resizable(width=False, height=False)
+
+        # flat background
+
+        self.canvas = Canvas(
+            self,
+            bg = "#FFFFFF",
+            height = 600,
+            width = 1024,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
+
+        self.canvas.grid(row = 0, column = 0, sticky = "nsew")
+
+        # add elements here
+
+        self.canvas.create_rectangle(
+            120.0,
+            0.0,
+            904.0,
+            600.0,
+            fill="#F9F9F9",
+            outline="")
+
+        self.image_process_off = PhotoImage(
+            file=self.relative_to_assets("image_process_off.png"))
+        self.button_process = Button(self,
+            image=self.image_process_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_1 clicked"),
+            relief="flat"
+        )
+
+        self.button_process.place(
+            x=0.0,
+            y=103.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.image_home_off = PhotoImage(
+            file=self.relative_to_assets("image_home_off.png"))
+        self.button_home = Button(self,
+            image=self.image_home_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_2 clicked"),
+            relief="flat"
+        )
+        self.button_home.place(
+            x=0.0,
+            y=0.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.image_setting_off = PhotoImage(
+            file=self.relative_to_assets("image_setting_off.png"))
+        self.button_setting = Button(self,
+            image=self.image_setting_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_3 clicked"),
+            relief="flat"
+        )
+        self.button_setting.place(
+            x=0.0,
+            y=497.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.canvas.create_text(
+            148.0,
+            24.0,
+            anchor="nw",
+            text="RESULTS LOG",
+            fill="#569FCB",
+            font=("Noto Sans", 32 * -1, "bold")
+        )
+
+        self.canvas.create_rectangle(
+            904.0, 0.0, 1024.0, 600.0, fill="#E6EFF4", outline="")
+
+        self.canvas.create_text(578.0, 98.0, anchor="nw",
+            text="1299-3377-2311", fill="#17171B", font=("Noto Sans", 24 * -1))
+
+        self.canvas.create_text(426.0, 98.0, anchor="nw",
+            text="TEST ID", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
+
+        self.canvas.create_text(578.0, 148.0, anchor="nw",
+            text="2023-08-23 13:00:33", fill="#17171B", font=("Noto Sans", 24 * -1))
+
+        self.canvas.create_text(426.0, 148.0, anchor="nw",
+            text="RUN TIME", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
 
-canvas = Canvas(
-    window,
-    bg = "#FFFFFF",
-    height = 600,
-    width = 1024,
-    bd = 0,
-    highlightthickness = 0,
-    relief = "ridge"
-)
+        self.image_result_on = PhotoImage(
+            file=self.relative_to_assets("image_result_on.png"))
+        self.button_result = Button(
+            image=self.image_result_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_4 clicked"),
+            relief="flat"
+        )
+        self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
 
-canvas.place(x = 0, y = 0)
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#FFFFFF",
-    outline="")
+        self.image_log_on = PhotoImage(
+            file=self.relative_to_assets("image_log_on.png"))
 
-canvas.create_rectangle(
-    120.0,
-    0.0,
-    904.0,
-    600.0,
-    fill="#F9F9F9",
-    outline="")
+        self.button_log = Button(
+            image=self.image_log_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_5 clicked"),
+            relief="flat"
+        )
 
-button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
-button_1 = Button(
-    image=button_image_1,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
-    relief="flat"
-)
-button_1.place(
-    x=0.0,
-    y=103.0,
-    width=120.0,
-    height=103.0
-)
+        self.button_log.place(x=903.0, y=496.0, width=121.0, height=103.0)
 
-button_image_2 = PhotoImage(
-    file=relative_to_assets("button_2.png"))
-button_2 = Button(
-    image=button_image_2,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
-    relief="flat"
-)
-button_2.place(
-    x=0.0,
-    y=0.0,
-    width=120.0,
-    height=103.0
-)
+        self.image_return_off = PhotoImage(
+            file=self.relative_to_assets("image_return_off.png"))
+        
+        self.button_return = Button(
+            image=self.image_return_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_6 clicked"),
+            relief="flat"
+        )
+        self.button_return.place(
+            x=904.0,
+            y=393.0,
+            width=120.0,
+            height=103.0
+        )
 
-button_image_3 = PhotoImage(
-    file=relative_to_assets("button_3.png"))
-button_3 = Button(
-    image=button_image_3,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_3 clicked"),
-    relief="flat"
-)
-button_3.place(
-    x=0.0,
-    y=497.0,
-    width=120.0,
-    height=103.0
-)
+        # log of results
+        self.canvas.create_text(300.0, 98.0, anchor="nw",
+            text="40", fill="#17171B", font=("Noto Sans", 24 * -1))
 
-canvas.create_text(
-    148.0,
-    24.0,
-    anchor="nw",
-    text="RESULTS LOG",
-    fill="#569FCB",
-    font=("Noto Sans", 32 * -1)
-)
+        self.canvas.create_text(148.0, 98.0, anchor="nw",
+            text="CYCLES", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
-canvas.create_rectangle(
-    904.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#E6EFF4",
-    outline="")
+        self.canvas.create_text(300.0, 148.0, anchor="nw",
+            text="32", fill="#17171B", font=("Noto Sans", 24 * -1))
 
-canvas.create_text(
-    578.0,
-    98.0,
-    anchor="nw",
-    text="1299-3377-2311",
-    fill="#17171B",
-    font=("Noto Sans", 24 * -1)
-)
+        self.canvas.create_text(148.0, 148.0, anchor="nw",
+            text="CT-VALUE", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
-canvas.create_text(
-    426.0,
-    98.0,
-    anchor="nw",
-    text="TEST ID",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
+        self.image_image_1 = PhotoImage(
+            file=self.relative_to_assets("image_1.png"))
+        self.image_1 = self.canvas.create_image(512.0, 392.0,
+            image=self.image_image_1)
 
-canvas.create_text(
-    578.0,
-    148.0,
-    anchor="nw",
-    text="2023-08-23 13:00:33",
-    fill="#17171B",
-    font=("Noto Sans", 24 * -1)
-)
+        self.image_image_2 = PhotoImage(
+            file=self.relative_to_assets("image_2.png"))
+        self.image_2 = self.canvas.create_image(863.0, 392.0,
+            image=self.image_image_2)
 
-canvas.create_text(
-    426.0,
-    148.0,
-    anchor="nw",
-    text="RUN TIME",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
+        self.image_image_3 = PhotoImage(
+            file=self.relative_to_assets("image_3.png"))
+        self.image_3 = self.canvas.create_image(494.0, 389.0,
+            image=self.image_image_3)
 
-button_image_4 = PhotoImage(
-    file=relative_to_assets("button_4.png"))
-button_4 = Button(
-    image=button_image_4,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_4 clicked"),
-    relief="flat"
-)
-button_4.place(
-    x=0.0,
-    y=206.0,
-    width=120.0,
-    height=103.0
-)
 
-button_image_5 = PhotoImage(
-    file=relative_to_assets("button_5.png"))
-button_5 = Button(
-    image=button_image_5,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_5 clicked"),
-    relief="flat"
-)
-button_5.place(
-    x=903.0,
-    y=496.0,
-    width=121.0,
-    height=103.0
-)
+if __name__ == "__main__":
+    window = Tk()
+    window.geometry("1024x600")
+    window.configure(bg = "#FFFFFF")
 
-button_image_6 = PhotoImage(
-    file=relative_to_assets("button_6.png"))
-button_6 = Button(
-    image=button_image_6,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_6 clicked"),
-    relief="flat"
-)
-button_6.place(
-    x=904.0,
-    y=393.0,
-    width=121.0,
-    height=103.0
-)
+    container = Frame(window, bg="#FFFFFF")
+    container.pack(side = "top", fill = "both", expand = True)
+    container.grid_rowconfigure(0, weight = 1)
+    container.grid_columnconfigure(0, weight = 1)
 
-canvas.create_text(
-    300.0,
-    98.0,
-    anchor="nw",
-    text="40",
-    fill="#17171B",
-    font=("Noto Sans", 24 * -1)
-)
+    window.frames = {}
+    frame = PageResultLog(container, window)
 
-canvas.create_text(
-    148.0,
-    98.0,
-    anchor="nw",
-    text="CYCLES",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
+    window.frames[PageResultLog] = frame
+    frame.grid(row = 0, column = 0, sticky ="nsew")
 
-canvas.create_text(
-    300.0,
-    148.0,
-    anchor="nw",
-    text="32",
-    fill="#17171B",
-    font=("Noto Sans", 24 * -1)
-)
-
-canvas.create_text(
-    148.0,
-    148.0,
-    anchor="nw",
-    text="CT-VALUE",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
-
-image_image_1 = PhotoImage(
-    file=relative_to_assets("image_1.png"))
-image_1 = canvas.create_image(
-    512.0,
-    392.0,
-    image=image_image_1
-)
-
-image_image_2 = PhotoImage(
-    file=relative_to_assets("image_2.png"))
-image_2 = canvas.create_image(
-    863.0,
-    392.0,
-    image=image_image_2
-)
-
-image_image_3 = PhotoImage(
-    file=relative_to_assets("image_3.png"))
-image_3 = canvas.create_image(
-    494.0,
-    389.0,
-    image=image_image_3
-)
-window.resizable(False, False)
-window.mainloop()
+    frame.tkraise()
+    window.mainloop()
+    

@@ -10,11 +10,11 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 
 
-class PageResultList(Frame):
+class PageResultChart(Frame):
 
     # user data
     OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_list")
+    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_chart")
 
 
     def relative_to_assets(self, path: str) -> Path:
@@ -52,16 +52,6 @@ class PageResultList(Frame):
         self.canvas.grid(row = 0, column = 0, sticky = "nsew")
 
         # add elements here
-        '''
-        self.canvas.create_rectangle(
-            0.0,
-            0.0,
-            1024.0,
-            600.0,
-            fill="#FFFFFF",
-            outline="")
-        '''
-
         self.canvas.create_rectangle(
             120.0,
             0.0,
@@ -123,7 +113,7 @@ class PageResultList(Frame):
             148.0,
             24.0,
             anchor="nw",
-            text="RESULTS LIST",
+            text="RESULTS",
             fill="#569FCB",
             font=("Noto Sans", 32 * -1, "bold")
         )
@@ -131,21 +121,63 @@ class PageResultList(Frame):
         self.canvas.create_rectangle(
             904.0, 0.0, 1024.0, 600.0, fill="#E6EFF4", outline="")
 
-        self.canvas.create_text(394.0, 89.0, anchor="nw",
-            text="TEST ID", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
+        self.canvas.create_text(276.0, 94.0, anchor="nw",
+            text="1299-3377-2311", fill="#17171B", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_text(678.0, 94.0, anchor="nw",
+            text="22", fill="#17171B", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_text(148.0, 94.0, anchor="nw",
+            text="TEST ID", fill="#7D8CA7", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_text(276.0, 133.0, anchor="nw",
+            text="2023-08-23 13:00:33", fill="#17171B", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_text(148.0, 133.0, anchor="nw",
+            text="RUN TIME", fill="#7D8CA7", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_text(519.0, 94.0, anchor="nw",
+            text="WELL 1 CT", fill="#7D8CA7", font=("Noto Sans", 20 * -1))
+
+
+        self.image_log_off = PhotoImage(
+            file=self.relative_to_assets("image_log_off.png"))
+
+        self.button_log = Button(
+            image=self.image_log_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_4 clicked"),
+            relief="flat"
         )
 
-        self.canvas.create_text(595.0, 89.0, anchor="nw",
-            text="TEST NAME", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
+        self.button_log.place(x=903.0, y=496.0, width=121.0, height=103.0)
+
+        self.image_leave_off = PhotoImage(
+            file=self.relative_to_assets("image_leave_off.png"))
+
+        self.button_leave = Button(
+            image=self.image_leave_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_5 clicked"),
+            relief="flat"
         )
 
-        self.canvas.create_text(168.0, 522.0, anchor="nw",
-            text="Page 1/3", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
+        self.button_leave.place(x=903.0, y=395.0, width=121.0, height=103.0)
+
+        self.image_folder_off = PhotoImage(
+            file=self.relative_to_assets("image_folder_off.png"))
+
+        self.button_folder = Button(
+            image=self.image_folder_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_6 clicked"),
+            relief="flat"
         )
 
-        self.canvas.create_text(158.0, 89.0, anchor="nw",
-            text="RUN TIME", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
-        )
+        self.button_folder.place(x=903.0, y=0.0, width=121.0, height=103.0)
 
         self.image_result_on = PhotoImage(
             file=self.relative_to_assets("image_result_on.png"))
@@ -158,80 +190,25 @@ class PageResultList(Frame):
         )
         self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
 
-        self.image_folder_on = PhotoImage(
-            file=self.relative_to_assets("image_folder_on.png"))
 
-        self.button_folder = Button(
-            image=self.image_folder_on,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_5 clicked"),
-            relief="flat"
-        )
-
-        self.button_folder.place(x=903.0, y=0.0, width=121.0, height=103.0)
-
-        self.image_return_off = PhotoImage(
-            file=self.relative_to_assets("image_return_off.png"))
-        
-        self.button_return = Button(
-            image=self.image_return_off,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_6 clicked"),
-            relief="flat"
-        )
-        self.button_return.place(
-            x=904.0,
-            y=105.0,
-            width=120.0,
-            height=103.0
-        )
 
         # list of results
+        self.canvas.create_rectangle(647.0, 98.0, 667.0, 118.0,
+            fill="#F466B3", outline="")
+
+        self.canvas.create_text(678.0, 137.0, anchor="nw",
+            text="32", fill="#17171B", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_text(519.0, 137.0, anchor="nw",
+            text="WELL 2 CT", fill="#7D8CA7", font=("Noto Sans", 20 * -1))
+
+        self.canvas.create_rectangle(647.0, 141.0, 667.0, 161.0,
+            fill="#3DAAEB", outline="")
 
         self.image_image_1 = PhotoImage(
             file=self.relative_to_assets("image_1.png"))
-        self.image_1 = self.canvas.create_image(512.0, 153.0,
+        self.image_1 = self.canvas.create_image(512.0, 391.0,
             image=self.image_image_1)
-
-        self.image_image_2 = PhotoImage(
-            file=self.relative_to_assets("image_2.png"))
-        self.image_2 = self.canvas.create_image(512.0, 213.0,
-            image=self.image_image_2)
-
-        self.image_image_3 = PhotoImage(
-            file=self.relative_to_assets("image_3.png"))
-        self.image_3 = self.canvas.create_image(512.0, 273.0,
-            image=self.image_image_3)
-
-        self.image_image_4 = PhotoImage(
-            file=self.relative_to_assets("image_4.png"))
-        self.image_4 = self.canvas.create_image(512.0, 333.0,
-            image=self.image_image_4)
-
-        self.image_image_5 = PhotoImage(
-            file=self.relative_to_assets("image_5.png"))
-        self.image_5 = self.canvas.create_image(512.0, 393.0,
-            image=self.image_image_5)
-
-        self.image_image_6 = PhotoImage(
-            file=self.relative_to_assets("image_6.png"))
-        self.image_6 = self.canvas.create_image(512.0, 453.0,
-            image=self.image_image_6)
-
-
-        self.image_next_on = PhotoImage(
-            file=self.relative_to_assets("image_next_on.png"))
-
-        self.button_next = Button(self,
-            image=self.image_next_on,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_7 clicked"),
-            relief="flat"
-        )
-        self.button_next.place(x=713.0, y=519.0, width=163.0, height=42.0)
 
 if __name__ == "__main__":
     window = Tk()
@@ -244,9 +221,9 @@ if __name__ == "__main__":
     container.grid_columnconfigure(0, weight = 1)
 
     window.frames = {}
-    frame = PageResultList(container, window)
+    frame = PageResultChart(container, window)
 
-    window.frames[PageResultList] = frame
+    window.frames[PageResultChart] = frame
     frame.grid(row = 0, column = 0, sticky ="nsew")
 
     frame.tkraise()

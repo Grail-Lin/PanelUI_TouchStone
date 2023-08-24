@@ -7,145 +7,185 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+import page_process_init
+
+class PageSetting(Frame):
+
+    # user data
+
+    OUTPUT_PATH = Path(__file__).parent
+    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_setting")
+
+    def relative_to_assets(self, path: str) -> Path:
+        return self.ASSETS_PATH / Path(path)
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+
+        # set user data
+
+        # set window size
+        width = 1024
+        height = 600
+
+        screenwidth = controller.winfo_screenwidth()
+        screenheight = controller.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        controller.geometry(alignstr)
+        controller.resizable(width=False, height=False)
+
+        # add elements here
+        self.canvas = Canvas(
+            self,
+            bg = "#FFFFFF",
+            height = 600,
+            width = 1024,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
+        
+        self.canvas.place(x = 0, y = 0)
+
+        self.button_image_1 = PhotoImage(
+            file=self.relative_to_assets("image_home_off.png"))
+        self.button_1 = Button(self,
+            image=self.button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_1 clicked"),
+            bg="#F9F9F9",
+            relief="flat"
+        )
+        self.button_1.place(
+            x=0.0,
+            y=0.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.button_image_2 = PhotoImage(
+            file=self.relative_to_assets("image_process_off.png"))
+        self.button_2 = Button(self,
+            image=self.button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_process,  #lambda: print("button_2 clicked"),
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_2.place(
+            x=0.0,
+            y=103.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.button_image_3 = PhotoImage(
+            file=self.relative_to_assets("image_setting_on.png"))
+        self.button_3 = Button(self,
+            image=self.button_image_3,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_3 clicked"),
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_3.place(
+            x=0.0,
+            y=497.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.button_image_4 = PhotoImage(
+            file=self.relative_to_assets("image_result_off.png"))
+        self.button_4 = Button(self,
+            image=self.button_image_4,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_4 clicked"),
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_4.place(
+            x=0.0,
+            y=206.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.button_image_5 = PhotoImage(
+            file=self.relative_to_assets("image_logout.png"))
+        self.button_5 = Button(self,
+            image=self.button_image_5,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("logout clicked"),
+            relief="flat"
+        )
+        self.button_5.place(
+            x=904.0,
+            y=497.0,
+            width=120.0,
+            height=103.0
+        )
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"D:\CO_BT\20230718_UI\TDVersion\build\assets\frame_setting")
+        self.canvas.create_rectangle(
+            120.0,
+            0.0,
+            904.0,
+            600.0,
+            fill="#F9F9F9",
+            outline="")
+
+        self.canvas.create_text(
+            148.0,
+            16.0,
+            anchor="nw",
+            text="SETTINGS",
+            fill="#569FCB",
+            font=("Noto Sans", 32 * -1, "bold")
+        )
+
+        self.canvas.create_rectangle(
+            904.0,
+            0.0,
+            1024.0,
+            600.0,
+            fill="#E6EFF4",
+            outline="")
 
 
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
+    def Cmd_btn_process(self):
+        # need to check if there is cartridge inside
+        self.controller.frames[page_process_init.PageProcessInit].status = 0
+        self.controller.frames[page_process_init.PageProcessInit].update_status()
+        self.controller.show_frame(page_process_init.PageProcessInit)
 
 
-window = Tk()
+if __name__ == "__main__":
+    window = Tk()
+    window.geometry("1024x600")
+    window.configure(bg = "#FFFFFF")
 
-window.geometry("1024x600")
-window.configure(bg = "#FFFFFF")
+    container = Frame(window, bg="#FFFFFF")
+    container.pack(side = "top", fill = "both", expand = True)
+    container.grid_rowconfigure(0, weight = 1)
+    container.grid_columnconfigure(0, weight = 1)
+
+    window.frames = {}
+    frame = PageSetting(container, window)
+
+    window.frames[PageSetting] = frame
+    frame.grid(row = 0, column = 0, sticky ="nsew")
+
+    frame.tkraise()
+    window.mainloop()
+    
 
 
-canvas = Canvas(
-    window,
-    bg = "#FFFFFF",
-    height = 600,
-    width = 1024,
-    bd = 0,
-    highlightthickness = 0,
-    relief = "ridge"
-)
 
-canvas.place(x = 0, y = 0)
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#FFFFFF",
-    outline="")
-
-canvas.create_rectangle(
-    120.0,
-    0.0,
-    904.0,
-    600.0,
-    fill="#F9F9F9",
-    outline="")
-
-button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
-button_1 = Button(
-    image=button_image_1,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
-    relief="flat"
-)
-button_1.place(
-    x=0.0,
-    y=497.0,
-    width=120.0,
-    height=103.0
-)
-
-button_image_2 = PhotoImage(
-    file=relative_to_assets("button_2.png"))
-button_2 = Button(
-    image=button_image_2,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
-    relief="flat"
-)
-button_2.place(
-    x=0.0,
-    y=0.0,
-    width=120.0,
-    height=103.0
-)
-
-button_image_3 = PhotoImage(
-    file=relative_to_assets("button_3.png"))
-button_3 = Button(
-    image=button_image_3,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_3 clicked"),
-    relief="flat"
-)
-button_3.place(
-    x=0.0,
-    y=103.0,
-    width=120.0,
-    height=103.0
-)
-
-canvas.create_text(
-    148.0,
-    24.0,
-    anchor="nw",
-    text="SETTINGS",
-    fill="#569FCB",
-    font=("Noto Sans", 32 * -1)
-)
-
-canvas.create_rectangle(
-    904.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#E6EFF4",
-    outline="")
-
-button_image_4 = PhotoImage(
-    file=relative_to_assets("button_4.png"))
-button_4 = Button(
-    image=button_image_4,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_4 clicked"),
-    relief="flat"
-)
-button_4.place(
-    x=904.0,
-    y=497.0,
-    width=120.0,
-    height=103.0
-)
-
-button_image_5 = PhotoImage(
-    file=relative_to_assets("button_5.png"))
-button_5 = Button(
-    image=button_image_5,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_5 clicked"),
-    relief="flat"
-)
-button_5.place(
-    x=0.0,
-    y=206.0,
-    width=120.0,
-    height=103.0
-)
-window.resizable(False, False)
-window.mainloop()

@@ -134,16 +134,6 @@ class PageHome(Frame):
             font=("Noto Sans", 32 * -1, "bold")
         )
 
-        '''
-        self.image_image_2 = PhotoImage(
-            file=self.relative_to_assets("image_2.png"))
-        self.image_2 = self.canvas.create_image(
-            210.0,
-            42.0,
-            image=self.image_image_2
-        )
-        '''
-
         self.canvas.create_rectangle(
             904.0,
             0.0,
