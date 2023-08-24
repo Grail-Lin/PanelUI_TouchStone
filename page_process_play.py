@@ -186,6 +186,7 @@ class PageProcessPlay(Frame):
         self.preextract_bar.add_next_bar(self.extract_bar)
         self.extract_bar.add_next_bar(self.qpcr_bar)
 
+        self.current_bar = self.preextract_bar
 
         '''
         self.image_state_full = PhotoImage(
@@ -335,6 +336,20 @@ class PageProcessPlay(Frame):
 
     def Cmd_btn_stop(self):
         # hold the process for hardware
+        self.preextract_bar.running = False
+        self.extract_bar.running = False
+        self.qpcr_bar.running = False
+
+        if self.preextract_bar.running == True:
+            self.preextract_bar.toggle_pause()
+            self.current_bar = self.preextract_bar
+        elif self.extract_bar.running == True:
+            self.extract_bar.toggle_pause()
+            self.current_bar = self.extract_bar
+        elif self.qpcr_bar.running == True:
+            self.qpcr_bar.toggle_pause()
+            self.current_bar = self.qpcr_bar
+
         self.controller.show_frame(page_check.PageCheck)
 
     def step(self):

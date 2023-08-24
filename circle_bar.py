@@ -37,7 +37,10 @@ class CircularProgressbar(object):
 
         self.next_bar = next_bar
         self.arc_id = None
-        self.label_id = None
+        self.solve = None
+
+        self.label_id = self.canvas.create_text((self.x0 + self.x1)/2.0, (self.y0 + self.y1)/2 - 5, text="00:00",
+                                                font=self.custom_font, fill='#7D8CA7', anchor="center")
 
         '''
         total_time = N (default 15s)
@@ -66,8 +69,7 @@ class CircularProgressbar(object):
         remain_time_str = time.strftime("%M:%S", time.gmtime(self.total_time))
         #self.label_id = self.canvas.create_text(self.tx, self.ty, text=percent,
         #                                        font=self.custom_font, fill='#7D8CA7')
-        self.label_id = self.canvas.create_text((self.x0 + self.x1)/2.0, (self.y0 + self.y1)/2 - 5, text=remain_time_str,
-                                                font=self.custom_font, fill='#7D8CA7', anchor="center")
+        self.canvas.itemconfigure(self.label_id, text=remain_time_str)
         self.running = False
         self.canvas.after(interval, self.step, self.increment)
 
@@ -97,9 +99,7 @@ class CircularProgressbar(object):
 
             #self.canvas.itemconfigure(self.label_id, text=percent)
             self.canvas.itemconfigure(self.label_id, text=remain_time_str)
-
-
-        self.canvas.after(self.interval, self.step, delta)
+        self.solve = self.canvas.after(self.interval, self.step, delta)
 
 
     def toggle_pause(self):
@@ -109,6 +109,8 @@ class CircularProgressbar(object):
         self.next_bar = next_bar
 
     def reset(self, total_time):
+        if self.solve is not None:
+            self.canvas.after_cancel(self.solve)
         self.running = False
         self.total_time = total_time
         self.increment = self.full_extent * self.interval / self.total_time / 1000.0

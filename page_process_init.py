@@ -419,6 +419,7 @@ class PageProcessInit(Frame):
         if self.process_status == 2:
             #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
             #self.controller.frames[page_process_play.PageProcessPlay].update_status()
+            
             self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.start()
             self.controller.frames[page_process_play.PageProcessPlay].extract_bar.start()
             self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.start()
