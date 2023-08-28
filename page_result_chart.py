@@ -8,6 +8,23 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+import numpy as np
+import time
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from scipy.interpolate import make_interp_spline, BSpline
+
+
+
+
+class PCRResults:
+    def __init__(self, test_id, timestamp, ct1, ct2, well1_array, well2_array):
+        self.test_id = test_id
+        self.timestamp = timestamp
+        self.ct1 = ct1
+        self.ct2 = ct2
+        self.well1_array = well1_array
+        self.well2_array = well2_array
 
 
 class PageResultChart(Frame):
@@ -26,6 +43,20 @@ class PageResultChart(Frame):
         self.controller = controller
 
         # set user data
+        # set result data
+        test_id = "1299-3377-2310"
+        timestamp = time.time()
+        ct1 = 21
+        ct2 = 33
+        well1_array = np.array([  0,  0,  0,  0,  0,  0,   0,   0,  0,   0,
+                                  0,  0,  0,  0,  0,  0,   0,   0,  0,   0,
+                                  0,0.2,0.3,0.4,0.5,0.7,0.75,0.82,0.9,0.93,
+                                  1,1.2,1.3,1.4,1.5,1.7,1.75,1.82,1.9,1.93, 2])
+        well2_array = np.array([  0,  0,  0,  0,  0,  0,   0,   0,  0,   0,
+                                  0,  0,  0,  0,  0,  0,   0,   0,  0,   0,
+                                  0,  0,  0,  0,  0,  0,   0,   0,  0,   0,
+                                  0,  0,  0,0.2,0.5,0.7,0.75,0.82,0.9,0.93, 2])
+        self.pcrresults = PCRResults(test_id, timestamp, ct1, ct2, well1_array, well2_array)
 
         # set window size
         width = 1024
@@ -193,7 +224,7 @@ class PageResultChart(Frame):
 
 
         # list of results
-        self.canvas.create_rectangle(647.0, 98.0, 667.0, 118.0,
+        self.canvas.create_rectangle(647.0, 104.0, 667.0, 124.0,
             fill="#F466B3", outline="")
 
         self.canvas.create_text(678.0, 137.0, anchor="nw",
@@ -202,13 +233,60 @@ class PageResultChart(Frame):
         self.canvas.create_text(519.0, 137.0, anchor="nw",
             text="WELL 2 CT", fill="#7D8CA7", font=("Noto Sans", 20 * -1))
 
-        self.canvas.create_rectangle(647.0, 141.0, 667.0, 161.0,
+        self.canvas.create_rectangle(647.0, 147.0, 667.0, 167.0,
             fill="#3DAAEB", outline="")
 
+
+        # curve chart
+        '''
         self.image_image_1 = PhotoImage(
             file=self.relative_to_assets("image_1.png"))
         self.image_1 = self.canvas.create_image(512.0, 391.0,
             image=self.image_image_1)
+        '''
+        data = {
+            'Python': 11.27,
+            'C': 11.16,
+            'Java': 10.46,
+            'C++': 7.5,
+            'C#': 5.26
+        }
+        languages = data.keys()
+        popularity = data.values()
+        self.figure = Figure(figsize=(6, 4), dpi=100)
+        self.figure.subplots_adjust(left=0, bottom=0, right=0.97, top=1, wspace=0, hspace=0)
+        self.figure_canvas = FigureCanvasTkAgg(self.figure, self)
+
+        self.axes = self.figure.add_subplot()
+
+        # create the curve chart
+        time_array = np.arange(0, 41)
+        
+        xnew = np.linspace(0, 41, 300)
+        spl1 = make_interp_spline(time_array, self.pcrresults.well1_array, k=3)  # type: BSpline
+        a1_smooth = spl1(xnew)
+
+        spl2 = make_interp_spline(time_array, self.pcrresults.well2_array, k=3)  # type: BSpline
+        a2_smooth = spl2(xnew)
+
+
+        self.axes.set_xlim([0,40])
+        self.axes.set_ylim([-0.2,2])
+        self.axes.set_xticks([10, 20, 30, 40])
+        self.axes.set_yticks([])
+        self.axes.plot(xnew, a1_smooth, color="#F467B3")
+        self.axes.plot(xnew, a2_smooth, color="#3EAAEC")
+        self.axes.vlines(10, 0, 2, color="#CECECE")
+        self.axes.vlines(20, 0, 2, color="#CECECE")
+        self.axes.vlines(30, 0, 2, color="#CECECE")
+        self.axes.spines['bottom'].set_position(('data', 0))
+        self.axes.spines[['right', 'top']].set_visible(False)
+        #self.axes.plot(time_array, self.pcrresults.well1_array, color="#F467B3")
+        #self.axes.plot(time_array, self.pcrresults.well2_array, color="#3EAAEC")
+
+        # place the chart
+        self.figure_canvas.get_tk_widget().place(x=148.0, y=210.0, width=728.0, height=364.0)
+
 
 if __name__ == "__main__":
     window = Tk()
