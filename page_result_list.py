@@ -8,6 +8,8 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+import time, random
+from coutil import PCRResults
 
 
 class PageResultList(Frame):
@@ -25,7 +27,15 @@ class PageResultList(Frame):
         Frame.__init__(self, parent)
         self.controller = controller
 
-        # set user data
+        # set page data
+        self.total_page = 3
+        self.current_page = 1
+        self.result_array = []
+
+        # mock result data
+        for j in range(15):
+            result = PCRResults(timestamp=time.time()-random.randrange(0,180))
+            self.result_array.append(result)
 
         # set window size
         width = 1024
@@ -189,6 +199,8 @@ class PageResultList(Frame):
         )
 
         # list of results
+        self.image_empty_button = PhotoImage(
+            file=self.relative_to_assets("image_empty_button.png"))
 
         self.image_image_1 = PhotoImage(
             file=self.relative_to_assets("image_1.png"))
@@ -215,12 +227,31 @@ class PageResultList(Frame):
         self.image_5 = self.canvas.create_image(512.0, 393.0,
             image=self.image_image_5)
 
-        self.image_image_6 = PhotoImage(
-            file=self.relative_to_assets("image_6.png"))
+
+        # result 6
+        '''
+        self.button_result6 = Button(self,
+            image=self.image_empty_button,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button result6 clicked"),
+            relief="flat"
+        )
+        self.button_result6.place(x=512.0, y=453.0, width=728.0, height=56.0, anchor="center")
+        '''
         self.image_6 = self.canvas.create_image(512.0, 453.0,
-            image=self.image_image_6)
+            image=self.image_empty_button)
 
 
+        self.id_r6_ts = self.canvas.create_text(168.0, 433.0, anchor="nw",
+            text="2023-08-23 13:00:35", fill="#17171B", font=("Noto Sans", 20 * -1))
+        self.id_r6_tid = self.canvas.create_text(394.0, 433.0, anchor="nw",
+            text="1299-3377-2310", fill="#17171B", font=("Noto Sans", 20 * -1))
+        self.id_r6_tname = self.canvas.create_text(595.0, 433.0, anchor="nw",
+            text="Res. Panel", fill="#17171B", font=("Noto Sans", 20 * -1))
+
+
+        # next btn
         self.image_next_on = PhotoImage(
             file=self.relative_to_assets("image_next_on.png"))
 
@@ -232,6 +263,28 @@ class PageResultList(Frame):
             relief="flat"
         )
         self.button_next.place(x=713.0, y=519.0, width=163.0, height=42.0)
+
+        self.image_previous_on = PhotoImage(
+            file=self.relative_to_assets("image_previous_on.png"))
+
+        self.button_previous = Button(self,
+            image=self.image_previous_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_8 clicked"),
+            relief="flat"
+        )
+        self.button_previous.place(x=522.0, y=519.0, width=163.0, height=42.0)
+
+        self.update()
+
+    def update(self):
+        # use current page and total page to modify buttons
+        return
+
+    def btn_results(self, result_data):
+        print("click the results")
+        return
 
 if __name__ == "__main__":
     window = Tk()
