@@ -28,12 +28,16 @@ class PageResultList(Frame):
         self.controller = controller
 
         # set page data
+        self.each_page_num = 6
+        self.total_result_num = 15
+        self.select_result_num = 1
+
         self.total_page = 3
-        self.current_page = 1
+        self.current_page = 0
         self.result_array = []
 
         # mock result data
-        for j in range(15):
+        for j in range(self.total_result_num):
             result = PCRResults(timestamp=time.time()-random.randrange(0,180))
             self.result_array.append(result)
 
@@ -62,16 +66,6 @@ class PageResultList(Frame):
         self.canvas.grid(row = 0, column = 0, sticky = "nsew")
 
         # add elements here
-        '''
-        self.canvas.create_rectangle(
-            0.0,
-            0.0,
-            1024.0,
-            600.0,
-            fill="#FFFFFF",
-            outline="")
-        '''
-
         self.canvas.create_rectangle(
             120.0,
             0.0,
@@ -149,7 +143,7 @@ class PageResultList(Frame):
             text="TEST NAME", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
         )
 
-        self.canvas.create_text(168.0, 522.0, anchor="nw",
+        self.page_label = self.canvas.create_text(168.0, 522.0, anchor="nw",
             text="Page 1/3", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
         )
 
@@ -202,53 +196,83 @@ class PageResultList(Frame):
         self.image_empty_button = PhotoImage(
             file=self.relative_to_assets("image_empty_button.png"))
 
-        self.image_image_1 = PhotoImage(
-            file=self.relative_to_assets("image_1.png"))
+        # result 1
         self.image_1 = self.canvas.create_image(512.0, 153.0,
-            image=self.image_image_1)
+            image=self.image_empty_button)
 
-        self.image_image_2 = PhotoImage(
-            file=self.relative_to_assets("image_2.png"))
+        self.id_r1_ts = self.canvas.create_text(168.0, 133.0, anchor="nw",
+            text="2023-08-23 13:00:31", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r1_tid = self.canvas.create_text(394.0, 133.0, anchor="nw",
+            text="1299-3377-2311", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r1_tname = self.canvas.create_text(595.0, 133.0, anchor="nw",
+            text="Res. 1 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+
+        self.canvas.tag_bind(self.image_1, '<Button-1>', self.btn_results_1, "")
+
+        # result 2
         self.image_2 = self.canvas.create_image(512.0, 213.0,
-            image=self.image_image_2)
+            image=self.image_empty_button)
 
-        self.image_image_3 = PhotoImage(
-            file=self.relative_to_assets("image_3.png"))
+        self.id_r2_ts = self.canvas.create_text(168.0, 193.0, anchor="nw",
+            text="2023-08-23 13:00:32", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r2_tid = self.canvas.create_text(394.0, 193.0, anchor="nw",
+            text="1299-3377-2312", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r2_tname = self.canvas.create_text(595.0, 193.0, anchor="nw",
+            text="Res. 2 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+
+        self.canvas.tag_bind(self.image_2, '<Button-1>', self.btn_results_2, "")
+
+        # result 3
         self.image_3 = self.canvas.create_image(512.0, 273.0,
-            image=self.image_image_3)
+            image=self.image_empty_button)
 
-        self.image_image_4 = PhotoImage(
-            file=self.relative_to_assets("image_4.png"))
+        self.id_r3_ts = self.canvas.create_text(168.0, 253.0, anchor="nw",
+            text="2023-08-23 13:00:33", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r3_tid = self.canvas.create_text(394.0, 253.0, anchor="nw",
+            text="1299-3377-2313", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r3_tname = self.canvas.create_text(595.0, 253.0, anchor="nw",
+            text="Res. 3 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+
+        self.canvas.tag_bind(self.image_3, '<Button-1>', self.btn_results_3, "")
+
+        # result 4
         self.image_4 = self.canvas.create_image(512.0, 333.0,
-            image=self.image_image_4)
+            image=self.image_empty_button)
 
-        self.image_image_5 = PhotoImage(
-            file=self.relative_to_assets("image_5.png"))
+        self.id_r4_ts = self.canvas.create_text(168.0, 313.0, anchor="nw",
+            text="2023-08-23 13:00:34", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r4_tid = self.canvas.create_text(394.0, 313.0, anchor="nw",
+            text="1299-3377-2314", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r4_tname = self.canvas.create_text(595.0, 313.0, anchor="nw",
+            text="Res. 4 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+
+        self.canvas.tag_bind(self.image_4, '<Button-1>', self.btn_results_4, "")
+
+        # result 5
         self.image_5 = self.canvas.create_image(512.0, 393.0,
-            image=self.image_image_5)
+            image=self.image_empty_button)
 
+        self.id_r5_ts = self.canvas.create_text(168.0, 373.0, anchor="nw",
+            text="2023-08-23 13:00:35", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r5_tid = self.canvas.create_text(394.0, 373.0, anchor="nw",
+            text="1299-3377-2315", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+        self.id_r5_tname = self.canvas.create_text(595.0, 373.0, anchor="nw",
+            text="Res. 5 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+
+        self.canvas.tag_bind(self.image_5, '<Button-1>', self.btn_results_5, "")
 
         # result 6
-        '''
-        self.button_result6 = Button(self,
-            image=self.image_empty_button,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button result6 clicked"),
-            relief="flat"
-        )
-        self.button_result6.place(x=512.0, y=453.0, width=728.0, height=56.0, anchor="center")
-        '''
         self.image_6 = self.canvas.create_image(512.0, 453.0,
             image=self.image_empty_button)
 
-
         self.id_r6_ts = self.canvas.create_text(168.0, 433.0, anchor="nw",
-            text="2023-08-23 13:00:35", fill="#17171B", font=("Noto Sans", 20 * -1))
+            text="2023-08-23 13:00:36", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
         self.id_r6_tid = self.canvas.create_text(394.0, 433.0, anchor="nw",
-            text="1299-3377-2310", fill="#17171B", font=("Noto Sans", 20 * -1))
+            text="1299-3377-2316", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
         self.id_r6_tname = self.canvas.create_text(595.0, 433.0, anchor="nw",
-            text="Res. Panel", fill="#17171B", font=("Noto Sans", 20 * -1))
+            text="Res. 6 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
+
+        self.canvas.tag_bind(self.image_6, '<Button-1>', self.btn_results_6, "")
 
 
         # next btn
@@ -259,7 +283,7 @@ class PageResultList(Frame):
             image=self.image_next_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_7 clicked"),
+            command=self.cmd_btn_next,
             relief="flat"
         )
         self.button_next.place(x=713.0, y=519.0, width=163.0, height=42.0)
@@ -271,19 +295,169 @@ class PageResultList(Frame):
             image=self.image_previous_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_8 clicked"),
+            command=self.cmd_btn_previous,
             relief="flat"
         )
         self.button_previous.place(x=522.0, y=519.0, width=163.0, height=42.0)
 
         self.update()
 
-    def update(self):
-        # use current page and total page to modify buttons
+    def cmd_btn_next(self):
+        self.current_page = self.current_page + 1
+        self.update()
         return
 
-    def btn_results(self, result_data):
-        print("click the results")
+    def cmd_btn_previous(self):
+        self.current_page = self.current_page - 1
+        self.update()
+        return
+
+    def hide_all(self):
+        self.canvas.itemconfigure(self.image_1, state="hidden")
+        self.canvas.itemconfigure(self.id_r1_ts, state="hidden")
+        self.canvas.itemconfigure(self.id_r1_tid, state="hidden")
+        self.canvas.itemconfigure(self.id_r1_tname, state="hidden")
+        self.canvas.itemconfigure(self.image_2, state="hidden")
+        self.canvas.itemconfigure(self.id_r2_ts, state="hidden")
+        self.canvas.itemconfigure(self.id_r2_tid, state="hidden")
+        self.canvas.itemconfigure(self.id_r2_tname, state="hidden")
+        self.canvas.itemconfigure(self.image_3, state="hidden")
+        self.canvas.itemconfigure(self.id_r3_ts, state="hidden")
+        self.canvas.itemconfigure(self.id_r3_tid, state="hidden")
+        self.canvas.itemconfigure(self.id_r3_tname, state="hidden")
+        self.canvas.itemconfigure(self.image_4, state="hidden")
+        self.canvas.itemconfigure(self.id_r4_ts, state="hidden")
+        self.canvas.itemconfigure(self.id_r4_tid, state="hidden")
+        self.canvas.itemconfigure(self.id_r4_tname, state="hidden")
+        self.canvas.itemconfigure(self.image_5, state="hidden")
+        self.canvas.itemconfigure(self.id_r5_ts, state="hidden")
+        self.canvas.itemconfigure(self.id_r5_tid, state="hidden")
+        self.canvas.itemconfigure(self.id_r5_tname, state="hidden")
+        self.canvas.itemconfigure(self.image_6, state="hidden")
+        self.canvas.itemconfigure(self.id_r6_ts, state="hidden")
+        self.canvas.itemconfigure(self.id_r6_tid, state="hidden")
+        self.canvas.itemconfigure(self.id_r6_tname, state="hidden")
+        return
+
+    def update(self):
+        # update page
+        temp_str = "Page %d/%d" % (self.current_page+1, self.total_page)
+        self.canvas.itemconfigure(self.page_label, text=temp_str)
+
+        # hide all result button
+        self.hide_all()
+		
+        # use current page and total page to modify buttons text
+        first_result_num = self.current_page * self.each_page_num
+        
+        for jj in range(self.each_page_num):
+            target_result_num = first_result_num + jj
+            if target_result_num < self.total_result_num:
+                target_result = self.result_array[target_result_num]
+                if jj == 0:
+                    self.canvas.itemconfigure(self.image_1, state="normal")
+                    self.canvas.itemconfigure(self.id_r1_ts, state="normal")
+                    self.canvas.itemconfigure(self.id_r1_tid, state="normal")
+                    self.canvas.itemconfigure(self.id_r1_tname, state="normal")
+                    timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(target_result.timestamp))
+                    self.canvas.itemconfigure(self.id_r1_ts, text=timestamp_str)
+                    self.canvas.itemconfigure(self.id_r1_tid, text=target_result.test_id)
+                    self.canvas.itemconfigure(self.id_r1_tname, text=target_result.test_name)
+                elif jj == 1:
+                    self.canvas.itemconfigure(self.image_2, state="normal")
+                    self.canvas.itemconfigure(self.id_r2_ts, state="normal")
+                    self.canvas.itemconfigure(self.id_r2_tid, state="normal")
+                    self.canvas.itemconfigure(self.id_r2_tname, state="normal")
+                    timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(target_result.timestamp))
+                    self.canvas.itemconfigure(self.id_r2_ts, text=timestamp_str)
+                    self.canvas.itemconfigure(self.id_r2_tid, text=target_result.test_id)
+                    self.canvas.itemconfigure(self.id_r2_tname, text=target_result.test_name)
+                elif jj == 2:
+                    self.canvas.itemconfigure(self.image_3, state="normal")
+                    self.canvas.itemconfigure(self.id_r3_ts, state="normal")
+                    self.canvas.itemconfigure(self.id_r3_tid, state="normal")
+                    self.canvas.itemconfigure(self.id_r3_tname, state="normal")
+                    timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(target_result.timestamp))
+                    self.canvas.itemconfigure(self.id_r3_ts, text=timestamp_str)
+                    self.canvas.itemconfigure(self.id_r3_tid, text=target_result.test_id)
+                    self.canvas.itemconfigure(self.id_r3_tname, text=target_result.test_name)
+                elif jj == 3:
+                    self.canvas.itemconfigure(self.image_4, state="normal")
+                    self.canvas.itemconfigure(self.id_r4_ts, state="normal")
+                    self.canvas.itemconfigure(self.id_r4_tid, state="normal")
+                    self.canvas.itemconfigure(self.id_r4_tname, state="normal")
+                    timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(target_result.timestamp))
+                    self.canvas.itemconfigure(self.id_r4_ts, text=timestamp_str)
+                    self.canvas.itemconfigure(self.id_r4_tid, text=target_result.test_id)
+                    self.canvas.itemconfigure(self.id_r4_tname, text=target_result.test_name)
+                elif jj == 4:
+                    self.canvas.itemconfigure(self.image_5, state="normal")
+                    self.canvas.itemconfigure(self.id_r5_ts, state="normal")
+                    self.canvas.itemconfigure(self.id_r5_tid, state="normal")
+                    self.canvas.itemconfigure(self.id_r5_tname, state="normal")
+                    timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(target_result.timestamp))
+                    self.canvas.itemconfigure(self.id_r5_ts, text=timestamp_str)
+                    self.canvas.itemconfigure(self.id_r5_tid, text=target_result.test_id)
+                    self.canvas.itemconfigure(self.id_r5_tname, text=target_result.test_name)
+                elif jj == 5:
+                    self.canvas.itemconfigure(self.image_6, state="normal")
+                    self.canvas.itemconfigure(self.id_r6_ts, state="normal")
+                    self.canvas.itemconfigure(self.id_r6_tid, state="normal")
+                    self.canvas.itemconfigure(self.id_r6_tname, state="normal")
+                    timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(target_result.timestamp))
+                    self.canvas.itemconfigure(self.id_r6_ts, text=timestamp_str)
+                    self.canvas.itemconfigure(self.id_r6_tid, text=target_result.test_id)
+                    self.canvas.itemconfigure(self.id_r6_tname, text=target_result.test_name)
+
+        # if there is more page, let next btn on
+        self.button_next['state']="normal"
+        if self.current_page == (self.total_page - 1):
+            self.button_next['state']="disabled"
+        # if there is not the first page, let the previous btn on
+        self.button_previous['state']="normal"
+        if self.current_page == 0:
+            self.button_previous['state']="disabled"
+
+        return
+
+    def btn_result(self, result_data):
+        return
+
+    def btn_results_1(self, click_data):
+        print("click the results: 1, click_data: %s" % click_data)
+        # select correct result_data
+        result_data = PCRResults()
+        self.btn_result(result_data)
+        return
+    def btn_results_2(self, click_data):
+        print("click the results: 2, click_data: %s" % click_data)
+        # select correct result_data
+        result_data = PCRResults()
+        self.btn_result(result_data)
+        return
+    def btn_results_3(self, click_data):
+        print("click the results: 3, click_data: %s" % click_data)
+        # select correct result_data
+        result_data = PCRResults()
+        self.btn_result(result_data)
+        return
+    def btn_results_4(self, click_data):
+        print("click the results: 4, click_data: %s" % click_data)
+        # select correct result_data
+        result_data = PCRResults()
+        self.btn_result(result_data)
+        return
+    def btn_results_5(self, click_data):
+        print("click the results: 5, click_data: %s" % click_data)
+        # select correct result_data
+        result_data = PCRResults()
+        self.btn_result(result_data)
+        return
+    def btn_results_6(self, click_data):
+        print("click the results: 6, click_data: %s" % click_data)
+        # select correct result_data
+        result_data = PCRResults()
+        self.btn_result(result_data)
         return
 
 if __name__ == "__main__":
