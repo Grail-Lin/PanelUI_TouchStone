@@ -10,6 +10,7 @@ class PCRResults:
         self.ct2 = ct2
         self.well1_array = well1_array
         self.well2_array = well2_array
+        self.proc_log = []
 
         # fake data if all None
         if test_id == None:
@@ -36,3 +37,13 @@ class PCRResults:
             ct = random.randrange(25,35)
             self.ct2 = ct
             self.well2_array = np.append(np.zeros(ct), np.sort(np.random.uniform(0.1, 2, 41-ct)))
+
+
+    def add_log(self, log):
+        self.proc_log.append(log)
+        return
+
+    def reset_log(self):
+        self.proc_log = []
+        return
+

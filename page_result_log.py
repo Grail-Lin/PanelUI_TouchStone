@@ -7,7 +7,7 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, scrolledtext
 
 
 class PageResultLog(Frame):
@@ -189,6 +189,50 @@ class PageResultLog(Frame):
         self.canvas.create_text(148.0, 148.0, anchor="nw",
             text="CT-VALUE", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
+        # scrolled text
+        scrolW = 78
+        scrolH = 13
+        self.log_text = scrolledtext.ScrolledText(self, width=scrolW, height=scrolH, wrap="word", font=("Noto Sans", 16 * -1), relief="flat")  # relief="solid"
+        self.log_text.place(in_ = self.canvas, x = 148, y = 210)
+
+        self.log_text.insert("insert",
+            """\
+Log content dummy text 1.2.3
+More dummy text
+CT cycle started...
+95....55....95....
+Temperature not reached
+Log content dummy text 1.2.3
+
+System started
+
+Log content dummy text 1.2.3
+More dummy text
+CT cycle started...
+95....55....95....
+Temperature not reached
+
+
+More dummy text
+CT cycle started...
+95....55....95....
+Temperature not reached
+More dummy text
+CT cycle started...
+95....55....95....
+Temperature not reached
+
+""")
+        self.log_text.configure(state ='disabled')
+
+        self.canvas.create_rectangle(
+            146.0,
+            208.0,
+            871.0,
+            578.0,
+            outline="#F0F0F0")        
+
+        '''
         self.image_image_1 = PhotoImage(
             file=self.relative_to_assets("image_1.png"))
         self.image_1 = self.canvas.create_image(512.0, 392.0,
@@ -203,6 +247,8 @@ class PageResultLog(Frame):
             file=self.relative_to_assets("image_3.png"))
         self.image_3 = self.canvas.create_image(494.0, 389.0,
             image=self.image_image_3)
+        '''
+
 
 
 if __name__ == "__main__":
