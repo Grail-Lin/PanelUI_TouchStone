@@ -7,6 +7,10 @@ from page_process_init import PageProcessInit
 from page_process_edit import PageProcessEdit
 from page_process_play import PageProcessPlay
 from page_check import PageCheck
+from page_result_chart import PageResultChart
+from page_result_list import PageResultList
+from page_result_log import PageResultLog
+from page_setting import PageSetting
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -38,7 +42,9 @@ class tkinterApp(tk.Tk):
         self.frames = {}
         
         # iterating through a tuple consisting of the different page layouts
-        for F in (PageHome, PageLogin, PageProcessInit, PageProcessEdit, PageProcessPlay, PageCheck):
+        page_array = [PageHome, PageLogin, PageProcessInit, PageProcessEdit, PageProcessPlay, 
+                      PageCheck, PageResultChart, PageResultList, PageResultLog, PageSetting]
+        for F in page_array:
             frame = F(container, self)
             
             # initializing frame of the object from all pages respectively with for loop

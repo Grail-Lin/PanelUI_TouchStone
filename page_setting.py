@@ -8,7 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
-import page_process_init
+import page_process_init, page_home, page_result_list
 
 class PageSetting(Frame):
 
@@ -55,7 +55,7 @@ class PageSetting(Frame):
             image=self.button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=self.Cmd_btn_home,
             bg="#F9F9F9",
             relief="flat"
         )
@@ -106,7 +106,7 @@ class PageSetting(Frame):
             image=self.button_image_4,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=self.Cmd_btn_result,
             bg="#FFFFFF",
             relief="flat"
         )
@@ -165,6 +165,13 @@ class PageSetting(Frame):
         self.controller.frames[page_process_init.PageProcessInit].status = 0
         self.controller.frames[page_process_init.PageProcessInit].update_status()
         self.controller.show_frame(page_process_init.PageProcessInit)
+
+    def Cmd_btn_result(self):
+        #self.controller.frames[page_result_list.PageResultList].update_status()
+        self.controller.show_frame(page_result_list.PageResultList)
+
+    def Cmd_btn_home(self):
+        self.controller.show_frame(page_home.PageHome)
 
 
 if __name__ == "__main__":

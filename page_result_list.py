@@ -11,6 +11,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import time, random
 from coutil import PCRResults
 
+import page_home, page_setting, page_process_init
 
 class PageResultList(Frame):
 
@@ -80,7 +81,7 @@ class PageResultList(Frame):
             image=self.image_process_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=self.Cmd_btn_process,
             relief="flat"
         )
 
@@ -97,7 +98,7 @@ class PageResultList(Frame):
             image=self.image_home_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=self.Cmd_btn_home,
             relief="flat"
         )
         self.button_home.place(
@@ -113,7 +114,7 @@ class PageResultList(Frame):
             image=self.image_setting_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_3 clicked"),
+            command=self.Cmd_btn_setting,
             relief="flat"
         )
         self.button_setting.place(
@@ -153,7 +154,7 @@ class PageResultList(Frame):
 
         self.image_result_on = PhotoImage(
             file=self.relative_to_assets("image_result_on.png"))
-        self.button_result = Button(
+        self.button_result = Button(self,
             image=self.image_result_on,
             borderwidth=0,
             highlightthickness=0,
@@ -165,7 +166,7 @@ class PageResultList(Frame):
         self.image_folder_on = PhotoImage(
             file=self.relative_to_assets("image_folder_on.png"))
 
-        self.button_folder = Button(
+        self.button_folder = Button(self,
             image=self.image_folder_on,
             borderwidth=0,
             highlightthickness=0,
@@ -178,7 +179,7 @@ class PageResultList(Frame):
         self.image_return_off = PhotoImage(
             file=self.relative_to_assets("image_return_off.png"))
         
-        self.button_return = Button(
+        self.button_return = Button(self,
             image=self.image_return_off,
             borderwidth=0,
             highlightthickness=0,
@@ -459,6 +460,18 @@ class PageResultList(Frame):
         result_data = PCRResults()
         self.btn_result(result_data)
         return
+
+    def Cmd_btn_process(self):
+        # need to check if there is cartridge inside
+        self.controller.frames[page_process_init.PageProcessInit].status = 0
+        self.controller.frames[page_process_init.PageProcessInit].update_status()
+        self.controller.show_frame(page_process_init.PageProcessInit)
+
+    def Cmd_btn_setting(self):
+        self.controller.show_frame(page_setting.PageSetting)
+
+    def Cmd_btn_home(self):
+        self.controller.show_frame(page_home.PageHome)
 
 if __name__ == "__main__":
     window = Tk()

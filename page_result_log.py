@@ -137,7 +137,7 @@ class PageResultLog(Frame):
 
         self.image_result_on = PhotoImage(
             file=self.relative_to_assets("image_result_on.png"))
-        self.button_result = Button(
+        self.button_result = Button(self,
             image=self.image_result_on,
             borderwidth=0,
             highlightthickness=0,
@@ -149,7 +149,7 @@ class PageResultLog(Frame):
         self.image_log_on = PhotoImage(
             file=self.relative_to_assets("image_log_on.png"))
 
-        self.button_log = Button(
+        self.button_log = Button(self,
             image=self.image_log_on,
             borderwidth=0,
             highlightthickness=0,
@@ -162,7 +162,7 @@ class PageResultLog(Frame):
         self.image_return_off = PhotoImage(
             file=self.relative_to_assets("image_return_off.png"))
         
-        self.button_return = Button(
+        self.button_return = Button(self,
             image=self.image_return_off,
             borderwidth=0,
             highlightthickness=0,

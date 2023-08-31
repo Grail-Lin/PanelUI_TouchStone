@@ -14,6 +14,7 @@ import random, string, time
 import page_process_play
 import page_home
 import page_process_edit
+import page_result_list
 
 #class PageProcess
 
@@ -90,7 +91,7 @@ class PageProcessInit(Frame):
         self.button_image_result_off = PhotoImage(file=self.relative_to_assets("button_result_off.png"))
         self.button_result = Button(self, image=self.button_image_result_off,
                                     borderwidth=0, highlightthickness=0,
-                                    command=lambda: print("button_3 clicked"),
+                                    command=self.Cmd_btn_result,
                                     relief="flat")
         self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
 
@@ -427,6 +428,11 @@ class PageProcessInit(Frame):
             self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
 
             self.controller.show_frame(page_process_play.PageProcessPlay)
+
+    def Cmd_btn_result(self):
+        #self.controller.frames[page_result_list.PageResultList].update_status()
+        self.controller.show_frame(page_result_list.PageResultList)
+
 
 
 if __name__ == "__main__":

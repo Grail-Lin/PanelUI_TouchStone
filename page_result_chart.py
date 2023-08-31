@@ -165,7 +165,7 @@ class PageResultChart(Frame):
         self.image_log_off = PhotoImage(
             file=self.relative_to_assets("image_log_off.png"))
 
-        self.button_log = Button(
+        self.button_log = Button(self,
             image=self.image_log_off,
             borderwidth=0,
             highlightthickness=0,
@@ -178,7 +178,7 @@ class PageResultChart(Frame):
         self.image_leave_off = PhotoImage(
             file=self.relative_to_assets("image_leave_off.png"))
 
-        self.button_leave = Button(
+        self.button_leave = Button(self,
             image=self.image_leave_off,
             borderwidth=0,
             highlightthickness=0,
@@ -191,7 +191,7 @@ class PageResultChart(Frame):
         self.image_folder_off = PhotoImage(
             file=self.relative_to_assets("image_folder_off.png"))
 
-        self.button_folder = Button(
+        self.button_folder = Button(self,
             image=self.image_folder_off,
             borderwidth=0,
             highlightthickness=0,
@@ -203,7 +203,7 @@ class PageResultChart(Frame):
 
         self.image_result_on = PhotoImage(
             file=self.relative_to_assets("image_result_on.png"))
-        self.button_result = Button(
+        self.button_result = Button(self,
             image=self.image_result_on,
             borderwidth=0,
             highlightthickness=0,
