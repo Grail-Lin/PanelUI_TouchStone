@@ -232,24 +232,6 @@ Temperature not reached
             578.0,
             outline="#F0F0F0")        
 
-        '''
-        self.image_image_1 = PhotoImage(
-            file=self.relative_to_assets("image_1.png"))
-        self.image_1 = self.canvas.create_image(512.0, 392.0,
-            image=self.image_image_1)
-
-        self.image_image_2 = PhotoImage(
-            file=self.relative_to_assets("image_2.png"))
-        self.image_2 = self.canvas.create_image(863.0, 392.0,
-            image=self.image_image_2)
-
-        self.image_image_3 = PhotoImage(
-            file=self.relative_to_assets("image_3.png"))
-        self.image_3 = self.canvas.create_image(494.0, 389.0,
-            image=self.image_image_3)
-        '''
-
-
 
 if __name__ == "__main__":
     window = Tk()

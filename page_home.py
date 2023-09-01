@@ -147,7 +147,7 @@ class PageHome(Frame):
 
     def Cmd_btn_process(self):
         # need to check if there is cartridge inside
-        self.controller.frames[page_process_init.PageProcessInit].status = 0
+        #self.controller.frames[page_process_init.PageProcessInit].status = 0
         self.controller.frames[page_process_init.PageProcessInit].update_status()
         self.controller.show_frame(page_process_init.PageProcessInit)
 

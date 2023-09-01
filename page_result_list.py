@@ -11,7 +11,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import time, random
 from coutil import PCRResults
 
-import page_home, page_setting, page_process_init
+import page_home, page_setting, page_process_init, page_result_chart
 
 class PageResultList(Frame):
 
@@ -31,7 +31,7 @@ class PageResultList(Frame):
         # set page data
         self.each_page_num = 6
         self.total_result_num = 15
-        self.select_result_num = 1
+        self.select_result_num = 0
 
         self.total_page = 3
         self.current_page = 0
@@ -183,7 +183,7 @@ class PageResultList(Frame):
             image=self.image_return_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_6 clicked"),
+            command=self.btn_results_last,
             relief="flat"
         )
         self.button_return.place(
@@ -209,6 +209,9 @@ class PageResultList(Frame):
             text="Res. 1 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
 
         self.canvas.tag_bind(self.image_1, '<Button-1>', self.btn_results_1, "")
+        self.canvas.tag_bind(self.id_r1_ts, '<Button-1>', self.btn_results_1, "")
+        self.canvas.tag_bind(self.id_r1_tid, '<Button-1>', self.btn_results_1, "")
+        self.canvas.tag_bind(self.id_r1_tname, '<Button-1>', self.btn_results_1, "")
 
         # result 2
         self.image_2 = self.canvas.create_image(512.0, 213.0,
@@ -222,6 +225,9 @@ class PageResultList(Frame):
             text="Res. 2 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
 
         self.canvas.tag_bind(self.image_2, '<Button-1>', self.btn_results_2, "")
+        self.canvas.tag_bind(self.id_r2_ts, '<Button-1>', self.btn_results_2, "")
+        self.canvas.tag_bind(self.id_r2_tid, '<Button-1>', self.btn_results_2, "")
+        self.canvas.tag_bind(self.id_r2_tname, '<Button-1>', self.btn_results_2, "")
 
         # result 3
         self.image_3 = self.canvas.create_image(512.0, 273.0,
@@ -235,6 +241,9 @@ class PageResultList(Frame):
             text="Res. 3 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
 
         self.canvas.tag_bind(self.image_3, '<Button-1>', self.btn_results_3, "")
+        self.canvas.tag_bind(self.id_r3_ts, '<Button-1>', self.btn_results_3, "")
+        self.canvas.tag_bind(self.id_r3_tid, '<Button-1>', self.btn_results_3, "")
+        self.canvas.tag_bind(self.id_r3_tname, '<Button-1>', self.btn_results_3, "")
 
         # result 4
         self.image_4 = self.canvas.create_image(512.0, 333.0,
@@ -248,6 +257,9 @@ class PageResultList(Frame):
             text="Res. 4 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
 
         self.canvas.tag_bind(self.image_4, '<Button-1>', self.btn_results_4, "")
+        self.canvas.tag_bind(self.id_r4_ts, '<Button-1>', self.btn_results_4, "")
+        self.canvas.tag_bind(self.id_r4_tid, '<Button-1>', self.btn_results_4, "")
+        self.canvas.tag_bind(self.id_r4_tname, '<Button-1>', self.btn_results_4, "")
 
         # result 5
         self.image_5 = self.canvas.create_image(512.0, 393.0,
@@ -261,6 +273,9 @@ class PageResultList(Frame):
             text="Res. 5 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
 
         self.canvas.tag_bind(self.image_5, '<Button-1>', self.btn_results_5, "")
+        self.canvas.tag_bind(self.id_r5_ts, '<Button-1>', self.btn_results_5, "")
+        self.canvas.tag_bind(self.id_r5_tid, '<Button-1>', self.btn_results_5, "")
+        self.canvas.tag_bind(self.id_r5_tname, '<Button-1>', self.btn_results_5, "")
 
         # result 6
         self.image_6 = self.canvas.create_image(512.0, 453.0,
@@ -274,6 +289,9 @@ class PageResultList(Frame):
             text="Res. 6 Panel", fill="#17171B", font=("Noto Sans", 20 * -1), state="disabled")
 
         self.canvas.tag_bind(self.image_6, '<Button-1>', self.btn_results_6, "")
+        self.canvas.tag_bind(self.id_r6_ts, '<Button-1>', self.btn_results_6, "")
+        self.canvas.tag_bind(self.id_r6_tid, '<Button-1>', self.btn_results_6, "")
+        self.canvas.tag_bind(self.id_r6_tname, '<Button-1>', self.btn_results_6, "")
 
 
         # next btn
@@ -422,48 +440,59 @@ class PageResultList(Frame):
         return
 
     def btn_result(self, result_data):
+        self.controller.frames[page_result_chart.PageResultChart].pcrresults = result_data
+        self.controller.frames[page_result_chart.PageResultChart].update()
+        self.controller.show_frame(page_result_chart.PageResultChart)
         return
 
-    def btn_results_1(self, click_data):
-        print("click the results: 1, click_data: %s" % click_data)
+    def btn_results_last(self):
         # select correct result_data
-        result_data = PCRResults()
-        self.btn_result(result_data)
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
         return
-    def btn_results_2(self, click_data):
-        print("click the results: 2, click_data: %s" % click_data)
+
+
+    def btn_results_1(self, click_data):
         # select correct result_data
-        result_data = PCRResults()
-        self.btn_result(result_data)
+        self.select_result_num = self.current_page * self.each_page_num
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
+        return
+
+    def btn_results_2(self, click_data):
+        # select correct result_data
+        self.select_result_num = self.current_page * self.each_page_num + 1
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
         return
     def btn_results_3(self, click_data):
-        print("click the results: 3, click_data: %s" % click_data)
         # select correct result_data
-        result_data = PCRResults()
-        self.btn_result(result_data)
+        self.select_result_num = self.current_page * self.each_page_num + 2
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
         return
     def btn_results_4(self, click_data):
-        print("click the results: 4, click_data: %s" % click_data)
         # select correct result_data
-        result_data = PCRResults()
-        self.btn_result(result_data)
+        self.select_result_num = self.current_page * self.each_page_num + 3
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
         return
     def btn_results_5(self, click_data):
-        print("click the results: 5, click_data: %s" % click_data)
         # select correct result_data
-        result_data = PCRResults()
-        self.btn_result(result_data)
+        self.select_result_num = self.current_page * self.each_page_num + 4
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
         return
     def btn_results_6(self, click_data):
-        print("click the results: 6, click_data: %s" % click_data)
         # select correct result_data
-        result_data = PCRResults()
-        self.btn_result(result_data)
+        self.select_result_num = self.current_page * self.each_page_num + 5
+        target_result = self.result_array[self.select_result_num]
+        self.btn_result(target_result)
         return
 
     def Cmd_btn_process(self):
         # need to check if there is cartridge inside
-        self.controller.frames[page_process_init.PageProcessInit].status = 0
+        #self.controller.frames[page_process_init.PageProcessInit].status = 0
         self.controller.frames[page_process_init.PageProcessInit].update_status()
         self.controller.show_frame(page_process_init.PageProcessInit)
 
