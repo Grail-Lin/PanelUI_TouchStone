@@ -15,8 +15,8 @@ import page_process_play
 import page_home
 import page_process_edit
 import page_result_list
+import page_setting
 
-#class PageProcess
 
 
 class PageProcessInit(Frame):
@@ -98,7 +98,7 @@ class PageProcessInit(Frame):
         self.button_image_setting_off = PhotoImage(file=self.relative_to_assets("button_setting_off.png"))
         self.button_setting = Button(self, image=self.button_image_setting_off, 
                                      borderwidth=0, highlightthickness=0,
-                                     command=lambda: print("button_4 clicked"),
+                                     command=self.Cmd_btn_setting,
                                      relief="flat")
         self.button_setting.place(x=0.0, y=497.0, width=120.0, height=103.0)
 
@@ -433,7 +433,8 @@ class PageProcessInit(Frame):
         #self.controller.frames[page_result_list.PageResultList].update_status()
         self.controller.show_frame(page_result_list.PageResultList)
 
-
+    def Cmd_btn_setting(self):
+        self.controller.show_frame(page_setting.PageSetting)
 
 if __name__ == "__main__":
     window = Tk()

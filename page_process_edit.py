@@ -13,6 +13,7 @@ import round_rect
 import page_home
 import page_process_play
 import page_result_list
+import page_setting
 
 class PageProcessEdit(Frame):
 
@@ -170,7 +171,7 @@ class PageProcessEdit(Frame):
             image=self.button_image_setting_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=self.Cmd_btn_setting,
             relief="flat"
         )
         self.button_setting.place(
@@ -658,6 +659,8 @@ class PageProcessEdit(Frame):
         #self.controller.frames[page_result_list.PageResultList].update_status()
         self.controller.show_frame(page_result_list.PageResultList)
 
+    def Cmd_btn_setting(self):
+        self.controller.show_frame(page_setting.PageSetting)
 
 if __name__ == "__main__":
     window = Tk()

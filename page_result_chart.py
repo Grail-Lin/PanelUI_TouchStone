@@ -315,6 +315,8 @@ class PageResultChart(Frame):
         self.controller.show_frame(page_setting.PageSetting)
 
     def Cmd_btn_result_log(self):
+        self.controller.frames[page_result_log.PageResultLog].pcrresults = self.pcrresults
+        self.controller.frames[page_result_log.PageResultLog].update()
         self.controller.show_frame(page_result_log.PageResultLog)
 
 

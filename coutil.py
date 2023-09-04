@@ -38,6 +38,10 @@ class PCRResults:
             self.ct2 = ct
             self.well2_array = np.append(np.zeros(ct), np.sort(np.random.uniform(0.1, 2, 41-ct)))
 
+        self.add_log('test id: %s' % self.test_id)
+        self.add_log('test name: %s' % self.test_name)
+        self.add_log('process at %s' % self.timestamp)
+
 
     def add_log(self, log):
         self.proc_log.append(log)

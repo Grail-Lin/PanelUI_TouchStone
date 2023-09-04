@@ -9,6 +9,9 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, scrolledtext
 
+from coutil import PCRResults
+import time
+import page_result_chart, page_process_init, page_home, page_setting
 
 class PageResultLog(Frame):
 
@@ -26,6 +29,7 @@ class PageResultLog(Frame):
         self.controller = controller
 
         # set user data
+        self.pcrresults = PCRResults()
 
         # set window size
         width = 1024
@@ -67,7 +71,7 @@ class PageResultLog(Frame):
             image=self.image_process_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=self.Cmd_btn_process,
             relief="flat"
         )
 
@@ -84,7 +88,7 @@ class PageResultLog(Frame):
             image=self.image_home_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=self.Cmd_btn_home,
             relief="flat"
         )
         self.button_home.place(
@@ -100,7 +104,7 @@ class PageResultLog(Frame):
             image=self.image_setting_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_3 clicked"),
+            command=self.Cmd_btn_setting,
             relief="flat"
         )
         self.button_setting.place(
@@ -122,13 +126,13 @@ class PageResultLog(Frame):
         self.canvas.create_rectangle(
             904.0, 0.0, 1024.0, 600.0, fill="#E6EFF4", outline="")
 
-        self.canvas.create_text(578.0, 98.0, anchor="nw",
+        self.id_testid = self.canvas.create_text(578.0, 98.0, anchor="nw",
             text="1299-3377-2311", fill="#17171B", font=("Noto Sans", 24 * -1))
 
         self.canvas.create_text(426.0, 98.0, anchor="nw",
             text="TEST ID", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
-        self.canvas.create_text(578.0, 148.0, anchor="nw",
+        self.id_timestamp = self.canvas.create_text(578.0, 148.0, anchor="nw",
             text="2023-08-23 13:00:33", fill="#17171B", font=("Noto Sans", 24 * -1))
 
         self.canvas.create_text(426.0, 148.0, anchor="nw",
@@ -141,7 +145,7 @@ class PageResultLog(Frame):
             image=self.image_result_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=self.Cmd_btn_result,
             relief="flat"
         )
         self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
@@ -166,7 +170,7 @@ class PageResultLog(Frame):
             image=self.image_return_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_6 clicked"),
+            command=self.Cmd_btn_return,
             relief="flat"
         )
         self.button_return.place(
@@ -177,17 +181,17 @@ class PageResultLog(Frame):
         )
 
         # log of results
-        self.canvas.create_text(300.0, 98.0, anchor="nw",
+        self.id_ct1 = self.canvas.create_text(300.0, 98.0, anchor="nw",
             text="40", fill="#17171B", font=("Noto Sans", 24 * -1))
 
         self.canvas.create_text(148.0, 98.0, anchor="nw",
-            text="CYCLES", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
+            text="CT-VALUE1", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
-        self.canvas.create_text(300.0, 148.0, anchor="nw",
+        self.id_ct2 = self.canvas.create_text(300.0, 148.0, anchor="nw",
             text="32", fill="#17171B", font=("Noto Sans", 24 * -1))
 
         self.canvas.create_text(148.0, 148.0, anchor="nw",
-            text="CT-VALUE", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
+            text="CT-VALUE2", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
         # scrolled text
         scrolW = 78
@@ -231,6 +235,42 @@ Temperature not reached
             871.0,
             578.0,
             outline="#F0F0F0")        
+
+    def update(self):
+        self.canvas.itemconfig(self.id_testid, text=self.pcrresults.test_id)
+        self.canvas.itemconfig(self.id_ct1, text=self.pcrresults.ct1)
+        self.canvas.itemconfig(self.id_ct2, text=self.pcrresults.ct2)
+        timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.pcrresults.timestamp))
+        self.canvas.itemconfig(self.id_timestamp, text=timestamp_str)
+
+        self.log_text.configure(state = 'normal')
+        self.log_text.delete('1.0', 'end')
+        self.log_text.insert("insert", '\n'.join(self.pcrresults.proc_log))
+        self.log_text.configure(state = 'disabled')
+
+        return
+
+    def Cmd_btn_result(self):
+        #self.controller.frames[page_result_list.PageResultList].update_status()
+        #self.controller.show_frame(page_result_list.PageResultList)
+        return
+
+    def Cmd_btn_return(self):
+        self.controller.show_frame(page_result_chart.PageResultChart)
+        return
+
+    def Cmd_btn_process(self):
+        # need to check if there is cartridge inside
+        #self.controller.frames[page_process_init.PageProcessInit].status = 0
+        self.controller.frames[page_process_init.PageProcessInit].update_status()
+        self.controller.show_frame(page_process_init.PageProcessInit)
+
+    def Cmd_btn_home(self):
+        self.controller.show_frame(page_home.PageHome)
+
+    def Cmd_btn_setting(self):
+        self.controller.show_frame(page_setting.PageSetting)
+
 
 
 if __name__ == "__main__":
