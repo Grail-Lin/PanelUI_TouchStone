@@ -1,5 +1,7 @@
 import random, time, string
 import numpy as np
+import sqlite3
+import io
 
 class PCRResults:
     def __init__(self, test_id = None, test_name = None, timestamp = None, ct1 = None, ct2 = None, well1_array = None, well2_array = None):
@@ -51,3 +53,73 @@ class PCRResults:
         self.proc_log = []
         return
 
+class COSQLite:
+    def __init__(self, dbname = 'data.db'):
+        self.conn = sqlite3.connect('data.db')
+        self.cursor = self.conn.cursor()
+        return
+
+    def __del__(self):
+        self.conn.close()
+        return
+
+    def adapt_array(self, arr):
+        out = io.BytesIO()
+        np.save(out, arr)
+        out.seek(0)
+        return sqlite3.Binary(out.read())
+
+    def convert_array(self, text):
+        out = io.BytesIO(text)
+        out.seek(0)
+        return np.load(out)
+
+    def queryLogin(self, username, password):
+        self.cursor.execute('SELECT * from USERDATA where USERNAME="%s" and PASSWORD="%s"' % (username, password))
+        if self.cursor.fetchone():
+            return True
+        return False
+
+    def queryUser(self, username):
+        self.cursor.execute('SELECT * from USERDATA where USERNAME="%s"' % (username))
+        if self.cursor.fetchone():
+            return True
+        return False
+
+    def queryPCRResults(self):
+        ret_results = []
+        self.cursor.execute('SELECT * from PCRRESULT')
+
+        for ret in self.cursor.fetchall():
+            '''
+            ret[0] = uid
+            ret[1] = testid
+            ret[2] = testname
+            ret[3] = timestamp
+            ret[4] = ct1
+            ret[5] = ct2
+            ret[6] = w1array
+            ret[7] = w2array
+            '''
+            temp_result = PCRResults(test_id = ret[1], test_name = ret[2], timestamp = ret[3],
+	                                 ct1 = ret[4], ct2 = ret[5], well1_array = self.convert_array(ret[6]), well2_array = self.convert_array(ret[7]))
+
+            ret_results.append(temp_result)
+
+        return ret_results
+
+    def addPCRResult(self, pcrresult):
+        tid = pcrresult.test_id
+        tname = pcrresult.test_name
+        ts = pcrresult.timestamp
+        ct1 = pcrresult.ct1
+        ct2 = pcrresult.ct2
+        w1a = self.adapt_array(pcrresult.well1_array)
+        w2a = self.adapt_array(pcrresult.well2_array)
+
+        self.cursor.execute("INSERT INTO PCRRESULT (testid, testname, timestamp, ct1, ct2, w1array, w2array) VALUES(?, ?, ?, ?, ?, ?, ?)", 
+                            [tid, tname, ts, ct1, ct2, w1a, w2a])
+
+        self.conn.commit()
+
+        return

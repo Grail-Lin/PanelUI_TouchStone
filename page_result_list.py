@@ -9,7 +9,9 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import time, random
-from coutil import PCRResults
+import coutil
+# PCRResults and COSQLite
+import math
 
 import page_home, page_setting, page_process_init, page_result_chart
 
@@ -39,7 +41,7 @@ class PageResultList(Frame):
 
         # mock result data
         for j in range(self.total_result_num):
-            result = PCRResults(timestamp=time.time()-random.randrange(0,180))
+            result = coutil.PCRResults(timestamp=time.time()-random.randrange(0,180))
             self.result_array.append(result)
 
         # set window size
@@ -501,6 +503,16 @@ class PageResultList(Frame):
 
     def Cmd_btn_home(self):
         self.controller.show_frame(page_home.PageHome)
+
+    def fetchResults(self):
+        # fetch results from database
+        cosql = coutil.COSQLite('data.db')
+        self.result_array = cosql.queryPCRResults()
+        self.total_result_num = len(self.result_array)
+        self.select_result_num = 0
+        self.current_page = 0
+        self.total_page = math.ceil(self.total_result_num/self.each_page_num)
+        self.update()
 
 if __name__ == "__main__":
     window = Tk()

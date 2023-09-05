@@ -656,7 +656,7 @@ class PageProcessEdit(Frame):
             self.controller.show_frame(page_process_play.PageProcessPlay)
 
     def Cmd_btn_result(self):
-        #self.controller.frames[page_result_list.PageResultList].update_status()
+        self.controller.frames[page_result_list.PageResultList].fetchResults()
         self.controller.show_frame(page_result_list.PageResultList)
 
     def Cmd_btn_setting(self):
