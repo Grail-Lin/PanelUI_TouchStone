@@ -15,15 +15,25 @@ import page_process_play
 import page_result_list
 import page_setting
 
+from copic import img_button_opt_high_off, img_button_opt_high_on
+from copic import img_button_opt_low_off, img_button_opt_low_on
+from copic import img_button_opt_medium_off, img_button_opt_medium_on
+from copic import img_button_opt_none_off, img_button_opt_none_on
+from copic import img_button_opt_normal_off, img_button_opt_normal_on
+from copic import img_button_opt_short_off, img_button_opt_short_on
+from copic import img_button_opt_yes_off, img_button_opt_yes_on
+from copic import img_button_process_on, img_button_result_off, img_button_home_off, img_button_setting_off
+from copic import img_button_play_off, img_button_stop_off, img_button_edit_on
+
 class PageProcessEdit(Frame):
 
     # user data
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -67,45 +77,27 @@ class PageProcessEdit(Frame):
         self.canvas.grid(row = 0, column = 0, sticky = "nsew")
 
         # all images here
-        self.img_opt_high_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_high_off.png"))
-        self.img_opt_high_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_high_on.png"))
-        self.img_opt_low_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_low_off.png"))
-        self.img_opt_low_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_low_on.png"))
-        self.img_opt_medium_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_medium_off.png"))
-        self.img_opt_medium_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_medium_on.png"))
-        self.img_opt_none_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_none_off.png"))
-        self.img_opt_none_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_none_on.png"))
-        self.img_opt_normal_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_normal_off.png"))
-        self.img_opt_normal_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_normal_on.png"))
-        self.img_opt_short_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_short_off.png"))
-        self.img_opt_short_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_short_on.png"))
-        self.img_opt_yes_off = PhotoImage(
-            file=self.relative_to_assets("btn_opt_yes_off.png"))
-        self.img_opt_yes_on = PhotoImage(
-            file=self.relative_to_assets("btn_opt_yes_on.png"))
-        self.button_image_process_on = PhotoImage(
-            file=self.relative_to_assets("button_process_on.png"))
-        self.button_image_result_off = PhotoImage(
-            file=self.relative_to_assets("button_result_off.png"))
-        self.button_image_home_off = PhotoImage(
-            file=self.relative_to_assets("button_home_off.png"))
-        self.button_image_setting_off = PhotoImage(
-            file=self.relative_to_assets("button_setting_off.png"))
-        self.button_image_play_off = PhotoImage(file=self.relative_to_assets("button_play_off.png"))
-        self.button_image_stop_off = PhotoImage(file=self.relative_to_assets("button_stop_off.png"))
-        self.button_image_edit_on = PhotoImage(file=self.relative_to_assets("button_edit_on.png"))
+        self.img_opt_high_off = PhotoImage(data = img_button_opt_high_off)
+        self.img_opt_high_on = PhotoImage(data = img_button_opt_high_on)
+        self.img_opt_low_off = PhotoImage(data = img_button_opt_low_off)
+        self.img_opt_low_on = PhotoImage(data = img_button_opt_low_on)
+        self.img_opt_medium_off = PhotoImage(data = img_button_opt_medium_off)
+        self.img_opt_medium_on = PhotoImage(data = img_button_opt_medium_on)
+        self.img_opt_none_off = PhotoImage(data = img_button_opt_none_off)
+        self.img_opt_none_on = PhotoImage(data = img_button_opt_none_on)
+        self.img_opt_normal_off = PhotoImage(data = img_button_opt_normal_off)
+        self.img_opt_normal_on = PhotoImage(data = img_button_opt_normal_on)
+        self.img_opt_short_off = PhotoImage(data = img_button_opt_short_off)
+        self.img_opt_short_on = PhotoImage(data = img_button_opt_short_on)
+        self.img_opt_yes_off = PhotoImage(data = img_button_opt_yes_off)
+        self.img_opt_yes_on = PhotoImage(data = img_button_opt_yes_on)
+        self.button_image_process_on = PhotoImage(data = img_button_process_on)
+        self.button_image_result_off = PhotoImage(data = img_button_result_off)
+        self.button_image_home_off = PhotoImage(data = img_button_home_off)
+        self.button_image_setting_off = PhotoImage(data = img_button_setting_off)
+        self.button_image_play_off = PhotoImage(data = img_button_play_off)
+        self.button_image_stop_off = PhotoImage(data = img_button_stop_off)
+        self.button_image_edit_on = PhotoImage(data = img_button_edit_on)
         
         # add elements here
 
@@ -117,8 +109,6 @@ class PageProcessEdit(Frame):
             fill="#F9F9F9",
             outline="")
 
-        #self.button_image_1 = PhotoImage(
-        #    file=self.relative_to_assets("button_1.png"))
         self.button_process = Button(self,
             image=self.button_image_process_on,
             borderwidth=0,
@@ -133,8 +123,6 @@ class PageProcessEdit(Frame):
             height=103.0
         )
 
-        #self.button_image_2 = PhotoImage(
-        #    file=self.relative_to_assets("button_2.png"))
         self.button_home = Button(self,
             image=self.button_image_home_off,
             borderwidth=0,
@@ -149,8 +137,6 @@ class PageProcessEdit(Frame):
             height=103.0
         )
 
-        #self.button_image_3 = PhotoImage(
-        #    file=self.relative_to_assets("button_3.png"))
         self.button_result = Button(self,
             image=self.button_image_result_off,
             borderwidth=0,
@@ -165,8 +151,6 @@ class PageProcessEdit(Frame):
             height=103.0
         )
 
-        #self.button_image_4 = PhotoImage(
-        #    file=self.relative_to_assets("button_4.png"))
         self.button_setting = Button(self,
             image=self.button_image_setting_off,
             borderwidth=0,
@@ -198,8 +182,6 @@ class PageProcessEdit(Frame):
             fill="#E6EFF4",
             outline="")
 
-        #self.button_image_5 = PhotoImage(
-        #    file=self.relative_to_assets("button_5.png"))
         self.button_play = Button(self,
             image=self.button_image_play_off,
             borderwidth=0,
@@ -214,8 +196,6 @@ class PageProcessEdit(Frame):
             height=103.0
         )
 
-        #self.button_image_6 = PhotoImage(
-        #    file=self.relative_to_assets("button_6.png"))
         self.button_stop = Button(self,
             image=self.button_image_stop_off,
             borderwidth=0,
@@ -239,8 +219,6 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        #self.button_image_7 = PhotoImage(
-        #    file=self.relative_to_assets("button_7.png"))
         self.rbtn_preextract_none = Button(self,
             image=self.img_opt_none_on,
             borderwidth=0,
@@ -256,8 +234,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_8 = PhotoImage(
-        #    file=self.relative_to_assets("button_8.png"))
         self.rbtn_preextract_yes = Button(self,
             image=self.img_opt_yes_off,
             borderwidth=0,
@@ -282,8 +258,6 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        #self.button_image_9 = PhotoImage(
-        #    file=self.relative_to_assets("button_9.png"))
         self.rbtn_precool_none = Button(self,
             image=self.img_opt_none_off,
             borderwidth=0,
@@ -299,8 +273,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_10 = PhotoImage(
-        #    file=self.relative_to_assets("button_10.png"))
         self.rbtn_precool_yes = Button(self,
             image=self.img_opt_yes_on,
             borderwidth=0,
@@ -335,8 +307,6 @@ class PageProcessEdit(Frame):
         )
 
 
-        #self.button_image_12 = PhotoImage(
-        #    file=self.relative_to_assets("button_12.png"))
         self.rbtn_extract_none = Button(self,
             image=self.img_opt_none_off,
             borderwidth=0,
@@ -352,8 +322,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_11 = PhotoImage(
-        #    file=self.relative_to_assets("button_11.png"))
         self.rbtn_extract_short = Button(self,
             image=self.img_opt_short_on,
             borderwidth=0,
@@ -369,8 +337,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_13 = PhotoImage(
-        #    file=self.relative_to_assets("button_13.png"))
         self.rbtn_extract_normal = Button(self,
             image=self.img_opt_normal_off,
             borderwidth=0,
@@ -386,8 +352,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_14 = PhotoImage(
-        #    file=self.relative_to_assets("button_14.png"))
         self.rbtn_rpm_low = Button(self,
             image=self.img_opt_low_on,
             borderwidth=0,
@@ -403,8 +367,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_15 = PhotoImage(
-        #    file=self.relative_to_assets("button_15.png"))
         self.rbtn_rpm_medium = Button(self,
             image=self.img_opt_medium_off,
             borderwidth=0,
@@ -420,8 +382,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_17 = PhotoImage(
-        #    file=self.relative_to_assets("button_17.png"))
         self.rbtn_rpm_high = Button(self,
             image=self.img_opt_high_off,
             borderwidth=0,
@@ -446,8 +406,6 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        #self.button_image_19 = PhotoImage(
-        #    file=self.relative_to_assets("button_19.png"))
         self.rbtn_cycle_none = Button(self,
             image=self.img_opt_none_off,
             borderwidth=0,
@@ -463,8 +421,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_16 = PhotoImage(
-        #    file=self.relative_to_assets("button_16.png"))
         self.rbtn_cycle_short = Button(self,
             image=self.img_opt_short_off,
             borderwidth=0,
@@ -480,8 +436,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_18 = PhotoImage(
-        #    file=self.relative_to_assets("button_18.png"))
         self.rbtn_cycle_normal = Button(self,
             image=self.img_opt_normal_on,
             borderwidth=0,
@@ -497,8 +451,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        #self.button_image_20 = PhotoImage(
-        #    file=self.relative_to_assets("button_20.png"))
         self.button_edit = Button(self,
             image=self.button_image_edit_on,
             borderwidth=0,

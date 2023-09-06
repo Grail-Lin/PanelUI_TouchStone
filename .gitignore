@@ -1,0 +1,5 @@
+
+*.pyc
+build/*
+panel_demo.spec
+dist/*

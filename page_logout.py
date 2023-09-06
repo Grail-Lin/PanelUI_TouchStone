@@ -14,15 +14,17 @@ from GradientFrame import GradientFrame                       # add for gradient
 import page_process_play
 import page_process_init
 
+from copic import img_button_cancel_off, img_button_logout_on
+
 class PageCheck(Frame):
 
     # user data
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_logout")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_logout")
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -57,7 +59,7 @@ class PageCheck(Frame):
         )
         
         
-        self.button_image_logout_on = PhotoImage(file=self.relative_to_assets("button_logout_on.png"))
+        self.button_image_logout_on = PhotoImage(data=img_button_logout_on)
         self.button_logout = Button(self, image=self.button_image_logout_on, 
                                   borderwidth=0, highlightthickness=0,
                                   command=self.Cmd_btn_logout,
@@ -68,7 +70,7 @@ class PageCheck(Frame):
             width=315.0,
             height=86.0)
 
-        self.button_image_cancel_off = PhotoImage(file=self.relative_to_assets("button_cancel_off.png"))
+        self.button_image_cancel_off = PhotoImage(data=img_button_cancel_off)
         self.button_cancel = Button(self, image=self.button_image_cancel_off, 
                                     borderwidth=0, highlightthickness=0,
                                     command=self.Cmd_btn_cancel,

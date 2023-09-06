@@ -11,16 +11,17 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 from GradientFrame import GradientFrame                       # add for gradient color background
 
+from copic import img_button_ok_on
 
 class PageError(Frame):
 
     # user data
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_error")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_error")
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -55,7 +56,7 @@ class PageError(Frame):
         )
         
         
-        self.button_image_ok_on = PhotoImage(file=self.relative_to_assets("button_ok_on.png"))
+        self.button_image_ok_on = PhotoImage(data=img_button_ok_on)
         self.button_ok = Button(self, image=self.button_image_ok_on, 
                                 borderwidth=0, highlightthickness=0,
                                 command=lambda: print("button_1 clicked"),

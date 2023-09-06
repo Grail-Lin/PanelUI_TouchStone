@@ -10,15 +10,17 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import page_process_init, page_home, page_result_list
 
+from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
+
 class PageSetting(Frame):
 
     # user data
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_setting")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_setting")
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -49,84 +51,80 @@ class PageSetting(Frame):
         
         self.canvas.place(x = 0, y = 0)
 
-        self.button_image_1 = PhotoImage(
-            file=self.relative_to_assets("image_home_off.png"))
-        self.button_1 = Button(self,
-            image=self.button_image_1,
+        self.img_button_home_off = PhotoImage(data=img_button_home_off)
+        self.button_home = Button(self,
+            image=self.img_button_home_off,
             borderwidth=0,
             highlightthickness=0,
             command=self.Cmd_btn_home,
             bg="#F9F9F9",
             relief="flat"
         )
-        self.button_1.place(
+        self.button_home.place(
             x=0.0,
             y=0.0,
             width=120.0,
             height=103.0
         )
 
-        self.button_image_2 = PhotoImage(
-            file=self.relative_to_assets("image_process_off.png"))
-        self.button_2 = Button(self,
-            image=self.button_image_2,
+        self.img_button_process_off = PhotoImage(data = img_button_process_off)
+        self.button_process = Button(self,
+            image=self.img_button_process_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_process,  #lambda: print("button_2 clicked"),
+            command=self.Cmd_btn_process,  #lambda: print("button_process clicked"),
             bg="#FFFFFF",
             relief="flat"
         )
-        self.button_2.place(
+        self.button_process.place(
             x=0.0,
             y=103.0,
             width=120.0,
             height=103.0
         )
 
-        self.button_image_3 = PhotoImage(
-            file=self.relative_to_assets("image_setting_on.png"))
-        self.button_3 = Button(self,
-            image=self.button_image_3,
-            borderwidth=0,
-            highlightthickness=0,
-            command=lambda: print("button_3 clicked"),
-            bg="#FFFFFF",
-            relief="flat"
-        )
-        self.button_3.place(
-            x=0.0,
-            y=497.0,
-            width=120.0,
-            height=103.0
-        )
 
-        self.button_image_4 = PhotoImage(
-            file=self.relative_to_assets("image_result_off.png"))
-        self.button_4 = Button(self,
-            image=self.button_image_4,
+        self.img_button_result_off = PhotoImage(data = img_button_result_off)
+        self.button_result = Button(self,
+            image=self.img_button_result_off,
             borderwidth=0,
             highlightthickness=0,
             command=self.Cmd_btn_result,
             bg="#FFFFFF",
             relief="flat"
         )
-        self.button_4.place(
+        self.button_result.place(
             x=0.0,
             y=206.0,
             width=120.0,
             height=103.0
         )
 
-        self.button_image_5 = PhotoImage(
-            file=self.relative_to_assets("image_logout.png"))
-        self.button_5 = Button(self,
-            image=self.button_image_5,
+        self.img_button_setting_on = PhotoImage(data = img_button_setting_on)
+        self.button_setting = Button(self,
+            image=self.img_button_setting_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("logout clicked"),
+            command=0,
+            bg="#FFFFFF",
             relief="flat"
         )
-        self.button_5.place(
+        self.button_setting.place(
+            x=0.0,
+            y=497.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.img_button_logout = PhotoImage(data = img_button_logout)
+        self.button_logout = Button(self,
+            image=self.img_button_logout,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_logout clicked"),
+            relief="flat"
+        )
+        self.button_logout.place(
             x=904.0,
             y=497.0,
             width=120.0,

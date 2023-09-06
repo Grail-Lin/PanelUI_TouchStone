@@ -15,15 +15,19 @@ import math
 
 import page_home, page_setting, page_process_init, page_result_chart
 
+from copic import img_button_process_off, img_button_home_off, img_button_setting_off
+from copic import img_button_result_on, img_button_folder_on, img_button_return_on
+from copic import img_empty_button, img_button_next_on, img_button_previous_on
+
 class PageResultList(Frame):
 
     # user data
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_list")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_list")
 
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
 
     def __init__(self, parent, controller):
@@ -77,8 +81,7 @@ class PageResultList(Frame):
             fill="#F9F9F9",
             outline="")
 
-        self.image_process_off = PhotoImage(
-            file=self.relative_to_assets("image_process_off.png"))
+        self.image_process_off = PhotoImage(data=img_button_process_off)
         self.button_process = Button(self,
             image=self.image_process_off,
             borderwidth=0,
@@ -94,8 +97,7 @@ class PageResultList(Frame):
             height=103.0
         )
 
-        self.image_home_off = PhotoImage(
-            file=self.relative_to_assets("image_home_off.png"))
+        self.image_home_off = PhotoImage(data=img_button_home_off)
         self.button_home = Button(self,
             image=self.image_home_off,
             borderwidth=0,
@@ -110,8 +112,7 @@ class PageResultList(Frame):
             height=103.0
         )
 
-        self.image_setting_off = PhotoImage(
-            file=self.relative_to_assets("image_setting_off.png"))
+        self.image_setting_off = PhotoImage(data=img_button_setting_off)
         self.button_setting = Button(self,
             image=self.image_setting_off,
             borderwidth=0,
@@ -154,8 +155,7 @@ class PageResultList(Frame):
             text="RUN TIME", fill="#7D8CA7", font=("Noto Sans", 20 * -1)
         )
 
-        self.image_result_on = PhotoImage(
-            file=self.relative_to_assets("image_result_on.png"))
+        self.image_result_on = PhotoImage(data=img_button_result_on)
         self.button_result = Button(self,
             image=self.image_result_on,
             borderwidth=0,
@@ -165,8 +165,7 @@ class PageResultList(Frame):
         )
         self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
 
-        self.image_folder_on = PhotoImage(
-            file=self.relative_to_assets("image_folder_on.png"))
+        self.image_folder_on = PhotoImage(data=img_button_folder_on)
 
         self.button_folder = Button(self,
             image=self.image_folder_on,
@@ -178,8 +177,7 @@ class PageResultList(Frame):
 
         self.button_folder.place(x=903.0, y=0.0, width=121.0, height=103.0)
 
-        self.image_return_off = PhotoImage(
-            file=self.relative_to_assets("image_return_off.png"))
+        self.image_return_off = PhotoImage(data=img_button_return_on)
         
         self.button_return = Button(self,
             image=self.image_return_off,
@@ -196,8 +194,7 @@ class PageResultList(Frame):
         )
 
         # list of results
-        self.image_empty_button = PhotoImage(
-            file=self.relative_to_assets("image_empty_button.png"))
+        self.image_empty_button = PhotoImage(data=img_empty_button)
 
         # result 1
         self.image_1 = self.canvas.create_image(512.0, 153.0,
@@ -297,8 +294,7 @@ class PageResultList(Frame):
 
 
         # next btn
-        self.image_next_on = PhotoImage(
-            file=self.relative_to_assets("image_next_on.png"))
+        self.image_next_on = PhotoImage(data=img_button_next_on)
 
         self.button_next = Button(self,
             image=self.image_next_on,
@@ -309,8 +305,7 @@ class PageResultList(Frame):
         )
         self.button_next.place(x=713.0, y=519.0, width=163.0, height=42.0)
 
-        self.image_previous_on = PhotoImage(
-            file=self.relative_to_assets("image_previous_on.png"))
+        self.image_previous_on = PhotoImage(data=img_button_previous_on)
 
         self.button_previous = Button(self,
             image=self.image_previous_on,
@@ -321,7 +316,7 @@ class PageResultList(Frame):
         )
         self.button_previous.place(x=522.0, y=519.0, width=163.0, height=42.0)
 
-        self.update()
+        self.fetchResults()
 
     def cmd_btn_next(self):
         self.current_page = self.current_page + 1

@@ -16,17 +16,18 @@ from scipy.interpolate import make_interp_spline, BSpline
 from coutil import PCRResults
 import page_result_list, page_process_init, page_home, page_setting, page_result_log
 
-
+from copic import img_button_process_off, img_button_home_off, img_button_setting_off
+from copic import img_button_log_off, img_button_export_off, img_button_folder_off, img_button_result_on
 
 class PageResultChart(Frame):
 
     # user data
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_chart")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_chart")
 
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
 
     def __init__(self, parent, controller):
@@ -70,8 +71,7 @@ class PageResultChart(Frame):
             fill="#F9F9F9",
             outline="")
 
-        self.image_process_off = PhotoImage(
-            file=self.relative_to_assets("image_process_off.png"))
+        self.image_process_off = PhotoImage(data=img_button_process_off)
         self.button_process = Button(self,
             image=self.image_process_off,
             borderwidth=0,
@@ -87,8 +87,7 @@ class PageResultChart(Frame):
             height=103.0
         )
 
-        self.image_home_off = PhotoImage(
-            file=self.relative_to_assets("image_home_off.png"))
+        self.image_home_off = PhotoImage(data=img_button_home_off)
         self.button_home = Button(self,
             image=self.image_home_off,
             borderwidth=0,
@@ -103,8 +102,7 @@ class PageResultChart(Frame):
             height=103.0
         )
 
-        self.image_setting_off = PhotoImage(
-            file=self.relative_to_assets("image_setting_off.png"))
+        self.image_setting_off = PhotoImage(data=img_button_setting_off)
         self.button_setting = Button(self,
             image=self.image_setting_off,
             borderwidth=0,
@@ -162,8 +160,7 @@ class PageResultChart(Frame):
             fill="#3DAAEB", outline="")
 
 
-        self.image_log_off = PhotoImage(
-            file=self.relative_to_assets("image_log_off.png"))
+        self.image_log_off = PhotoImage(data=img_button_log_off)
 
         self.button_log = Button(self,
             image=self.image_log_off,
@@ -175,11 +172,10 @@ class PageResultChart(Frame):
 
         self.button_log.place(x=903.0, y=496.0, width=121.0, height=103.0)
 
-        self.image_leave_off = PhotoImage(
-            file=self.relative_to_assets("image_leave_off.png"))
+        self.image_export_off = PhotoImage(data=img_button_export_off)
 
         self.button_leave = Button(self,
-            image=self.image_leave_off,
+            image=self.image_export_off,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_5 clicked"),
@@ -188,8 +184,7 @@ class PageResultChart(Frame):
 
         self.button_leave.place(x=903.0, y=395.0, width=121.0, height=103.0)
 
-        self.image_folder_off = PhotoImage(
-            file=self.relative_to_assets("image_folder_off.png"))
+        self.image_folder_off = PhotoImage(data=img_button_folder_off)
 
         self.button_folder = Button(self,
             image=self.image_folder_off,
@@ -201,8 +196,7 @@ class PageResultChart(Frame):
 
         self.button_folder.place(x=903.0, y=0.0, width=121.0, height=103.0)
 
-        self.image_result_on = PhotoImage(
-            file=self.relative_to_assets("image_result_on.png"))
+        self.image_result_on = PhotoImage(data=img_button_result_on)
         self.button_result = Button(self,
             image=self.image_result_on,
             borderwidth=0,
@@ -217,12 +211,6 @@ class PageResultChart(Frame):
         # list of results
 
         # curve chart
-        '''
-        self.image_image_1 = PhotoImage(
-            file=self.relative_to_assets("image_1.png"))
-        self.image_1 = self.canvas.create_image(512.0, 391.0,
-            image=self.image_image_1)
-        '''
         self.figure = Figure(figsize=(6, 4), dpi=100)
         self.figure.subplots_adjust(left=0, bottom=0, right=0.97, top=1, wspace=0, hspace=0)
         self.figure_canvas = FigureCanvasTkAgg(self.figure, self)

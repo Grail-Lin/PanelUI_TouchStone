@@ -17,13 +17,18 @@ import page_process_edit
 import page_result_list
 import page_setting
 
-
+from copic import img_button_play_out, img_button_edit_out, img_button_stop_out
+from copic import img_button_play_off, img_button_edit_off, img_button_stop_off
+from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
+from copic import img_button_insert_on, img_button_insert_off
+from copic import img_button_eject_on, img_button_eject_off
+from copic import img_state_aborted, img_state_completed, img_state_not_started
 
 class PageProcessInit(Frame):
 
     # user data
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_process")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame_process")
 
     # process status
     # 0: not started, no cartridge
@@ -35,8 +40,8 @@ class PageProcessInit(Frame):
 
     process_setting = {}
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -67,35 +72,34 @@ class PageProcessInit(Frame):
         self.canvas.place(x = 0, y = 0)
 
         # add elements here
-        self.button_image_play_out = PhotoImage(file=self.relative_to_assets("button_play_out.png"))
-        self.button_image_edit_out = PhotoImage(file=self.relative_to_assets("button_edit_out.png"))
-        self.button_image_stop_out = PhotoImage(file=self.relative_to_assets("button_stop_out.png"))
+        self.button_image_play_out = PhotoImage(data=img_button_play_out)
+        self.button_image_edit_out = PhotoImage(data=img_button_edit_out)
+        self.button_image_stop_out = PhotoImage(data=img_button_stop_out)
 
         self.canvas.create_rectangle(120.0, 0.0, 904.0, 600.0, fill="#F9F9F9", outline="")
 
-        self.button_image_process_on = PhotoImage(
-            file=self.relative_to_assets("button_process_on.png"))
+        self.button_image_process_on = PhotoImage(data=img_button_process_on)
         self.button_process = Button(self, image=self.button_image_process_on,
                                      borderwidth=0, highlightthickness=0,
                                      command=lambda: print("button_1 clicked"),
                                      relief="flat")
         self.button_process.place(x=0.0, y=103.0, width=120.0, height=103.0)
 
-        self.button_image_home_off = PhotoImage(file=self.relative_to_assets("button_home_off.png"))
+        self.button_image_home_off = PhotoImage(data=img_button_home_off)
         self.button_home = Button(self, image=self.button_image_home_off,
                                   borderwidth=0, highlightthickness=0,
                                   command=self.Cmd_btn_home,
                                   relief="flat")
         self.button_home.place(x=0.0, y=0.0, width=120.0, height=103.0)
 
-        self.button_image_result_off = PhotoImage(file=self.relative_to_assets("button_result_off.png"))
+        self.button_image_result_off = PhotoImage(data=img_button_result_off)
         self.button_result = Button(self, image=self.button_image_result_off,
                                     borderwidth=0, highlightthickness=0,
                                     command=self.Cmd_btn_result,
                                     relief="flat")
         self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
 
-        self.button_image_setting_off = PhotoImage(file=self.relative_to_assets("button_setting_off.png"))
+        self.button_image_setting_off = PhotoImage(data=img_button_setting_off)
         self.button_setting = Button(self, image=self.button_image_setting_off, 
                                      borderwidth=0, highlightthickness=0,
                                      command=self.Cmd_btn_setting,
@@ -125,7 +129,7 @@ class PageProcessInit(Frame):
             outline="")
         '''
 
-        self.button_image_play_off = PhotoImage(file=self.relative_to_assets("button_play_off.png"))
+        self.button_image_play_off = PhotoImage(data=img_button_play_off)
         self.button_play = Button(self, image=self.button_image_play_off,
                                   borderwidth=0, highlightthickness=0,
                                   command=self.Cmd_btn_play,
@@ -133,14 +137,14 @@ class PageProcessInit(Frame):
         #self.button_play.place(x=938.0, y=140.0, width=52.0, height=52.0)
         self.button_play.place(x=903.0, y=105.0, width=121.0, height=103.0)
 
-        self.button_image_stop_off = PhotoImage(file=self.relative_to_assets("button_stop_off.png"))
+        self.button_image_stop_off = PhotoImage(data=img_button_stop_off)
         self.button_stop = Button(self, image=self.button_image_stop_off,
                              borderwidth=0, highlightthickness=0,
                              command=lambda: print("button_6 clicked"),
                              relief="flat")
         #self.button_stop.place(x=938.0, y=243.0, width=52.0, height=52.0)
         self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
-        self.button_image_edit_off = PhotoImage(file=self.relative_to_assets("button_edit_off.png"))
+        self.button_image_edit_off = PhotoImage(data=img_button_edit_off)
         self.button_edit = Button(self, image=self.button_image_edit_off,
                                   borderwidth=0, highlightthickness=0,
                                   command=self.Cmd_btn_edit,
@@ -225,8 +229,8 @@ class PageProcessInit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.button_image_insert_on = PhotoImage(file=self.relative_to_assets("button_insert_on.png"))
-        self.button_image_insert_off = PhotoImage(file=self.relative_to_assets("button_insert_off.png"))
+        self.button_image_insert_on = PhotoImage(data=img_button_insert_on)
+        self.button_image_insert_off = PhotoImage(data=img_button_insert_off)
         self.button_insert = Button(self, image=self.button_image_insert_on,
                                     borderwidth=0, highlightthickness=0,
                                     command=self.Cmd_btn_insert,
@@ -234,8 +238,8 @@ class PageProcessInit(Frame):
         self.button_insert.place(
             x=515.0, y=423.0, width=315.0, height=86.0)
 
-        self.button_image_eject_on = PhotoImage(file=self.relative_to_assets("button_eject_on.png"))
-        self.button_image_eject_off = PhotoImage(file=self.relative_to_assets("button_eject_off.png"))
+        self.button_image_eject_on = PhotoImage(data=img_button_eject_on)
+        self.button_image_eject_off = PhotoImage(data=img_button_eject_off)
         self.button_eject = Button(self, image=self.button_image_eject_off,
                                    borderwidth=0, highlightthickness=0,
                                    command=self.Cmd_btn_eject,
@@ -251,9 +255,9 @@ class PageProcessInit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.image_state_not_started = PhotoImage(file=self.relative_to_assets("state_not_started.png"))
-        self.image_state_completed = PhotoImage(file=self.relative_to_assets("state_completed.png"))
-        self.image_state_aborted = PhotoImage(file=self.relative_to_assets("state_aborted.png"))
+        self.image_state_not_started = PhotoImage(data=img_state_not_started)
+        self.image_state_completed = PhotoImage(data=img_state_completed)
+        self.image_state_aborted = PhotoImage(data=img_state_aborted)
         self.image_state = self.canvas.create_image(731.0, 47.0, image=self.image_state_not_started)
 
     def update_status(self):

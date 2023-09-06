@@ -13,15 +13,18 @@ from coutil import PCRResults
 import time
 import page_result_chart, page_process_init, page_home, page_setting
 
+from copic import img_button_process_off, img_button_home_off, img_button_setting_off
+from copic import img_button_result_on, img_button_log_on, img_button_return_on
+
 class PageResultLog(Frame):
 
     # user data
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_log")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_result_log")
 
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
 
     def __init__(self, parent, controller):
@@ -65,8 +68,7 @@ class PageResultLog(Frame):
             fill="#F9F9F9",
             outline="")
 
-        self.image_process_off = PhotoImage(
-            file=self.relative_to_assets("image_process_off.png"))
+        self.image_process_off = PhotoImage(data=img_button_process_off)
         self.button_process = Button(self,
             image=self.image_process_off,
             borderwidth=0,
@@ -82,8 +84,7 @@ class PageResultLog(Frame):
             height=103.0
         )
 
-        self.image_home_off = PhotoImage(
-            file=self.relative_to_assets("image_home_off.png"))
+        self.image_home_off = PhotoImage(data=img_button_home_off)
         self.button_home = Button(self,
             image=self.image_home_off,
             borderwidth=0,
@@ -98,8 +99,7 @@ class PageResultLog(Frame):
             height=103.0
         )
 
-        self.image_setting_off = PhotoImage(
-            file=self.relative_to_assets("image_setting_off.png"))
+        self.image_setting_off = PhotoImage(data=img_button_setting_off)
         self.button_setting = Button(self,
             image=self.image_setting_off,
             borderwidth=0,
@@ -139,8 +139,7 @@ class PageResultLog(Frame):
             text="RUN TIME", fill="#7D8CA7", font=("Noto Sans", 24 * -1))
 
 
-        self.image_result_on = PhotoImage(
-            file=self.relative_to_assets("image_result_on.png"))
+        self.image_result_on = PhotoImage(data=img_button_result_on)
         self.button_result = Button(self,
             image=self.image_result_on,
             borderwidth=0,
@@ -150,8 +149,7 @@ class PageResultLog(Frame):
         )
         self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
 
-        self.image_log_on = PhotoImage(
-            file=self.relative_to_assets("image_log_on.png"))
+        self.image_log_on = PhotoImage(data=img_button_log_on)
 
         self.button_log = Button(self,
             image=self.image_log_on,
@@ -163,8 +161,7 @@ class PageResultLog(Frame):
 
         self.button_log.place(x=903.0, y=496.0, width=121.0, height=103.0)
 
-        self.image_return_off = PhotoImage(
-            file=self.relative_to_assets("image_return_off.png"))
+        self.image_return_off = PhotoImage(data=img_button_return_on)
         
         self.button_return = Button(self,
             image=self.image_return_off,

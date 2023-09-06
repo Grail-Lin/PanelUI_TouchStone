@@ -13,15 +13,18 @@ import time
 
 from circle_bar import CircularProgressbar
 
+from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
+from copic import img_button_stop_off, img_button_edit_off, img_button_play_on
+
 class PageProcessPlay(Frame):
 
     # user data
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -66,8 +69,7 @@ class PageProcessPlay(Frame):
             fill="#F9F9F9",
             outline="")
 
-        self.button_image_process_on = PhotoImage(
-            file=self.relative_to_assets("button_process_on.png"))
+        self.button_image_process_on = PhotoImage(data=img_button_process_on)
         self.button_process = Button(self,
             image=self.button_image_process_on,
             borderwidth=0,
@@ -82,8 +84,7 @@ class PageProcessPlay(Frame):
             height=103.0
         )
 
-        self.button_image_home_off = PhotoImage(
-            file=self.relative_to_assets("button_home_off.png"))
+        self.button_image_home_off = PhotoImage(data=img_button_home_off)
         self.button_home = Button(self,
             image=self.button_image_home_off,
             borderwidth=0,
@@ -98,8 +99,7 @@ class PageProcessPlay(Frame):
             height=103.0
         )
 
-        self.button_image_result_off = PhotoImage(
-            file=self.relative_to_assets("button_result_off.png"))
+        self.button_image_result_off = PhotoImage(data=img_button_result_off)
         self.button_result = Button(self,
             image=self.button_image_result_off,
             borderwidth=0,
@@ -114,8 +114,7 @@ class PageProcessPlay(Frame):
             height=103.0
         )
 
-        self.button_image_setting_off = PhotoImage(
-            file=self.relative_to_assets("button_setting_off.png"))
+        self.button_image_setting_off = PhotoImage(data=img_button_setting_off)
         self.button_setting = Button(self,
             image=self.button_image_setting_off,
             borderwidth=0,
@@ -147,14 +146,14 @@ class PageProcessPlay(Frame):
             fill="#E6EFF4",
             outline="")
 
-        self.button_image_stop_off = PhotoImage(file=self.relative_to_assets("button_stop_off.png"))
+        self.button_image_stop_off = PhotoImage(data=img_button_stop_off)
         self.button_stop = Button(self, image=self.button_image_stop_off,
                              borderwidth=0, highlightthickness=0,
                              command=self.Cmd_btn_stop,
                              relief="flat")
         #self.button_stop.place(x=938.0, y=243.0, width=52.0, height=52.0)
         self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
-        self.button_image_edit_off = PhotoImage(file=self.relative_to_assets("button_edit_off.png"))
+        self.button_image_edit_off = PhotoImage(data=img_button_edit_off)
         self.button_edit = Button(self, image=self.button_image_edit_off,
                                   borderwidth=0, highlightthickness=0,
                                   command=0,
@@ -163,8 +162,7 @@ class PageProcessPlay(Frame):
         self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
 
 
-        self.button_image_play_on = PhotoImage(
-            file=self.relative_to_assets("button_play_on.png"))
+        self.button_image_play_on = PhotoImage(data=img_button_play_on)
         self.button_play = Button(self,
             image=self.button_image_play_on,
             borderwidth=0,
@@ -187,32 +185,6 @@ class PageProcessPlay(Frame):
         self.extract_bar.add_next_bar(self.qpcr_bar)
 
         self.current_bar = self.preextract_bar
-
-        '''
-        self.image_state_full = PhotoImage(
-            file=self.relative_to_assets("image_state_full.png"))
-        self.image_state_1 = self.canvas.create_image(
-            278.0,
-            262.0,
-            image=self.image_state_full
-        )
-
-        self.image_state_empty = PhotoImage(
-            file=self.relative_to_assets("image_state_empty.png"))
-        self.image_state_2 = self.canvas.create_image(
-            730.0,
-            262.0,
-            image=self.image_state_empty
-        )
-
-        self.image_state_half = PhotoImage(
-            file=self.relative_to_assets("image_state_half.png"))
-        self.image_state_3 = self.canvas.create_image(
-            504.0,
-            262.0,
-            image=self.image_state_half
-        )
-        '''
 
         # title of circles
         self.canvas.create_text(
@@ -276,35 +248,6 @@ class PageProcessPlay(Frame):
 		
 
         # middle of circle
-        '''
-        self.canvas.create_text(
-            277.0,
-            255.0, #230.0,
-            anchor="center",
-            text="0:05",
-            fill="#7D8CA7",
-            font=("Noto Sans", 46 * -1)
-        )
-
-        self.canvas.create_text(
-            503.0,
-            255.0, #230.0,
-            anchor="center",
-            text="0:12",
-            fill="#7D8CA7",
-            font=("Noto Sans", 46 * -1)
-        )
-
-        self.canvas.create_text(
-            730.0,
-            255.0, #230.0,
-            anchor="center",
-            text="0:25",
-            fill="#7D8CA7",
-            font=("Noto Sans", 46 * -1)
-        )
-        '''
-
         self.canvas.create_text(
             427.0,
             21.0, #29.0,

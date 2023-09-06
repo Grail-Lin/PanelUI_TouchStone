@@ -14,6 +14,8 @@ import page_home
 import coutil
 import win_popup_kb
 
+from copic import img_entry_bg, img_button_login_off, img_button_login_on, img_logo
+
 class PageLogin(Frame):
 
     # user data
@@ -22,11 +24,11 @@ class PageLogin(Frame):
     value_vk_on = False
 
 
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_login")
+    #OUTPUT_PATH = Path(__file__).parent
+    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_login")
 
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
+    #def relative_to_assets(self, path: str) -> Path:
+    #    return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -64,13 +66,14 @@ class PageLogin(Frame):
         #self.canvas.place(x = 0, y = 0)
 
 
-        self.entry_image_1 = PhotoImage(
-            file=self.relative_to_assets("entry_1.png"))
+        # self.entry_image_1 = PhotoImage(
+        #     file=self.relative_to_assets("entry_1.png"))
+        self.img_entry_bg = PhotoImage(data=img_entry_bg)
 
         self.entry_bg_1 = self.canvas.create_image(
             525.0,
             214.0,
-            image=self.entry_image_1
+            image=self.img_entry_bg
         )
 
 
@@ -91,12 +94,12 @@ class PageLogin(Frame):
         )
         self.entry_1.bind("<1>", self.Focus_entry_uname)
 
-        self.entry_image_2 = PhotoImage(
-            file=self.relative_to_assets("entry_1.png"))
+        #self.entry_image_2 = PhotoImage(
+        #    file=self.relative_to_assets("entry_1.png"))
         self.entry_bg_2 = self.canvas.create_image(
             525.0,
             327.0,
-            image=self.entry_image_2
+            image=self.img_entry_bg
         )
         self.entry_2 = Entry(self,
             bd=0,
@@ -139,20 +142,26 @@ class PageLogin(Frame):
         self.canvas.itemconfigure(self.error_password, state="hidden")
         self.canvas.itemconfigure(self.error_username, state="hidden")
 
-        self.image_image_1 = PhotoImage(
-            file=self.relative_to_assets("image_1.png"))
-        self.image_1 = self.canvas.create_image(
+        #self.image_image_1 = PhotoImage(
+        #    file=self.relative_to_assets("image_1.png"))
+
+        self.img_logo = PhotoImage(data=img_logo)
+		
+        self.image_logo = self.canvas.create_image(
             525.0,
             93.0,
-            image=self.image_image_1
+            image=self.img_logo
         )
 
-        self.button_image_1 = PhotoImage(
-            file=self.relative_to_assets("button_1.png"))
-        self.button_image_1_click = PhotoImage(
-            file=self.relative_to_assets("button_1_click.png"))
+        #self.button_image_1 = PhotoImage(
+        #    file=self.relative_to_assets("button_1.png"))
+        #self.button_image_1_click = PhotoImage(
+        #    file=self.relative_to_assets("button_1_click.png"))
+        self.img_button_login_off = PhotoImage(data=img_button_login_off)
+        self.img_button_login_on = PhotoImage(data=img_button_login_on)
+
         self.button_1 = Button(self,
-            image=self.button_image_1,
+            image=self.img_button_login_off,
             borderwidth=0,
             highlightthickness=0,
             command=0, #lambda: print("button_1 clicked"),
@@ -174,7 +183,7 @@ class PageLogin(Frame):
     def Cmd_btn_login(self):
         # change login btn image
         #self.button_1['state']="disabled"
-        self.button_1['image']=self.button_image_1
+        self.button_1['image']=self.img_button_login_off
         self.button_1['command']=0
 
         # close kb
@@ -228,7 +237,7 @@ class PageLogin(Frame):
         self.entry_1['fg']="#17171B"
         # change login btn image
         #self.button_1['state']="normal"
-        self.button_1['image']=self.button_image_1_click
+        self.button_1['image']=self.img_button_login_on
         self.button_1['command']=self.Cmd_btn_login
 
         if self.value_vk_on == False:
@@ -245,7 +254,7 @@ class PageLogin(Frame):
         self.entry_2['show']="*"
         # change login btn image
         #self.button_1['state']="normal"
-        self.button_1['image']=self.button_image_1_click
+        self.button_1['image']=self.img_button_login_on
         self.button_1['command']=self.Cmd_btn_login
         if self.value_vk_on == False:
             self.value_vk_on = True
