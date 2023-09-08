@@ -31,8 +31,8 @@ class COPcbConnector:
         # need to inplement in child class
         self.init_package = None #bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
         self.init_OK_package = None #bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
-        self.scan_package = None #bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
-        self.scan_OK_package = None #bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
+        self.func_package = None #bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
+        self.func_OK_package = None #bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
         self.stop_package = None #bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
 
         # return errors
@@ -44,6 +44,7 @@ class COPcbConnector:
         # state
         # 0: uninit
         # 1: init
+        # -1: failed at serial connection
         self.state = 0
         return
 
@@ -54,7 +55,8 @@ class COPcbConnector:
         # use description   ELMO GMAS (COM10)
         # to get name       COM10
         # than serial connect it and send inital cmd
-        if self.target_desc == None:
+        if self.target_desc == None and self.port == None:
+            self.state = -1
             return
 
         if self.port == None:
@@ -70,6 +72,8 @@ class COPcbConnector:
             self.ser.flushInput()
             self.ser.flushOutput()
             print('Connect ' + self.ser.name)
+        else
+            self.state = -1
         return
 
     # need to inplement in child class
@@ -91,7 +95,7 @@ class COPcbConnector:
     # need to inplement in child class
     def sendCmd(self, timeout, cmd_str):
         # check if initialized
-        if self.state == 0:
+        if self.state < 1:
             return self.err_uninit
         
         # flush the reading data
@@ -103,7 +107,7 @@ class COPcbConnector:
         time.sleep(0.1)
         nowtime = time.time()
 
-        while self.ser.in_waiting <= len(self.scan_OK_package):
+        while self.ser.in_waiting <= len(self.func_OK_package):
             time.sleep(0.1)
             difftime = time.time() - nowtime
             if difftime >= timeout:
@@ -111,10 +115,10 @@ class COPcbConnector:
                 return self.err_timeout
 
 
-        if self.ser.in_waiting > len(self.scan_OK_package):
+        if self.ser.in_waiting > len(self.func_OK_package):
             data = self.ser.readline()
             print(data)
-            if (data[0:15] == self.scan_OK_package):
+            if (data[0:15] == self.func_OK_package):
                 try:
                     ret_string = data[15:].decode("utf-8")
                 except:
@@ -133,16 +137,16 @@ class COPcbConnector:
 class QRCodeReader(COPcbConnector):
     def __init__(self):
         super().__init__(target_desc = 'ELMO GMAS')
-        self.connect()
         self.definePackage()
+        self.connect()
 
     def definePackage(self):
         self.init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
         self.init_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
-        self.scan_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
-        self.scan_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
+        self.func_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
+        self.func_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
         self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
 	
     def scan(self, timeout = 10):
-        return self.sendCmd(timeout, self.scan_package)
+        return self.sendCmd(timeout, self.func_package)
 
