@@ -72,7 +72,7 @@ class COPcbConnector:
             self.ser.flushInput()
             self.ser.flushOutput()
             print('Connect ' + self.ser.name)
-        else
+        else:
             self.state = -1
         return
 
@@ -117,7 +117,7 @@ class COPcbConnector:
 
         if self.ser.in_waiting > len(self.func_OK_package):
             data = self.ser.readline()
-            print(data)
+            #print(data)
             if (data[0:15] == self.func_OK_package):
                 try:
                     ret_string = data[15:].decode("utf-8")
@@ -150,3 +150,10 @@ class QRCodeReader(COPcbConnector):
     def scan(self, timeout = 10):
         return self.sendCmd(timeout, self.func_package)
 
+
+if __name__ == "__main__":
+    # test QRCodeReader
+    qrcr = QRCodeReader()
+    qrcr.initPCB(10)
+    ret = qrcr.scan(10)
+    print("QRCode scan result: " + ret)
