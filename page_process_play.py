@@ -16,6 +16,10 @@ from circle_bar import CircularProgressbar
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
 from copic import img_button_stop_off, img_button_edit_off, img_button_play_on
 
+# PCB module
+import copcb
+
+
 class PageProcessPlay(Frame):
 
     # user data
@@ -32,6 +36,12 @@ class PageProcessPlay(Frame):
 
         # set user data
 
+
+        # set pcb boards
+        # initial all pcb here
+        #self.pcb_a = ModuleA()
+        #self.pcb_a.initPCB(10)
+
         # set window size
         width = 1024
         height = 600
@@ -41,11 +51,6 @@ class PageProcessPlay(Frame):
         alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
         controller.geometry(alignstr)
         controller.resizable(width=False, height=False)
-
-
-        # gradient background
-        #self.canvas = GradientFrame(self, colors = ("white", "#F0F0F0"), width = 1024, height = 600)
-        #self.canvas.config(direction = self.canvas.top2bottom)
 
         
         # flat background
@@ -302,7 +307,12 @@ class PageProcessPlay(Frame):
 
         self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
         self.canvas.after(100, self.step)
-
+        '''
+        1, check current stage
+		2, call current stage pcb
+        3, update the remaining time
+        4, update bars
+        '''
 
 if __name__ == "__main__":
     window = Tk()

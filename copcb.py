@@ -150,6 +150,23 @@ class QRCodeReader(COPcbConnector):
     def scan(self, timeout = 10):
         return self.sendCmd(timeout, self.func_package)
 
+class ModuleA(COPcbConnector):
+    def __init__(self):
+        super().__init__(target_desc = 'ModuleA')
+        self.definePackage()
+        self.connect()
+
+    def definePackage(self):
+        self.init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
+        self.init_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
+        self.func_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
+        self.func_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
+        self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
+	
+    def func(self, timeout = 10):
+        #return self.sendCmd(timeout, self.func_package)
+        return 10
+
 
 if __name__ == "__main__":
     # test QRCodeReader
