@@ -3,6 +3,20 @@ import numpy as np
 import sqlite3
 import io
 
+class PCBStep:
+    def __init__(self, name, para_array, pcb, pcb_id):
+        self.name = name
+        self.para_array = para_array
+        self.pcb = pcb
+        self.pcb_id = pcb_id
+        self.rtime = 0
+
+    def doFunc(self):
+        if self.pcb_id == 0:
+            ret = self.pcb.doFunc(10)
+            if ret[:5] != "ERROR"
+                self.rtime = ret[0]
+
 class PCRResults:
     def __init__(self, test_id = None, test_name = None, timestamp = None, ct1 = None, ct2 = None, well1_array = None, well2_array = None):
         self.test_id = test_id

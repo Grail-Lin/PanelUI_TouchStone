@@ -163,7 +163,7 @@ class ModuleA(COPcbConnector):
         self.func_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
         self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
 	
-    def func(self, timeout = 10):
+    def doFunc(self, timeout = 10):
         #return self.sendCmd(timeout, self.func_package)
         return 10
 

@@ -18,7 +18,7 @@ from copic import img_button_stop_off, img_button_edit_off, img_button_play_on
 
 # PCB module
 import copcb
-
+import coutil
 
 class PageProcessPlay(Frame):
 
@@ -40,7 +40,13 @@ class PageProcessPlay(Frame):
         # set pcb boards
         # initial all pcb here
         #self.pcb_a = ModuleA()
-        #self.pcb_a.initPCB(10)
+        #self.pcb_a.initPCB(10)self
+        self.step_array = []
+        self.cur_step_rtime = 0
+        self.cur_step_num = 0
+        self.cur_step_ctime = 0 # check time
+
+        #
 
         # set window size
         width = 1024
@@ -279,7 +285,7 @@ class PageProcessPlay(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.canvas.after(100, self.step)
+        self.canvas.after(1000, self.step)
 
 
     def Cmd_btn_stop(self):
@@ -306,13 +312,45 @@ class PageProcessPlay(Frame):
         remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
 
         self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
-        self.canvas.after(100, self.step)
+        self.canvas.after(1000, self.step)
         '''
         1, check current stage
 		2, call current stage pcb
         3, update the remaining time
         4, update bars
         '''
+        self.step_array[self.cur_step_num].cur_step_rtime -= 1
+        self.cur_step_ctime += 1
+        if self.step_array[self.cur_step_num].cur_step_rtime <= 0:
+            # check if need to do next step
+            self.step_array[self.cur_step_num].doFunc()
+            self.cur_step_ctime = 0
+            if self.step_array[self.cur_step_num].rtime <= 0:
+                # next step
+                self.cur_step_num += 1
+                if len(self.step_array) > self.cur_step_num:
+                    self.step_array[self.cur_step_num].doFunc()
+                    self.cur_step_ctime = 0
+                else: # no more step
+                    self.finish_all()
+        elif self.cur_step_ctime == 5:
+            # check status
+            self.step_array[self.cur_step_num].doFunc()
+            self.cur_step_ctime = 0
+
+    def initial_step_array(self):
+        self.step_array = []
+
+        step1 = coutil.PCBStep("step1", "para1", "pcb1", 1)
+        step2 = coutil.PCBStep("step2", "para2", "pcb2", 2)
+        step3 = coutil.PCBStep("step3", "para3", "pcb3", 3)
+        self.step_array.append(step1)
+        self.step_array.append(step2)
+        self.step_array.append(step3)
+
+    def conf_step(self, step_num, step_para):
+        self.step_array[step_num].para_array = step_para
+
 
 if __name__ == "__main__":
     window = Tk()
