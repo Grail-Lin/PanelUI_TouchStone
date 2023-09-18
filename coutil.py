@@ -14,8 +14,8 @@ class PCBStep:
     def doFunc(self):
         if self.pcb_id == 0:
             ret = self.pcb.doFunc(10)
-            if ret[:5] != "ERROR"
-                self.rtime = ret[0]
+            if type(ret) == int:
+                self.rtime = ret
 
 class PCRResults:
     def __init__(self, test_id = None, test_name = None, timestamp = None, ct1 = None, ct2 = None, well1_array = None, well2_array = None):

@@ -18,6 +18,7 @@ import time
 import serial
 import serial.tools.list_ports
 
+import random
 
 
 # basic class
@@ -151,10 +152,12 @@ class QRCodeReader(COPcbConnector):
         return self.sendCmd(timeout, self.func_package)
 
 class ModuleA(COPcbConnector):
-    def __init__(self):
+    def __init__(self, total_time):
         super().__init__(target_desc = 'ModuleA')
         self.definePackage()
         self.connect()
+        self.total_time = total_time
+
 
     def definePackage(self):
         self.init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
@@ -165,7 +168,11 @@ class ModuleA(COPcbConnector):
 	
     def doFunc(self, timeout = 10):
         #return self.sendCmd(timeout, self.func_package)
-        return 10
+        # return remain_time, other value
+        ret = self.total_time
+        self.total_time -= 1
+        if self.total_time < 0:
+            self.total_time = random.randrange(10,180)
 
 
 if __name__ == "__main__":

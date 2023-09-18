@@ -319,9 +319,9 @@ class PageProcessPlay(Frame):
         3, update the remaining time
         4, update bars
         '''
-        self.step_array[self.cur_step_num].cur_step_rtime -= 1
+        self.step_array[self.cur_step_num].rtime -= 1
         self.cur_step_ctime += 1
-        if self.step_array[self.cur_step_num].cur_step_rtime <= 0:
+        if self.step_array[self.cur_step_num].rtime <= 0:
             # check if need to do next step
             self.step_array[self.cur_step_num].doFunc()
             self.cur_step_ctime = 0
