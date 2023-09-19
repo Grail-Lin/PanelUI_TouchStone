@@ -93,7 +93,8 @@ class PageCheck(Frame):
 
     def Cmd_btn_cancel(self):
         # return to process play
-        self.controller.frames[page_process_play.PageProcessPlay].current_bar.toggle_pause()
+        #self.controller.frames[page_process_play.PageProcessPlay].current_bar.toggle_pause()
+        self.controller.frames[page_process_play.PageProcessPlay].step()
         self.controller.show_frame(page_process_play.PageProcessPlay)
 
     def Cmd_btn_stop(self):

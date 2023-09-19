@@ -373,9 +373,27 @@ class PageProcessInit(Frame):
         self.str_testname.set(temp_string)
 
 
-        self.var_preextracttime = random.randrange(10,180)
-        self.var_extracttime = random.randrange(10,240)
-        self.var_qpcrtime = random.randrange(10,180)
+        #self.var_preextracttime = random.randrange(10,180)
+        #self.var_extracttime = random.randrange(10,240)
+        #self.var_qpcrtime = random.randrange(10,180)
+
+        #self.var_processtime = self.var_preextracttime+ self.var_extracttime + self.var_qpcrtime
+        #self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
+
+
+        # set the time for play page
+        # self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.reset(self.var_preextracttime)
+        # self.controller.frames[page_process_play.PageProcessPlay].extract_bar.reset(self.var_extracttime)
+        # self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.reset(self.var_qpcrtime)
+
+        # init all step setting
+        all_steps_setting = []
+        self.controller.frames[page_process_play.PageProcessPlay].initial_step_array(all_steps_setting)
+
+
+        self.var_preextracttime = self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.total_time
+        self.var_extracttime = self.controller.frames[page_process_play.PageProcessPlay].extract_bar.total_time
+        self.var_qpcrtime = self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.total_time
 
         self.var_processtime = self.var_preextracttime+ self.var_extracttime + self.var_qpcrtime
         self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
@@ -390,10 +408,6 @@ class PageProcessInit(Frame):
         self.process_status = 2
         self.update_status()
 
-        # set the time for play page
-        self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.reset(self.var_preextracttime)
-        self.controller.frames[page_process_play.PageProcessPlay].extract_bar.reset(self.var_extracttime)
-        self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.reset(self.var_qpcrtime)
 
         return
     # btn eject cartridge
@@ -421,6 +435,7 @@ class PageProcessInit(Frame):
 
     def Cmd_btn_play(self):
         # pass the value of process setting
+        print("process_status: " + str(self.process_status))
         if self.process_status == 2:
             #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
             #self.controller.frames[page_process_play.PageProcessPlay].update_status()
@@ -428,9 +443,10 @@ class PageProcessInit(Frame):
             self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.start()
             self.controller.frames[page_process_play.PageProcessPlay].extract_bar.start()
             self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.start()
-
+            '''
             self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
-
+            '''
+            self.controller.frames[page_process_play.PageProcessPlay].step()
             self.controller.show_frame(page_process_play.PageProcessPlay)
 
     def Cmd_btn_result(self):

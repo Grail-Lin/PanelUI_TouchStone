@@ -19,6 +19,7 @@ from copic import img_button_stop_off, img_button_edit_off, img_button_play_on
 # PCB module
 import copcb
 import coutil
+import random
 
 class PageProcessPlay(Frame):
 
@@ -35,14 +36,31 @@ class PageProcessPlay(Frame):
         self.controller = controller
 
         # set user data
-
+        self.play_after = None
 
         # set pcb boards
         # initial all pcb here
-        #self.pcb_a = ModuleA()
+        self.pcb_a1 = copcb.ModuleA()
+        self.pcb_a2 = copcb.ModuleA()
+        self.pcb_b1 = copcb.ModuleA()
+        self.pcb_b2 = copcb.ModuleA()
+        self.pcb_b3 = copcb.ModuleA()
+        self.pcb_b4 = copcb.ModuleA()
+        self.pcb_b5 = copcb.ModuleA()
+        self.pcb_b6 = copcb.ModuleA()
+        self.pcb_b7 = copcb.ModuleA()
+        self.pcb_b8 = copcb.ModuleA()
+        self.pcb_c1 = copcb.ModuleA()
+        self.pcb_c2 = copcb.ModuleA()
+        self.pcb_c3 = copcb.ModuleA()
+
+
         #self.pcb_a.initPCB(10)self
         self.step_array = []
-        self.cur_step_rtime = 0
+        self.preextract_steps = []
+        self.extract_steps = []
+        self.qpcr_steps = []
+
         self.cur_step_num = 0
         self.cur_step_ctime = 0 # check time
 
@@ -226,7 +244,7 @@ class PageProcessPlay(Frame):
         )
 
         # botton of circle
-        self.canvas.create_text(
+        self.text_preext = self.canvas.create_text(
             277.0,
             385.0, #375.0,
             anchor="center",
@@ -235,7 +253,7 @@ class PageProcessPlay(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.canvas.create_text(
+        self.text_ext = self.canvas.create_text(
             503.0,
             385.0, #375.0,
             anchor="center",
@@ -244,7 +262,7 @@ class PageProcessPlay(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.canvas.create_text(
+        self.text_qpcr = self.canvas.create_text(
             729.0,
             385.0, #375.0,
             anchor="center",
@@ -285,11 +303,12 @@ class PageProcessPlay(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.canvas.after(1000, self.step)
+        #self.canvas.after(1000, self.step)
 
 
     def Cmd_btn_stop(self):
         # hold the process for hardware
+        '''
         self.preextract_bar.running = False
         self.extract_bar.running = False
         self.qpcr_bar.running = False
@@ -303,54 +322,171 @@ class PageProcessPlay(Frame):
         elif self.qpcr_bar.running == True:
             self.qpcr_bar.toggle_pause()
             self.current_bar = self.qpcr_bar
+        '''
+        if self.play_after is not None:
+            self.canvas.after_cancel(self.play_after)
 
         self.controller.show_frame(page_check.PageCheck)
 
     def step(self):
-        """Increment extent and update arc and label displaying how much completed."""
-        remain_time = self.preextract_bar.remain_time + self.extract_bar.remain_time + self.qpcr_bar.remain_time
-        remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
-
-        self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
-        self.canvas.after(1000, self.step)
         '''
         1, check current stage
 		2, call current stage pcb
         3, update the remaining time
         4, update bars
         '''
-        self.step_array[self.cur_step_num].rtime -= 1
-        self.cur_step_ctime += 1
-        if self.step_array[self.cur_step_num].rtime <= 0:
-            # check if need to do next step
-            self.step_array[self.cur_step_num].doFunc()
-            self.cur_step_ctime = 0
+        if len(self.step_array) > self.cur_step_num:
+            self.step_array[self.cur_step_num].rtime -= 1
+            self.cur_step_ctime += 1
             if self.step_array[self.cur_step_num].rtime <= 0:
-                # next step
-                self.cur_step_num += 1
-                if len(self.step_array) > self.cur_step_num:
-                    self.step_array[self.cur_step_num].doFunc()
-                    self.cur_step_ctime = 0
-                else: # no more step
-                    self.finish_all()
-        elif self.cur_step_ctime == 5:
-            # check status
-            self.step_array[self.cur_step_num].doFunc()
-            self.cur_step_ctime = 0
+                # check if need to do next step
+                self.step_array[self.cur_step_num].doFunc()
+                print("cur_step_num: " + str(self.cur_step_num))
+                self.cur_step_ctime = 0
+                if self.step_array[self.cur_step_num].rtime <= 0:
+                    # next step
+                    if self.cur_step_num == 0:
+                        self.canvas.itemconfigure(self.text_preext, text="1 / 2 STEPS")
+                    elif self.cur_step_num == 1:
+                        self.canvas.itemconfigure(self.text_preext, text="2 / 2 STEPS")
+                    elif self.cur_step_num == 2:
+                        self.canvas.itemconfigure(self.text_ext, text="1 / 8 STEPS")
+                    elif self.cur_step_num == 3:
+                        self.canvas.itemconfigure(self.text_ext, text="2 / 8 STEPS")
+                    elif self.cur_step_num == 4:
+                        self.canvas.itemconfigure(self.text_ext, text="3 / 8 STEPS")
+                    elif self.cur_step_num == 5:
+                        self.canvas.itemconfigure(self.text_ext, text="4 / 8 STEPS")
+                    elif self.cur_step_num == 6:
+                        self.canvas.itemconfigure(self.text_ext, text="5 / 8 STEPS")
+                    elif self.cur_step_num == 7:
+                        self.canvas.itemconfigure(self.text_ext, text="6 / 8 STEPS")
+                    elif self.cur_step_num == 8:
+                        self.canvas.itemconfigure(self.text_ext, text="7 / 8 STEPS")
+                    elif self.cur_step_num == 9:
+                        self.canvas.itemconfigure(self.text_ext, text="8 / 8 STEPS")
 
-    def initial_step_array(self):
+                    self.cur_step_num += 1
+                    if len(self.step_array) > self.cur_step_num:
+                        self.step_array[self.cur_step_num].doFunc()
+                        self.cur_step_ctime = 0
+                    else: # no more step
+                        self.finish_all()
+            elif self.cur_step_ctime == 5:
+                # check status
+                self.step_array[self.cur_step_num].doFunc()
+                self.cur_step_ctime = 0
+
+        rtime = 0
+        total_time = self.preextract_bar.total_time
+        for ss in self.preextract_steps:
+            rtime += ss.rtime
+        self.preextract_bar.reset(total_time, total_time - rtime)
+
+        rtime = 0
+        total_time = self.extract_bar.total_time
+        for ss in self.extract_steps:
+            rtime += ss.rtime
+        self.extract_bar.reset(total_time, total_time - rtime)
+
+        rtime = 0
+        total_time = self.qpcr_bar.total_time
+        for ss in self.qpcr_steps:
+            rtime += ss.rtime
+        self.qpcr_bar.reset(total_time, total_time - rtime)
+
+        """Increment extent and update arc and label displaying how much completed."""
+        remain_time = self.preextract_bar.remain_time + self.extract_bar.remain_time + self.qpcr_bar.remain_time
+        remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
+
+        self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
+
+        self.play_after = self.canvas.after(1000, self.step)
+
+
+    def initial_step_array(self, all_steps_setting):
+        if self.play_after is not None:
+            self.canvas.after_cancel(self.play_after)
+
+        self.cur_step_num = 0
+        self.cur_step_ctime = 0
+
         self.step_array = []
 
-        step1 = coutil.PCBStep("step1", "para1", "pcb1", 1)
-        step2 = coutil.PCBStep("step2", "para2", "pcb2", 2)
-        step3 = coutil.PCBStep("step3", "para3", "pcb3", 3)
-        self.step_array.append(step1)
-        self.step_array.append(step2)
-        self.step_array.append(step3)
+        self.pcb_a1.resetPCB(random.randrange(10,20))
+        self.pcb_a2.resetPCB(random.randrange(10,20))
+        self.pcb_b1.resetPCB(random.randrange(10,20))
+        self.pcb_b2.resetPCB(random.randrange(10,20))
+        self.pcb_b3.resetPCB(random.randrange(10,20))
+        self.pcb_b4.resetPCB(random.randrange(10,20))
+        self.pcb_b5.resetPCB(random.randrange(10,20))
+        self.pcb_b6.resetPCB(random.randrange(10,20))
+        self.pcb_b7.resetPCB(random.randrange(10,20))
+        self.pcb_b8.resetPCB(random.randrange(10,20))
+        self.pcb_c1.resetPCB(random.randrange(10,20))
+        self.pcb_c2.resetPCB(random.randrange(10,20))
+        self.pcb_c3.resetPCB(random.randrange(10,20))
+
+        step = coutil.PCBStep("preext-a1", "para1", self.pcb_a1, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("preext-a2", "para2", self.pcb_a2, 0)
+        self.step_array.append(step)
+
+        step = coutil.PCBStep("ext-b1", "para1", self.pcb_b1, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b2", "para2", self.pcb_b2, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b3", "para3", self.pcb_b3, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b4", "para4", self.pcb_b4, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b5", "para5", self.pcb_b5, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b6", "para6", self.pcb_b6, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b7", "para7", self.pcb_b7, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("ext-b8", "para8", self.pcb_b8, 0)
+        self.step_array.append(step)
+
+        step = coutil.PCBStep("qpcr-c1", "para1", self.pcb_c1, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("qpcr-c2", "para2", self.pcb_c2, 0)
+        self.step_array.append(step)
+        step = coutil.PCBStep("qpcr-c3", "para3", self.pcb_c3, 0)
+        self.step_array.append(step)
+
+        self.preextract_steps = self.step_array[:2]
+        self.extract_steps = self.step_array[2:10]
+        self.qpcr_steps = self.step_array[10:]
+
+        rtime = 0
+        for ss in self.preextract_steps:
+            rtime += ss.pcb.total_time
+        self.preextract_bar.reset(rtime)
+
+        rtime = 0
+        for ss in self.extract_steps:
+            rtime += ss.pcb.total_time
+        self.extract_bar.reset(rtime)
+
+        rtime = 0
+        for ss in self.qpcr_steps:
+            rtime += ss.pcb.total_time
+        self.qpcr_bar.reset(rtime)
+
+        self.canvas.itemconfigure(self.text_preext, text="0 / 2 STEPS")
+        self.canvas.itemconfigure(self.text_ext, text="0 / 8 STEPS")
+
 
     def conf_step(self, step_num, step_para):
         self.step_array[step_num].para_array = step_para
 
+    def finish_all(self):
+        print("finish all")
+        if self.play_after is not None:
+            self.canvas.after_cancel(self.play_after)
+        return
 
 if __name__ == "__main__":
     window = Tk()

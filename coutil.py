@@ -9,7 +9,7 @@ class PCBStep:
         self.para_array = para_array
         self.pcb = pcb
         self.pcb_id = pcb_id
-        self.rtime = 0
+        self.rtime = pcb.total_time
 
     def doFunc(self):
         if self.pcb_id == 0:

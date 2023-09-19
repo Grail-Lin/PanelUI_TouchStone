@@ -152,10 +152,12 @@ class QRCodeReader(COPcbConnector):
         return self.sendCmd(timeout, self.func_package)
 
 class ModuleA(COPcbConnector):
-    def __init__(self, total_time):
+    def __init__(self):
         super().__init__(target_desc = 'ModuleA')
         self.definePackage()
         self.connect()
+
+    def resetPCB(self, total_time):
         self.total_time = total_time
 
 
