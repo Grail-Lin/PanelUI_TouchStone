@@ -155,7 +155,7 @@ class ModuleA(COPcbConnector):
     def __init__(self):
         super().__init__(target_desc = 'ModuleA')
         self.definePackage()
-        self.connect()
+        #self.connect()
 
     def resetPCB(self, total_time):
         self.total_time = total_time

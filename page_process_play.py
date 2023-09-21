@@ -15,6 +15,7 @@ from circle_bar import CircularProgressbar
 
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
 from copic import img_button_stop_off, img_button_edit_off, img_button_play_on
+import page_result_chart
 
 # PCB module
 import copcb
@@ -486,6 +487,13 @@ class PageProcessPlay(Frame):
         print("finish all")
         if self.play_after is not None:
             self.canvas.after_cancel(self.play_after)
+
+        # todo: generate result and upload to db
+        result = coutil.PCRResults(timestamp=time.time()-random.randrange(0,180))
+        self.controller.frames[page_result_chart.PageResultChart].pcrresults = result
+        self.controller.frames[page_result_chart.PageResultChart].update()
+        self.controller.show_frame(page_result_chart.PageResultChart)
+
         return
 
 if __name__ == "__main__":
