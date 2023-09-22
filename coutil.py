@@ -4,12 +4,20 @@ import sqlite3
 import io
 
 class PCBStep:
-    def __init__(self, name, para_array, pcb, pcb_id):
+    def __init__(self, name, para_array, pcb, pcb_id, pcb_list=[], repeat=1):
         self.name = name
-        self.para_array = para_array
         self.pcb = pcb
         self.pcb_id = pcb_id
         self.rtime = pcb.total_time
+
+        self.pcb_list = pcb_list
+        self.para_array = para_array
+
+        self.repeat = repeat
+		
+		
+        self.cur_pcb_num = 0
+
 
     def doFunc(self):
         if self.pcb_id == 0:
