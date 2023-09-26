@@ -4,7 +4,28 @@ import sqlite3
 import io
 
 class PCBStep:
-    def __init__(self, name, para_array, pcb, pcb_id, pcb_list=[], repeat=1):
+    def __init__(self, name, para_array, pcb, pcb_id, repeat=1):
+        self.name = name
+        self.pcb = pcb
+        self.pcb_id = pcb_id
+        self.rtime = pcb.total_time
+
+        self.pcb_list = pcb_list
+        self.para_array = para_array
+
+        self.repeat = repeat
+		
+		
+
+    def doFunc(self):
+        if self.pcb_id == 0:
+            ret = self.pcb.doFunc(10)
+            if type(ret) == int:
+                self.rtime = ret
+
+
+class PCBsStep:
+    def __init__(self, name, para_array, pcb_list, pcb_id_list, repeat=1):
         self.name = name
         self.pcb = pcb
         self.pcb_id = pcb_id
@@ -24,6 +45,8 @@ class PCBStep:
             ret = self.pcb.doFunc(10)
             if type(ret) == int:
                 self.rtime = ret
+
+
 
 class PCRResults:
     def __init__(self, test_id = None, test_name = None, timestamp = None, ct1 = None, ct2 = None, well1_array = None, well2_array = None):
