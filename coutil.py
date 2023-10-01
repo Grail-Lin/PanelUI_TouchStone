@@ -25,27 +25,49 @@ class PCBStep:
 
 
 class PCBsStep:
-    def __init__(self, name, para_array, pcb_list, pcb_id_list, repeat=1):
+    # name = step name
+    # pcb_list = [PCB, PCB, PCB....]
+    # pcd_id_list = id to identify the pcb
+    # para_list = para for pcb
+    # time_list = time for pcb each
+    # repeat = repeat times
+    def __init__(self, name, pcb_list, pcb_id_list, para_list, time_list, repeat=1):
         self.name = name
-        self.pcb = pcb
-        self.pcb_id = pcb_id
-        self.rtime = pcb.total_time
 
         self.pcb_list = pcb_list
-        self.para_array = para_array
+        self.pcb_id_list = pcb_id_list
+        self.para_list = para_list
 
         self.repeat = repeat
 		
 		
         self.cur_pcb_num = 0
+        self.cur_repeat_num = 0
 
 
-    def doFunc(self):
-        if self.pcb_id == 0:
+        self.rtime = 0
+        for tt in time_list:
+           self.rtime += tt
+
+
+
+    def doFunc(self, current_time):
+        # check current pcb
+        temp_time = 0
+
+        for jj in range(0, self.repeat):
+            for ii in range(0, len(time_list)):
+                temp_time += time_list[ii]
+                if current_time <= temp_time:
+                    self.cur_pcb_num = ii
+                    self.cur_repeat_num = jj
+                    break
+            else:
+                continue
+            break
+
+        if pcb_id_list[self.cur_pcb_num] == 0:
             ret = self.pcb.doFunc(10)
-            if type(ret) == int:
-                self.rtime = ret
-
 
 
 class PCRResults:
