@@ -11,6 +11,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import page_process_init, page_home, page_result_list
 
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
+from copic import image_test_off, image_reset_off, image_user_off, image_time_off
 
 class PageSetting(Frame):
 
@@ -112,6 +113,67 @@ class PageSetting(Frame):
         self.button_setting.place(
             x=0.0,
             y=497.0,
+            width=120.0,
+            height=103.0
+        )
+
+        # button: user, time, test, reset, logout
+        self.image_user_off = PhotoImage(data = image_user_off)
+        self.button_user = Button(self,
+            image=self.image_user_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("image_user_off clicked"),
+            relief="flat"
+        )
+        self.button_user.place(
+            x=904.0,
+            y=0.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.image_time_off = PhotoImage(data = image_time_off)
+        self.button_time = Button(self,
+            image=self.image_time_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("image_time_off clicked"),
+            relief="flat"
+        )
+        self.button_time.place(
+            x=904.0,
+            y=103.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.image_test_off = PhotoImage(data = image_test_off)
+        self.button_test = Button(self,
+            image=self.image_test_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("image_test_off clicked"),
+            relief="flat"
+        )
+        self.button_test.place(
+            x=904.4,
+            y=206.0,
+            width=120.0,
+            height=103.0
+        )
+
+        self.image_reset_off = PhotoImage(data = image_reset_off)
+        self.button_reset = Button(self,
+            image=self.image_reset_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("image_reset_off clicked"),
+            relief="flat"
+        )
+        self.button_reset.place(
+            x=904.0,
+            y=394.0,
             width=120.0,
             height=103.0
         )

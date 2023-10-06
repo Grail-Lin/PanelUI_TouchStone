@@ -13,6 +13,7 @@ import page_result_list
 import page_setting
 
 from copic import img_button_home_on, img_button_process_off, img_button_setting_off, img_button_result_off
+from copic import img_co_logo, button_home_result, button_home_test
 
 class PageHome(Frame):
 
@@ -118,6 +119,46 @@ class PageHome(Frame):
             height=103.0
         )
 
+        # button for test/result
+        self.img_button_home_test = PhotoImage(data = button_home_test)
+        self.button_home_test = Button(self,
+            image=self.img_button_home_test,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_process,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_home_test.place(
+            x=148.0,
+            y=103.0,
+            width=350.0,
+            height=388.0
+        )
+
+        self.img_button_home_result = PhotoImage(data = button_home_result)
+        self.button_home_result = Button(self,
+            image=self.img_button_home_result,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_result,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_home_result.place(
+            x=526.0,
+            y=103.0,
+            width=350.0,
+            height=388.0
+        )
+
+
+
+
+
+
+
+
         self.canvas.create_rectangle(
             120.0,
             0.0,
@@ -142,6 +183,10 @@ class PageHome(Frame):
             600.0,
             fill="#E6EFF4",
             outline="")
+
+        # logo
+        self.img_co_logo = PhotoImage(data = img_co_logo)
+        self.canvas.create_image(964.0, 549.0, image=self.img_co_logo)
 
 
     def Cmd_btn_process(self):

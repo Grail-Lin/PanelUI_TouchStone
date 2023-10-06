@@ -15,6 +15,7 @@ def pic2str(functionName, file):
 
 
 if __name__ == '__main__':
+    '''
     pic2str('img_button_cancel_off', r".\assets\frame_check\button_cancel_off.png")
     pic2str('img_button_edit_off', r".\assets\frame_process\button_edit_off.png")
     pic2str('img_button_edit_on', r".\assets\frame_process\button_edit_on.png")
@@ -75,3 +76,19 @@ if __name__ == '__main__':
     pic2str('img_state_aborted', r".\assets\frame_process\state_aborted.png")
     pic2str('img_state_completed', r".\assets\frame_process\state_completed.png")
     pic2str('img_state_not_started', r".\assets\frame_process\state_not_started.png")
+    '''
+    #pic2str('img_button_delete_on', r".\assets\button_delete_on.png")
+    #pic2str('img_co_logo', r".\assets\co_logo.png")
+    #pic2str('image_reset_off', r".\assets\image_reset_off.png")
+    #pic2str('image_reset_on', r".\assets\image_reset_on.png")
+    #pic2str('image_test_off', r".\assets\image_test_off.png")
+    #pic2str('image_test_on', r".\assets\image_test_on.png")
+    #pic2str('image_time_off', r".\assets\image_time_off.png")
+    #pic2str('image_time_on', r".\assets\image_time_on.png")
+    #pic2str('image_user_off', r".\assets\image_user_off.png")
+    #pic2str('image_user_on', r".\assets\image_user_on.png")
+    pic2str('button_home_result', r".\assets\button_home_result.png")
+    pic2str('button_home_test', r".\assets\button_home_test.png")
+
+
+
