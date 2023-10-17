@@ -12,7 +12,7 @@ args = parser.parse_args()
 t1 = plate(heater)
 t2 = tec cold
 t3 = tec hot
-t4 = tube temperature
+t4 = tube temperature, detect by thermal camera
 
 Keep monitor: NTC and Thermal Camera
 
@@ -66,6 +66,11 @@ pid_low = PID.PID(P, I, D)
 pid_low.SetPoint = targetLowT
 pid_low.setSampleTime(1)
 
+pid_tec = PID.PID(P, I, D)
+pid_tec.SetPoint = targetLowT
+pid_tec.setSampleTime(1)
+
+
 class CoThermal:
     '''
         use relay to control heat with Arduino
@@ -100,13 +105,14 @@ class CoThermal:
         # temperature sampling rate: 1Hz
         self.samplingRate = 1
 
-        self.timestamp_high = 0
-        self.timestamp_low = 0
-        self.timestamp_env = 0
+        self.timestamp_plate = 0
+        self.timestamp_teccool = 0
+        self.timestamp_techeat = 0
 
         self.last_ts_high = 0
         self.last_ts_low = 0
         self.last_ts_env = 0
+        self.cur_cycle_time = 0
 
         self.r1 = 100000
         self.c1 = 4.391855325e-04
@@ -137,7 +143,7 @@ class CoThermal:
         self.relay_pin_sfan = 8
 
         # temperature pin
-        self.tp_pin_t1 = 0
+        self.tp_pin_t1 = 0 
         self.tp_pin_t2 = 1
         self.tp_pin_t3 = 2
         self.tp_pin_t4 = 3
@@ -151,10 +157,10 @@ class CoThermal:
 
     def start(self):
         # setting sampling for temperature
-        self.board.analog[self.tp_pin_t1].register_callback(self.HighTPCallback)
-        self.board.analog[self.tp_pin_t2].register_callback(self.LowTPCallback)
-        self.board.analog[self.tp_pin_t3].register_callback(self.LiqTPCallback)
-        #self.board.analog[self.tp_pin_t4].register_callback(self.LiqTPCallback)
+        self.board.analog[self.tp_pin_t1].register_callback(self.PlateTPCallback)
+        self.board.analog[self.tp_pin_t2].register_callback(self.TECCoolTPCallback)
+        self.board.analog[self.tp_pin_t3].register_callback(self.TECHeatTPCallback)
+        #self.board.analog[self.tp_pin_t4].register_callback(self.CameraTPCallback)
 
         self.board.samplingOn(1000 / self.samplingRate)
 
@@ -163,30 +169,34 @@ class CoThermal:
         self.board.analog[self.tp_pin_t3].enable_reporting()
         #self.board.analog[self.tp_pin_t4].enable_reporting()
 
-    def LowTPCallback(self, data):
+    def PlateTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("Low TS %f,%f:%f Ohm, %f C" % (self.timestamp_low, data, r2, Tc))
-        self.timestamp_low += (1 / self.samplingRate)
-        self.controlFlowForLowTS(Tc, self.timestamp_low)
+        print("Low TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate, data, r2, Tc))
+        self.timestamp_plate += (1 / self.samplingRate)
+        #self.controlFlowForLowTS(Tc, self.timestamp_low)
+e        self.controlFlowForAll(Tc, self.timestamp_plate)
 
-    def EnvTPCallback(self, data):
+    def TECCoolTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("Env TS %f,%f:%f Ohm, %f C" % (self.timestamp_env, data, r2, Tc))
-        self.timestamp_env += (1 / self.samplingRate)
-        self.controlFlowForEnvTS(Tc, self.timestamp_env)
+        print("Env TS %f,%f:%f Ohm, %f C" % (self.timestamp_teccool, data, r2, Tc))
+        self.timestamp_teccool += (1 / self.samplingRate)
+        #self.controlFlowForEnvTS(Tc, self.timestamp_env)
+        self.controlFlowForTECCool(Tc, self.timestamp_teccool)
 
-    def LiqTPCallback(self, data):
+    def TECHeatTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("Env TS %f,%f:%f Ohm, %f C" % (self.timestamp_env, data, r2, Tc))
-        self.timestamp_env += (1 / self.samplingRate)
-        self.controlFlowForLiqTS(Tc, self.timestamp_env)
+        print("Env TS %f,%f:%f Ohm, %f C" % (self.timestamp_techeat, data, r2, Tc))
+        self.timestamp_techeat += (1 / self.samplingRate)
+        #self.controlFlowForLiqTS(Tc, self.timestamp_env)
+        self.controlFlowForTECHeat(Tc, self.timestamp_techeat)
 
         
-    def HighTPCallback(self, data):
+    def CameraTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("High TS %f,%f:%f Ohm, %f C" % (self.timestamp_high, data, r2, Tc))
-        self.timestamp_high += (1 / self.samplingRate)
-        self.controlFlowForHighTS(Tc, self.timestamp_high)
+        print("High TS %f,%f:%f Ohm, %f C" % (self.timestamp_camera, data, r2, Tc))
+        self.timestamp_camera += (1 / self.samplingRate)
+        #self.controlFlowForHighTS(Tc, self.timestamp_high)
+        self.controlFlowForCamera(Tc, self.timestamp_camera)
     
     def stop(self):
         self.board.samplingOff()
@@ -204,6 +214,127 @@ class CoThermal:
         print("set digital[%d] value: %f" % (pin, value))
         self.board.digital[pin].write(value)
 
+
+    def controlFlowForAll(self, temperature, timestamp):
+        '''
+            T_low to T_high --> inc_period_time
+            stay in T_high --> high_period_time
+            T_high to T_low --> dec_period_time
+            stay in T_low --> low_period_time
+        '''
+        '''
+            state_high_ts 1 = keep on heating to 95
+            state_high_ts 2 = achieve target temperature: 95
+            state_high_ts 3 = stop heating, wait cooling to 55
+            state_high_ts 4 = achieve target temperature: 55
+        '''
+        print("state_high_ts = %d" % self.state_high_ts)
+
+        targetPwm = 0.0
+
+        if self.state_high_ts == 1:
+            '''
+                state_high_ts 1 = keep on heating
+                use PID
+            '''
+
+            # stop the cooling and turn off fan
+            self.pinOut(self.pwm_pin_heater, 0.0)
+            self.pinOut(self.relay_pin_bfan, 1.0)
+            self.pinOut(self.relay_pin_sfan, 1.0)
+
+
+            self.pid_high.update(temperature)
+            targetPwm = self.pid_high.output
+            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
+            targetPwm = targetPwm / 100.0
+            print("targetPwm = %f" % targetPwm)
+            self.pinOut(self.pwm_pin_heater, targetPwm)
+            
+            # check temperature
+            if temperature >= self.T_high:
+                self.last_ts_high = timestamp
+                self.state_high_ts = 2
+            
+        elif self.state_high_ts == 2:
+            '''
+                state_high_ts 2 = achieve target temperature: 95
+            '''
+
+            # stop the cooling and turn off fan
+            self.pinOut(self.pwm_pin_heater, 0.0)
+            self.pinOut(self.relay_pin_bfan, 1.0)
+            self.pinOut(self.relay_pin_sfan, 1.0)
+
+
+            targetPwm = self.pid_high.output
+            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
+            targetPwm = targetPwm / 100.0
+            self.pinOut(self.pwm_pin_heater, targetPwm)
+
+            # check timestamp
+            if (timestamp - self.last_ts_high) >= self.high_pt:
+                self.state_high_ts = 3
+                # change state_low_ts to 3 when state_high_ts about to 3
+                # self.state_low_ts = 3
+			
+			
+        elif self.state_high_ts == 3:
+            '''
+                state_high_ts 3 = stop heating
+            '''
+
+            # stop the cooling and turn on fan
+            self.pinOut(self.pwm_pin_heater, 0.0)
+            self.pinOut(self.relay_pin_bfan, 0.0)
+            self.pinOut(self.relay_pin_sfan, 0.0)
+
+            self.pid_tec.update(temperature)
+            targetPwm = self.pid_tec.output
+            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
+            targetPwm = targetPwm / 100.0
+            print("targetPwm = %f" % targetPwm)
+            self.pinOut(self.pwm_pin_tec, targetPwm)
+            
+            # check temperature
+            if temperature <= self.T_low:
+                self.last_ts_low = timestamp
+                self.state_high_ts = 4
+
+        elif self.state_high_ts == 4:
+            '''
+                state_high_ts 4 = achieve target temperature: 55
+                stop tec, keep fan
+            '''
+            self.pinOut(self.pwm_pin_tec, 0.0)
+            self.pinOut(self.relay_pin_bfan, 0.0)
+            self.pinOut(self.relay_pin_sfan, 0.0)
+
+            self.pid_low.update(temperature)
+            targetPwm = self.pid_low.output
+            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
+            targetPwm = targetPwm / 100.0
+            self.pinOut(self.pwm_pin_heater, targetPwm)
+
+            # check timestamp
+            if (timestamp - self.last_ts_low) >= self.low_pt:
+                self.state_high_ts = 1
+                # change state_low_ts to 3 when state_high_ts about to 3
+                # self.state_low_ts = 3
+
+        else:
+            '''
+                default value
+            '''
+            # turn off all item
+            self.pinOut(self.pwm_pin_heater, 0.0)
+            self.pinOut(self.pwm_pin_tec, 0.0)
+            self.pinOut(self.relay_pin_bfan, 0.0)
+            self.pinOut(self.relay_pin_sfan, 0.0)
+
+        if self.t1_ofile is not None:
+            print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.t1_ofile)
+        return
 
     def controlFlowForHighTS(self, temperature, timestamp):
         '''
@@ -272,147 +403,43 @@ class CoThermal:
             print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.h_output_file)
 
 
-    def controlFlowForLowTS(self, temperature, timestamp):
+    def controlFlowForTECCool(self, temperature, timestamp):
         '''
-            T_low to T_high --> inc_period_time
-            stay in T_high --> high_period_time
-            T_high to T_low --> dec_period_time
-            stay in T_low --> low_period_time
+            print the data only
         '''
+        if self.t2_ofile is not None:
+            print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.t2_ofile)
+
+    def controlFlowForTECHeat(self, temperature, timestamp):
         '''
-            state_low_ts 1 = keep on heating
-            state_low_ts 2 = achieve target temperature
-            state_low_ts 3 = stop heating, keep on cooling
+            print the data only
         '''
-        print("state_low_ts = %d" % self.state_low_ts)
+        if self.t3_ofile is not None:
+            print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.t3_ofile)
 
-        targetPwm = 0.0
-
-        if self.state_low_ts == 1:
-            '''
-                state_low_ts 1 = keep on heating
-                use PID
-            '''
-            self.pid_low.update(temperature)
-            targetPwm = self.pid_low.output
-            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-            targetPwm = targetPwm / 100.0
-            print("targetPwm = %f" % targetPwm)
-            self.pinOut(self.pwm_pin_heater2, targetPwm)
-            self.pinOut(self.relay_pin_tec, 1.0)
-            self.pinOut(self.relay_pin_fan, 1.0)
-            
-            # check temperature
-            if temperature >= self.T_low:
-                self.high_low_ts = timestamp
-                self.state_low_ts = 2
-            
-        elif self.state_low_ts == 2:
-            '''
-                state_low_ts 2 = achieve target temperature
-            '''
-            self.pid_low.update(temperature)
-            targetPwm = self.pid_low.output
-            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-            targetPwm = targetPwm / 100.0
-            self.pinOut(self.pwm_pin_heater2, targetPwm)
-
-            '''
-            if temperature > self.T_low:
-                # turn on TEC
-                self.pinOut(self.relay_pin_tec, 0.0)
-                self.pinOut(self.relay_pin_fan, 0.0)
-            else:
-                self.pinOut(self.relay_pin_tec, 1.0)
-                self.pinOut(self.relay_pin_fan, 1.0)
-            '''
-
-            # change state_low_ts to 3 when state_high_ts about to 3
-            '''
-            # check timestamp
-            if (timestamp - self.last_ts_low) >= self.low_pt:
-                self.state_low_ts = 3
-            '''
-        elif self.state_low_ts == 3:
-            '''
-                state_low_ts 3 = stop heating
-            '''
-            targetPwm = 0.0
-            self.pinOut(self.pwm_pin_heater2, targetPwm)
-            #self.pinOut(self.relay_pin_tec, 1.0)
-            #self.pinOut(self.relay_pin_fan, 1.0)
-            
-        else:
-            '''
-                default value
-            '''
-            targetPwm = 0.0
-            self.pinOut(self.pwm_pin_heater2, targetPwm)
-            #self.pinOut(self.relay_pin_tec, 1.0)
-            #self.pinOut(self.relay_pin_fan, 1.0)
-
-        if self.l_output_file is not None:
-            print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.l_output_file)
-
-    def controlFlowForLiqTS(self, temperature, timestamp):
-
-        if self.e_output_file is not None:
-            print("%d\t%f\t0.0" % (timestamp, temperature), file=self.l_output_file)
-
-        return
-
-    def controlFlowForEnvTS(self, temperature, timestamp):
+    def controlFlowForCamera(self, temperature, timestamp):
         '''
-            T_low to T_high --> inc_period_time
-            stay in T_high --> high_period_time
-            T_high to T_low --> dec_period_time
-            stay in T_low --> low_period_time
+            print the data only
         '''
-        '''
-            state_env_ts 1 = keep on heating
-            state_env_ts 2 = achieve target temperature
-            state_env_ts 3 = stop heating
-        '''
-        print("state_env_ts = %d" % self.state_env_ts)
-        
-        if self.state_env_ts == 1:
-            '''
-                state_env_ts 1 = if higher than default temperature, turn on fan
-                use PID
-            '''
-            # check temperature
-            if temperature >= self.T_env:
-                self.pid_env.update(temperature)
-                targetPwm = self.pid_env.output
-                targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-                targetPwm = 1.0 - targetPwm / 100.0
-                print("targetPwm = %f" % targetPwm)
-                self.pinOut(self.pwm_pin_fan, targetPwm)
-            else:
-                print("targetPwm = 0.0")
-                self.pinOut(self.pwm_pin_fan, 0.0)
-            return
-            
-        else:
-            '''
-                default value
-            '''
-            self.pinOut(self.pwm_pin_fan, 0.0)
-            return
+        if self.t4_ofile is not None:
+            print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.t4_ofile)
 
 
-h_path = 'high_output.txt'
-l_path = 'low_output.txt'
-e_path = 'env_output.txt'
+
+t1_path = 't1_output.txt'
+t2_path = 't2_output.txt'
+t3_path = 't3_output.txt'
+t4_path = 't4_output.txt'
 
 try: 
-    h_output_f = open(h_path, 'w')
-    l_output_f = open(l_path, 'w')
-    e_output_f = open(e_path, 'w')
+    t1_output_f = open(t1_path, 'w')
+    t2_output_f = open(t2_path, 'w')
+    t3_output_f = open(t3_path, 'w')
+    t4_output_f = open(t4_path, 'w')
 
     print("Let's print data from Arduino's analog pins for 100secs.")
     # Let's create an instance
-    ntc_sensor = CoThermal(h_output_file=h_output_f, l_output_file=l_output_f, e_output_file=e_output_f)
+    ntc_sensor = CoThermal(t1_ofile=t1_output_f, t2_ofile=t2_output_f, t3_ofile=t3_output_f, t4_ofile=t4_output_f)
     # and start DAQ
     ntc_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
@@ -423,14 +450,16 @@ try:
 
 except:
     print("Unable to create file on disk.")
-    h_output_f.close()
-    l_output_f.close()
-    e_output_f.close()
+    t1_output_f.close()
+    t2_output_f.close()
+    t3_output_f.close()
+    t4_output_f.close()
     return
 
 finally:
-    h_output_f.close()
-    l_output_f.close()
-    e_output_f.close()
+    t1_output_f.close()
+    t2_output_f.close()
+    t3_output_f.close()
+    t4_output_f.close()
 
 
