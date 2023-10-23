@@ -10,7 +10,7 @@ class PCBStep:
         self.pcb_id = pcb_id
         self.rtime = pcb.total_time
 
-        self.pcb_list = pcb_list
+        #self.pcb_list = pcb_list
         self.para_array = para_array
 
         self.repeat = repeat

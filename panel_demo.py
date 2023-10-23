@@ -17,7 +17,8 @@ class tkinterApp(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         
         # setting fullscreen attr
-        # self.attributes('-fullscreen', True)
+        self.attributes('-fullscreen', True)
+        #self.state('zoomed')
 
         #set window title
         self.title("TouchStone")
