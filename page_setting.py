@@ -220,6 +220,74 @@ class PageSetting(Frame):
             outline="")
 
 
+        # button for edit/time/test/password
+        self.img_button_setting_edit = PhotoImage(data = button_setting_edit)
+        self.button_setting_edit = Button(self,
+            image=self.img_button_setting_edit,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_process,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_setting_edit.place(
+            x=148.0,
+            y=103.0,
+            width=350.0,
+            height=206.0
+        )
+
+        self.img_button_setting_time = PhotoImage(data = button_setting_time)
+        self.button_setting_time = Button(self,
+            image=self.img_button_setting_time,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_result,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_setting_time.place(
+            x=526.0,
+            y=103.0,
+            width=350.0,
+            height=206.0
+        )
+
+        self.img_button_setting_test = PhotoImage(data = button_setting_test)
+        self.button_setting_test = Button(self,
+            image=self.img_button_setting_test,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_process,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_setting_test.place(
+            x=148.0,
+            y=337.0,
+            width=350.0,
+            height=206.0
+        )
+
+        self.img_button_setting_password = PhotoImage(data = button_setting_password)
+        self.button_setting_password = Button(self,
+            image=self.img_button_setting_password,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_result,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_setting_password.place(
+            x=526.0,
+            y=337.0,
+            width=350.0,
+            height=206.0
+        )
+
+
+
+
     def Cmd_btn_process(self):
         # need to check if there is cartridge inside
         self.controller.frames[page_process_init.PageProcessInit].status = 0
