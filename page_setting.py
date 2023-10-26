@@ -13,6 +13,9 @@ import page_process_init, page_home, page_result_list
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
 from copic import image_test_off, image_reset_off, image_user_off, image_time_off
 
+from copic import button_setting_edit, button_setting_password, button_setting_test, button_setting_time
+
+
 class PageSetting(Frame):
 
     # user data
@@ -226,7 +229,7 @@ class PageSetting(Frame):
             image=self.img_button_setting_edit,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_process,
+            command=0,
             bg="#FFFFFF",
             relief="flat"
         )
@@ -242,7 +245,7 @@ class PageSetting(Frame):
             image=self.img_button_setting_time,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_result,
+            command=0,
             bg="#FFFFFF",
             relief="flat"
         )
@@ -258,7 +261,7 @@ class PageSetting(Frame):
             image=self.img_button_setting_test,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_process,
+            command=0,
             bg="#FFFFFF",
             relief="flat"
         )
@@ -274,7 +277,7 @@ class PageSetting(Frame):
             image=self.img_button_setting_password,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_result,
+            command=0,
             bg="#FFFFFF",
             relief="flat"
         )
