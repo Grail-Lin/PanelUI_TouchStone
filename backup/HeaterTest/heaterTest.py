@@ -49,7 +49,8 @@ import math
 PORT = 'COM3'
 #PORT = Arduino.AUTODETECT
 
-targetHighT = 95
+b_USE_TEC = False
+targetHighT = 75
 targetLowT = 55
 
 P = 10
@@ -94,13 +95,14 @@ class CoThermal:
 
         self.pid_high = pid_high
         self.pid_low = pid_low
+        self.pid_tec = pid_tec
 
         self.T_low = targetLowT
         self.T_high = targetHighT
         self.high_pt = 30
         self.low_pt = 30
 
-        self.state_high_ts = 5
+        self.state_high_ts = 1
         
         # temperature sampling rate: 1Hz
         self.samplingRate = 1
@@ -291,12 +293,15 @@ class CoThermal:
             self.pinOut(self.relay_pin_bfan, 1.0)
             self.pinOut(self.relay_pin_sfan, 1.0)
 
-            self.pid_tec.update(temperature)
-            targetPwm = self.pid_tec.output
-            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-            targetPwm = targetPwm / 100.0
-            print("targetPwm = %f" % targetPwm)
-            self.pinOut(self.pwm_pin_tec, targetPwm)
+            if 1:
+                tempT = targetLowT - (temperature - targetLowT)
+                self.pid_tec.update(tempT)
+                targetPwm = self.pid_tec.output
+                targetPwm = max(min( targetPwm, 100.0 ), 0.0)
+                targetPwm = targetPwm / 100.0
+                print("targetPwm = %f" % targetPwm)
+                #if b_USE_TEC:
+                self.pinOut(self.pwm_pin_tec, targetPwm)
             
             # check temperature
             if temperature <= self.T_low:
@@ -381,7 +386,7 @@ try:
     # and start DAQ
     ntc_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
-    time.sleep(10000)
+    time.sleep(600)
     # let's stop it
     ntc_sensor.stop()
     print("finished")
