@@ -42,7 +42,9 @@ S6: any to room
 
 
 from pyfirmata2 import Arduino, PWM
-import PID
+#from jataruku import PID                          // Grail, 20231106 PID
+from PID import PID
+#from PIDv2 import PID                                       # Grail, 20231106 PID
 import time
 import math
 
@@ -53,10 +55,19 @@ b_USE_TEC = False
 targetHighT = 75
 targetLowT = 55
 
+'''
 P = 10
 I = 1
 D = 1
+'''
+HET_Kp = 9.1;         # 12 數值是否能達到目標值
+HET_Ki = 0.3;         # 0.05 誤差積累
+HET_Kd = 1.8;         # 35 誤差變化率
+TEC_Kp = 200;         # 200 數值是否能達到目標值
+TEC_Ki = 10;          # 10 誤差積累
+TEC_Kd = 5;           # 5 誤差變化率
 
+'''
 # heater to 95
 pid_high = PID.PID(P, I, D)
 pid_high.SetPoint = targetHighT
@@ -70,7 +81,20 @@ pid_low.setSampleTime(1)
 pid_tec = PID.PID(P, I, D)
 pid_tec.SetPoint = targetLowT
 pid_tec.setSampleTime(1)
+'''
+# heater to 95
+pid_high = PID(HET_Kp, HET_Ki, HET_Kd)
+pid_high.SetPoint = targetHighT
+pid_high.setSampleTime(1)
 
+# tec to 55
+pid_low = PID(HET_Kp, HET_Ki, HET_Kd)
+pid_low.SetPoint = targetLowT
+pid_low.setSampleTime(1)
+
+pid_tec = PID(TEC_Kp, TEC_Ki, TEC_Kd)
+pid_tec.SetPoint = targetLowT
+pid_tec.setSampleTime(1)
 
 
 
@@ -241,10 +265,9 @@ class CoThermal:
             '''
 
             # stop the cooling and turn off fan
-            self.pinOut(self.pwm_pin_heater, 0.0)
+            #self.pinOut(self.pwm_pin_heater, 0.0)
             self.pinOut(self.relay_pin_bfan, 0.0)
             self.pinOut(self.relay_pin_sfan, 0.0)
-
 
             self.pid_high.update(temperature)
             targetPwm = self.pid_high.output
@@ -265,7 +288,7 @@ class CoThermal:
             '''
 
             # stop the cooling and turn off fan
-            self.pinOut(self.pwm_pin_heater, 0.0)
+            #self.pinOut(self.pwm_pin_heater, 0.0)
             self.pinOut(self.relay_pin_bfan, 0.0)
             self.pinOut(self.relay_pin_sfan, 0.0)
 
@@ -289,7 +312,7 @@ class CoThermal:
             '''
 
             # stop the cooling and turn on fan
-            self.pinOut(self.pwm_pin_heater, 0.0)
+            #self.pinOut(self.pwm_pin_heater, 0.0)
             self.pinOut(self.relay_pin_bfan, 1.0)
             self.pinOut(self.relay_pin_sfan, 1.0)
 
