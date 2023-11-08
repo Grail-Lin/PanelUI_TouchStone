@@ -292,7 +292,7 @@ class CoThermal:
             self.pinOut(self.relay_pin_bfan, 0.0)
             self.pinOut(self.relay_pin_sfan, 0.0)
 
-
+            self.pid_high.update(temperature)
             targetPwm = self.pid_high.output
             targetPwm = max(min( targetPwm, 100.0 ), 0.0)
             targetPwm = targetPwm / 100.0
@@ -301,6 +301,7 @@ class CoThermal:
             # check timestamp
             if (timestamp - self.last_ts_high) >= self.high_pt:
                 self.state_high_ts = 3
+                self.pinOut(self.pwm_pin_heater, 0.0)
                 # change state_low_ts to 3 when state_high_ts about to 3
                 # self.state_low_ts = 3
 			
@@ -312,7 +313,7 @@ class CoThermal:
             '''
 
             # stop the cooling and turn on fan
-            #self.pinOut(self.pwm_pin_heater, 0.0)
+            # self.pinOut(self.pwm_pin_heater, 0.0)
             self.pinOut(self.relay_pin_bfan, 1.0)
             self.pinOut(self.relay_pin_sfan, 1.0)
 
@@ -329,6 +330,7 @@ class CoThermal:
             # check temperature
             if temperature <= self.T_low:
                 self.last_ts_low = timestamp
+                self.pinOut(self.pwm_pin_tec, 0.0)
                 self.state_high_ts = 4
 
         elif self.state_high_ts == 4:
@@ -337,7 +339,7 @@ class CoThermal:
                 state_high_ts 4 = achieve target temperature: 55
                 stop tec, keep fan
             '''
-            self.pinOut(self.pwm_pin_tec, 0.0)
+            #self.pinOut(self.pwm_pin_tec, 0.0)
             self.pinOut(self.relay_pin_bfan, 1.0)
             self.pinOut(self.relay_pin_sfan, 1.0)
 
