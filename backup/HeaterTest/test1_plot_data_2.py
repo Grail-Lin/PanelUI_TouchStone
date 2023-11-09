@@ -7,7 +7,7 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["output_temp1.txt"]
+filelist = ["t2_output.txt"]
 
 #for f in filelist:
 if 1:
@@ -33,7 +33,7 @@ if 1:
     ax1.set_ylim(0, 200)
     ax1.plot(time_list, tc_list, color = 'blue', linewidth = 1)
 	
-    ax1.hlines(95,0,300,color="red")
+    ax1.hlines(75,0,300,color="red")
     ax1.hlines(55,0,300,color="red")
     ax1.hlines(tc_list[0],0,300,color="red")
     ax1.vlines(250,0,200,color="green")
