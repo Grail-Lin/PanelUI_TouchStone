@@ -129,7 +129,16 @@ class CoThermal:
         self.state_high_ts = 1
         
         # temperature sampling rate: 1Hz
-        self.samplingRate = 1
+        self.samplingRate = 10
+
+        self.temp_plate = 0.0
+        self.temp_teccool = 0.0
+        self.temp_techeat = 0.0
+
+        self.count_plate = 0
+        self.count_teccool = 0
+        self.count_techeat = 0
+
 
         self.timestamp_plate = 0
         self.timestamp_teccool = 0
@@ -196,26 +205,55 @@ class CoThermal:
         #self.board.analog[self.tp_pin_t4].enable_reporting()
 
     def PlateTPCallback(self, data):
+
         r2, Tc = self.calT(data)
         print("Plate TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate, data, r2, Tc))
         self.timestamp_plate += (1 / self.samplingRate)
-        #self.controlFlowForLowTS(Tc, self.timestamp_low)
-        self.controlFlowForAll(Tc, self.timestamp_plate)
+ 
+        self.count_plate += 1
+        self.temp_plate += Tc
+
+        if self.count_plate == 10:
+            self.temp_plate /= 10.0
+            print("Plate avg TS %f, %f C" % (self.timestamp_plate, self.temp_plate))
+            self.controlFlowForAll(self.temp_plate, self.timestamp_plate)
+
+            self.temp_plate = 0
+            self.count_plate = 0
+
 
     def TECCoolTPCallback(self, data):
         r2, Tc = self.calT(data)
         print("TECCool TS %f,%f:%f Ohm, %f C" % (self.timestamp_teccool, data, r2, Tc))
         self.timestamp_teccool += (1 / self.samplingRate)
-        #self.controlFlowForEnvTS(Tc, self.timestamp_env)
-        self.controlFlowForTECCool(Tc, self.timestamp_teccool)
+ 
+        self.count_teccool += 1
+        self.temp_teccool += Tc
+
+        if self.count_teccool == 10:
+            self.temp_teccool /= 10.0
+            print("TECCool avg TS %f, %f C" % (self.timestamp_teccool, self.temp_teccool))
+            self.controlFlowForTECCool(self.temp_teccool, self.timestamp_teccool)
+
+            self.temp_teccool = 0
+            self.count_teccool = 0
+
 
     def TECHeatTPCallback(self, data):
         r2, Tc = self.calT(data)
         print("TECHeat TS %f,%f:%f Ohm, %f C" % (self.timestamp_techeat, data, r2, Tc))
         self.timestamp_techeat += (1 / self.samplingRate)
-        #self.controlFlowForLiqTS(Tc, self.timestamp_env)
-        self.controlFlowForTECHeat(Tc, self.timestamp_techeat)
+ 
+        self.count_techeat += 1
+        self.temp_techeat += Tc
 
+        if self.count_techeat == 10:
+            self.temp_techeat /= 10.0
+            print("TECHeat avg TS %f, %f C" % (self.timestamp_techeat, self.temp_techeat))
+            self.controlFlowForTECHeat(self.temp_techeat, self.timestamp_teccool)
+
+            self.temp_techeat = 0
+            self.count_techeat = 0
         
     def CameraTPCallback(self, data):
         r2, Tc = self.calT(data)
