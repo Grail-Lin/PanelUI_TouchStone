@@ -87,12 +87,13 @@ if __name__ == '__main__':
     #pic2str('image_time_on', r".\assets\image_time_on.png")
     #pic2str('image_user_off', r".\assets\image_user_off.png")
     #pic2str('image_user_on', r".\assets\image_user_on.png")
-    #pic2str('button_home_result', r".\assets\button_home_result.png")
-    #pic2str('button_home_test', r".\assets\button_home_test.png")
-    pic2str('button_setting_edit', r".\assets\button_setting_edit.png")
-    pic2str('button_setting_password', r".\assets\button_setting_password.png")
-    pic2str('button_setting_test', r".\assets\button_setting_test.png")
-    pic2str('button_setting_time', r".\assets\button_setting_time.png")
+    #pic2str('img_button_home_result', r".\assets\button_home_result.png")
+    #pic2str('img_button_home_test', r".\assets\button_home_test.png")
+    #pic2str('img_button_setting_edit', r".\assets\button_setting_edit.png")
+    #pic2str('img_button_setting_password', r".\assets\button_setting_password.png")
+    #pic2str('img_button_setting_test', r".\assets\button_setting_test.png")
+    #pic2str('img_button_setting_time', r".\assets\button_setting_time.png")
 
+    pic2str('img_button_settime_on', r".\assets\img_button_settime_on.png")
 
 

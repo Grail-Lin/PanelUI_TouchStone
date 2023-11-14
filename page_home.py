@@ -13,7 +13,7 @@ import page_result_list
 import page_setting
 
 from copic import img_button_home_on, img_button_process_off, img_button_setting_off, img_button_result_off
-from copic import img_co_logo, button_home_result, button_home_test
+from copic import img_co_logo, img_button_home_result, img_button_home_test
 
 class PageHome(Frame):
 
@@ -120,7 +120,7 @@ class PageHome(Frame):
         )
 
         # button for test/result
-        self.img_button_home_test = PhotoImage(data = button_home_test)
+        self.img_button_home_test = PhotoImage(data = img_button_home_test)
         self.button_home_test = Button(self,
             image=self.img_button_home_test,
             borderwidth=0,
@@ -136,7 +136,7 @@ class PageHome(Frame):
             height=388.0
         )
 
-        self.img_button_home_result = PhotoImage(data = button_home_result)
+        self.img_button_home_result = PhotoImage(data = img_button_home_result)
         self.button_home_result = Button(self,
             image=self.img_button_home_result,
             borderwidth=0,

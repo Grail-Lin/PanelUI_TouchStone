@@ -13,7 +13,7 @@ import page_process_init, page_home, page_result_list
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
 from copic import image_test_off, image_reset_off, image_user_off, image_time_off
 
-from copic import button_setting_edit, button_setting_password, button_setting_test, button_setting_time
+from copic import img_button_setting_edit, img_button_setting_password, img_button_setting_test, img_button_setting_time
 
 
 class PageSetting(Frame):
@@ -224,7 +224,7 @@ class PageSetting(Frame):
 
 
         # button for edit/time/test/password
-        self.img_button_setting_edit = PhotoImage(data = button_setting_edit)
+        self.img_button_setting_edit = PhotoImage(data = img_button_setting_edit)
         self.button_setting_edit = Button(self,
             image=self.img_button_setting_edit,
             borderwidth=0,
@@ -240,7 +240,7 @@ class PageSetting(Frame):
             height=206.0
         )
 
-        self.img_button_setting_time = PhotoImage(data = button_setting_time)
+        self.img_button_setting_time = PhotoImage(data = img_button_setting_time)
         self.button_setting_time = Button(self,
             image=self.img_button_setting_time,
             borderwidth=0,
@@ -256,7 +256,7 @@ class PageSetting(Frame):
             height=206.0
         )
 
-        self.img_button_setting_test = PhotoImage(data = button_setting_test)
+        self.img_button_setting_test = PhotoImage(data = img_button_setting_test)
         self.button_setting_test = Button(self,
             image=self.img_button_setting_test,
             borderwidth=0,
@@ -272,7 +272,7 @@ class PageSetting(Frame):
             height=206.0
         )
 
-        self.img_button_setting_password = PhotoImage(data = button_setting_password)
+        self.img_button_setting_password = PhotoImage(data = img_button_setting_password)
         self.button_setting_password = Button(self,
             image=self.img_button_setting_password,
             borderwidth=0,
