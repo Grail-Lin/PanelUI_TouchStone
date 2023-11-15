@@ -316,7 +316,7 @@ class CoThermal:
             self.pinOut(self.relay_pin_bfan, 1.0)
             self.pinOut(self.relay_pin_sfan, 1.0)
 
-            if 1:
+            if 0:
                 tempT = targetLowT - (temperature - targetLowT)
                 self.pid_tec.update(tempT)
                 targetPwm = self.pid_tec.output

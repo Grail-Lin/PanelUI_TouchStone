@@ -7,11 +7,11 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t2_output.txt"]
+filelist = ["t1_output.txt", "t3_output.txt"]
 
-#for f in filelist:
-if 1:
-    f = filelist[0]
+for f in filelist:
+#if 1:
+    #f = filelist[0]
     content = np.loadtxt(f)
     
     time_list = content[:, 0]

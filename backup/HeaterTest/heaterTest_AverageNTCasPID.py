@@ -351,11 +351,11 @@ class CoThermal:
             '''
 
             # stop the cooling and turn on fan
-            # self.pinOut(self.pwm_pin_heater, 0.0)
+            self.pinOut(self.pwm_pin_heater, 0.0)
             self.pinOut(self.relay_pin_bfan, 1.0)
             self.pinOut(self.relay_pin_sfan, 1.0)
 
-            if 1:
+            if 0:
                 tempT = targetLowT - (temperature - targetLowT)
                 self.pid_tec.update(tempT)
                 targetPwm = self.pid_tec.output
@@ -449,7 +449,7 @@ try:
     # and start DAQ
     ntc_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
-    time.sleep(600)
+    time.sleep(300)
     # let's stop it
     ntc_sensor.stop()
     print("finished")
