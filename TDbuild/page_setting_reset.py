@@ -37,7 +37,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
-from GradientFrame import GradientFrame                       # add for gradient color background
+#from GradientFrame import GradientFrame                       # add for gradient color background
 
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
 from copic import image_test_off, image_reset_off, image_user_off, image_time_off
@@ -236,14 +236,14 @@ class PageSettingReset(Frame):
 
 
 
-canvas.create_text(
-    148.0,
-    24.0,
-    anchor="nw",
-    text="SETTINGS / RESET PASSWORD",
-    fill="#569FCB",
-    font=("Noto Sans", 32 * -1)
-)
+        self.canvas.create_text(
+            148.0,
+            24.0,
+            anchor="nw",
+            text="SETTINGS / RESET PASSWORD",
+            fill="#569FCB",
+            font=("Noto Sans", 32 * -1)
+        )
 
 canvas.create_rectangle(
     904.0,
