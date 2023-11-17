@@ -245,48 +245,46 @@ class PageSettingReset(Frame):
             font=("Noto Sans", 32 * -1)
         )
 
-canvas.create_rectangle(
-    904.0,
-    0.0,
-    1024.0,
-    600.0,
-    fill="#E6EFF4",
-    outline="")
+        self.canvas.create_rectangle(
+            904.0,
+            0.0,
+            1024.0,
+            600.0,
+            fill="#E6EFF4",
+            outline="")
 
 
 
 
-button_image_10 = PhotoImage(
-    file=relative_to_assets("button_10.png"))
-button_10 = Button(
-    image=button_image_10,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_10 clicked"),
-    relief="flat"
-)
-button_10.place(
-    x=513.0,
-    y=415.0,
-    width=315.0,
-    height=86.0
-)
+        self.img_btn_confirm_on = PhotoImage(data=img_btn_confirm_on)
+        self.button_confirm = Button(
+            image=self.img_btn_confirm_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_10 clicked"),
+            relief="flat"
+        )
+        self.button_confirm.place(
+            x=513.0,
+            y=415.0,
+            width=315.0,
+            height=86.0
+        )
 
-button_image_11 = PhotoImage(
-    file=relative_to_assets("button_11.png"))
-button_11 = Button(
-    image=button_image_11,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_11 clicked"),
-    relief="flat"
-)
-button_11.place(
-    x=148.0,
-    y=416.0,
-    width=315.0,
-    height=86.0
-)
+        self.img_button_cancel_off = PhotoImage(data=img_button_cancel_off)
+        self.button_cancel = Button(
+            image=self.img_button_cancel_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_11 clicked"),
+            relief="flat"
+        )
+        self.button_cancel.place(
+            x=148.0,
+            y=416.0,
+            width=315.0,
+            height=86.0
+        )
 
 entry_image_1 = PhotoImage(
     file=relative_to_assets("entry_1.png"))

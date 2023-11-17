@@ -94,6 +94,6 @@ if __name__ == '__main__':
     #pic2str('img_button_setting_test', r".\assets\button_setting_test.png")
     #pic2str('img_button_setting_time', r".\assets\button_setting_time.png")
 
-    pic2str('img_button_settime_on', r".\assets\img_button_settime_on.png")
+    pic2str('img_btn_confirm_on', r".\assets\img_btn_confirm_on.png")
 
 
