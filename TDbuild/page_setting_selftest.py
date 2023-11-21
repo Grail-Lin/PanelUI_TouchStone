@@ -7,11 +7,493 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, StringVar
+
+import random, string, time
+
+import page_process_play
+import page_home
+import page_process_edit
+import page_result_list
+import page_setting
+
+from copic import img_button_play_out, img_button_edit_out, img_button_stop_out
+from copic import img_button_play_off, img_button_edit_off, img_button_stop_off
+from copic import img_button_process_off, img_button_home_off, img_button_result_off, img_button_setting_on
+from copic import img_button_insert_on, img_button_insert_off
+from copic import img_button_eject_on, img_button_eject_off
+from copic import img_state_aborted, img_state_completed, img_state_not_started
+
+class PageSettingSelftest(Frame):
+
+
+    # process status
+    # 0: not started, no cartridge
+    # 1: completed
+    # -1: error
+    # 2: not started, with cartridge
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+
+        # set user data
+
+        # set window size
+        width = 1024
+        height = 600
+
+        screenwidth = controller.winfo_screenwidth()
+        screenheight = controller.winfo_screenheight()
+        alignstr = '%dx%d+%d+%d' % (width, height, (screenwidth - width) / 2, (screenheight - height) / 2)
+        controller.geometry(alignstr)
+        controller.resizable(width=False, height=False)
+
+
+        self.canvas = Canvas(
+            self,
+            bg = "#FFFFFF",
+            height = 600,
+            width = 1024,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
+        self.canvas.place(x = 0, y = 0)
+
+        # add elements here
+        self.canvas.create_rectangle(120.0, 0.0, 904.0, 600.0, fill="#F9F9F9", outline="")
+
+        self.button_image_setting_on = PhotoImage(data=img_button_setting_on)
+        self.button_setting = Button(self, image=self.button_image_setting_on, 
+                                     borderwidth=0, highlightthickness=0,
+                                     command=self.Cmd_btn_setting,
+                                     relief="flat")
+        self.button_setting.place(x=0.0, y=497.0, width=120.0, height=103.0)
+
+        self.button_image_home_off = PhotoImage(data=img_button_home_off)
+        self.button_home = Button(self, image=self.button_image_home_off,
+                                  borderwidth=0, highlightthickness=0,
+                                  command=self.Cmd_btn_home,
+                                  relief="flat")
+        self.button_home.place(x=0.0, y=0.0, width=120.0, height=103.0)
+
+        self.button_image_process_off = PhotoImage(data=img_button_process_off)
+        self.button_process = Button(self, image=self.button_image_process_off,
+                                     borderwidth=0, highlightthickness=0,
+                                     command=lambda: print("button_1 clicked"),
+                                     relief="flat")
+        self.button_process.place(x=0.0, y=103.0, width=120.0, height=103.0)
+
+        self.canvas.create_text(
+            148.0,
+            24.0,
+            anchor="nw",
+            text="SETTINGS / SELF-TEST",
+            fill="#569FCB",
+            font=("Noto Sans", 32 * -1)
+        )
+
+        self.canvas.create_rectangle(
+            904.0, 0.0,
+            1024.0, 600.0,
+            fill="#E6EFF4",
+            outline="")
+
+
+
+
+        self.button_image_play_out = PhotoImage(data=img_button_play_out)
+        self.button_image_edit_out = PhotoImage(data=img_button_edit_out)
+        self.button_image_stop_out = PhotoImage(data=img_button_stop_out)
+
+
+
+
+        self.button_image_result_off = PhotoImage(data=img_button_result_off)
+        self.button_result = Button(self, image=self.button_image_result_off,
+                                    borderwidth=0, highlightthickness=0,
+                                    command=self.Cmd_btn_result,
+                                    relief="flat")
+        self.button_result.place(x=0.0, y=206.0, width=120.0, height=103.0)
+
+
+        self.canvas.create_text(
+            148.0,
+            16.0,   # 24.0,
+            anchor="nw",
+            text="PROCESS",
+            fill="#569FCB",
+            font=("Noto Sans", 32 * -1, "bold")
+        )
+
+
+        self.button_image_play_off = PhotoImage(data=img_button_play_off)
+        self.button_play = Button(self, image=self.button_image_play_off,
+                                  borderwidth=0, highlightthickness=0,
+                                  command=self.Cmd_btn_play,
+                                  relief="flat")
+        #self.button_play.place(x=938.0, y=140.0, width=52.0, height=52.0)
+        self.button_play.place(x=903.0, y=105.0, width=121.0, height=103.0)
+
+        self.button_image_stop_off = PhotoImage(data=img_button_stop_off)
+        self.button_stop = Button(self, image=self.button_image_stop_off,
+                             borderwidth=0, highlightthickness=0,
+                             command=lambda: print("button_6 clicked"),
+                             relief="flat")
+        #self.button_stop.place(x=938.0, y=243.0, width=52.0, height=52.0)
+        self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
+        self.button_image_edit_off = PhotoImage(data=img_button_edit_off)
+        self.button_edit = Button(self, image=self.button_image_edit_off,
+                                  borderwidth=0, highlightthickness=0,
+                                  command=self.Cmd_btn_edit,
+                                  relief="flat")
+        #self.button_edit.place(x=938.0, y=37.0, width=52.0, height=52.0)
+        self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
+
+        # cartridge variables
+        self.frame_cartridgeID = self.canvas.create_rectangle(381.0, 103.0, 828.0, 189.0,
+                                     fill="#EBEBEB", outline="")
+        self.str_cartridgeID = StringVar(self, "")
+        self.id_cartridgeID = self.canvas.create_text(
+            419.5, 122.0, anchor="nw", 
+            text=self.str_cartridgeID.get(),
+            fill="#17171B",
+            font=("Noto Sans", 24 * -1),
+            #state="hidden"
+        )
+
+        self.frame_testname = self.canvas.create_rectangle(381.0, 204.0, 828.0, 290.0,
+                                     fill="#EBEBEB", outline="")
+        self.str_testname = StringVar(self, "")
+        '''
+        self.entry_testname = Entry(self,
+            bd=0,
+            bg="#FFFFFF",
+            fg="#17171B",
+            highlightthickness=0,
+            font = ("Noto Sans", 24 * -1),
+            textvariable = self.str_testname
+        )
+        self.entry_testname.place(x=419.5, y=224.0, width=350, height=36)
+        '''
+        
+        self.id_testname = self.canvas.create_text(
+            419.5, 222.0, anchor="nw", 
+            text=self.str_testname.get(),
+            fill="#17171B",
+            font=("Noto Sans", 24 * -1),
+            #state="hidden"
+        )
+        
+
+        self.frame_processtime = self.canvas.create_rectangle(381.0, 305.0, 828.0, 391.0,
+                                     fill="#EBEBEB", outline="")
+        self.var_processtime = 0
+        self.str_processtime = StringVar(self, time.strftime("%M:%S", time.gmtime(self.var_processtime)))
+        self.id_processtime = self.canvas.create_text(
+            419.5, 324.0, anchor="nw", 
+            text=self.str_processtime.get(),
+            fill="#17171B",
+            font=("Noto Sans", 24 * -1),
+            #state="hidden"
+        )
+
+
+        # fix labels
+        self.canvas.create_text(
+            148.0,
+            120.0,     # 128.0,
+            anchor="nw",
+            text="CARTRIDGE ID",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            148.0,
+            221.0,    # 229.0
+            anchor="nw",
+            text="TEST NAME",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            148.0,
+            322.0,     # 330.0
+            anchor="nw",
+            text="PROCESS TIME",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
+
+        self.button_image_insert_on = PhotoImage(data=img_button_insert_on)
+        self.button_image_insert_off = PhotoImage(data=img_button_insert_off)
+        self.button_insert = Button(self, image=self.button_image_insert_on,
+                                    borderwidth=0, highlightthickness=0,
+                                    command=self.Cmd_btn_insert,
+                                    relief="flat")
+        self.button_insert.place(
+            x=515.0, y=423.0, width=315.0, height=86.0)
+
+        self.button_image_eject_on = PhotoImage(data=img_button_eject_on)
+        self.button_image_eject_off = PhotoImage(data=img_button_eject_off)
+        self.button_eject = Button(self, image=self.button_image_eject_off,
+                                   borderwidth=0, highlightthickness=0,
+                                   command=self.Cmd_btn_eject,
+                                   relief="flat")
+        self.button_eject.place(x=148.0, y=423.0, width=315.0, height=86.0)
+
+        self.canvas.create_text(
+            538.0,
+            21.0,     # 29.0
+            anchor="nw",
+            text="Status:",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
+
+        self.image_state_not_started = PhotoImage(data=img_state_not_started)
+        self.image_state_completed = PhotoImage(data=img_state_completed)
+        self.image_state_aborted = PhotoImage(data=img_state_aborted)
+        self.image_state = self.canvas.create_image(731.0, 47.0, image=self.image_state_not_started)
+
+    def update_status(self):
+        if self.process_status == 0:
+            # update status image
+            self.canvas.itemconfig(self.image_state, image = self.image_state_not_started)
+
+            # update frame color
+            self.canvas.itemconfig(self.frame_cartridgeID, fill="#EBEBEB")
+            self.canvas.itemconfig(self.frame_testname, fill="#EBEBEB")
+            self.canvas.itemconfig(self.frame_processtime, fill="#EBEBEB")
+
+            # empty text values
+            self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
+            self.canvas.itemconfig(self.id_processtime, text="")
+
+            # update btn image
+            self.button_insert['image']=self.button_image_insert_on
+            self.button_eject['image']=self.button_image_eject_off
+            self.button_insert['command']=self.Cmd_btn_insert
+            self.button_eject['command']=0
+
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_off
+            self.button_play['image']=self.button_image_play_off
+            self.button_stop['image']=self.button_image_stop_off
+
+        elif self.process_status == 1:
+            self.canvas.itemconfig(self.image_state, image = self.image_state_completed)
+
+            # update frame color
+            self.canvas.itemconfig(self.frame_cartridgeID, fill="#FFFFFF")
+            self.canvas.itemconfig(self.frame_testname, fill="#FFFFFF")
+            self.canvas.itemconfig(self.frame_processtime, fill="#FFFFFF")
+
+            # update text values
+            self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
+            self.canvas.itemconfig(self.id_processtime, text=self.str_processtime.get())
+
+            # update btn image
+            self.button_insert['image']=self.button_image_insert_off
+            self.button_eject['image']=self.button_image_eject_on
+            self.button_insert['command']=0
+            self.button_eject['command']=self.Cmd_btn_eject
+
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_out
+            self.button_play['image']=self.button_image_play_out
+            self.button_stop['image']=self.button_image_stop_out
+
+        elif self.process_status == -1:
+            self.canvas.itemconfig(self.image_state, image = self.image_state_aborted)
+
+            # update frame color
+            self.canvas.itemconfig(self.frame_cartridgeID, fill="#FFFFFF")
+            self.canvas.itemconfig(self.frame_testname, fill="#FFFFFF")
+            self.canvas.itemconfig(self.frame_processtime, fill="#FFFFFF")
+
+            # update text values
+            self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
+            self.canvas.itemconfig(self.id_processtime, text=self.str_processtime.get())
+
+            # update btn image
+            self.button_insert['image']=self.button_image_insert_off
+            self.button_eject['image']=self.button_image_eject_on
+            self.button_insert['command']=0
+            self.button_eject['command']=self.Cmd_btn_eject
+
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_out
+            self.button_play['image']=self.button_image_play_out
+            self.button_stop['image']=self.button_image_stop_out
+
+        elif self.process_status == 2:
+            # inserted but not process yet
+            self.canvas.itemconfig(self.image_state, image = self.image_state_not_started)
+
+            # update frame color
+            self.canvas.itemconfig(self.frame_cartridgeID, fill="#FFFFFF")
+            self.canvas.itemconfig(self.frame_testname, fill="#FFFFFF")
+            self.canvas.itemconfig(self.frame_processtime, fill="#FFFFFF")
+
+            # update text values
+            self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
+            self.canvas.itemconfig(self.id_processtime, text=self.str_processtime.get())
+
+            # update btn image
+            self.button_insert['image']=self.button_image_insert_off
+            self.button_eject['image']=self.button_image_eject_on
+            self.button_insert['command']=0
+            self.button_eject['command']=self.Cmd_btn_eject
+
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_off
+            self.button_play['image']=self.button_image_play_off
+            self.button_stop['image']=self.button_image_stop_off
+
+
+    # btn insert cartridge
+    def Cmd_btn_insert(self):
+        # open cartridge
+        # read QR code to get id and test name
+        temp_string = ''.join(random.choice(string.digits) for x in range(4))  \
+            +'-'+''.join(random.choice(string.digits) for x in range(4))       \
+            +'-'+''.join(random.choice(string.digits) for x in range(4))
+        self.str_cartridgeID.set(temp_string)
+
+        temp_string = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(10)) + " Test"
+        self.str_testname.set(temp_string)
+
+
+        #self.var_preextracttime = random.randrange(10,180)
+        #self.var_extracttime = random.randrange(10,240)
+        #self.var_qpcrtime = random.randrange(10,180)
+
+        #self.var_processtime = self.var_preextracttime+ self.var_extracttime + self.var_qpcrtime
+        #self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
+
+
+        # set the time for play page
+        # self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.reset(self.var_preextracttime)
+        # self.controller.frames[page_process_play.PageProcessPlay].extract_bar.reset(self.var_extracttime)
+        # self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.reset(self.var_qpcrtime)
+
+        # init all step setting
+        all_steps_setting = []
+        self.controller.frames[page_process_play.PageProcessPlay].initial_step_array(all_steps_setting)
+
+
+        self.var_preextracttime = self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.total_time
+        self.var_extracttime = self.controller.frames[page_process_play.PageProcessPlay].extract_bar.total_time
+        self.var_qpcrtime = self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.total_time
+
+        self.var_processtime = self.var_preextracttime+ self.var_extracttime + self.var_qpcrtime
+        self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
+
+        self.process_setting['preextract'] = random.randrange(0,2)
+        self.process_setting['precool'] = random.randrange(0,2)
+        self.process_setting['extracttime'] = random.randrange(0,3)
+        self.process_setting['spinrpm'] = random.randrange(0,3)
+        self.process_setting['pcrcycle'] = random.randrange(0,3)
+        self.process_setting['processtime'] = self.str_processtime.get()
+
+        self.process_status = 2
+        self.update_status()
+
+
+        return
+    # btn eject cartridge
+    def Cmd_btn_eject(self):
+        # empty id and test name
+        self.str_cartridgeID.set("")
+
+        self.str_testname.set("")
+
+        self.str_processtime.set("")
+
+        self.process_status = 0
+        self.update_status()
+        return
+
+    def Cmd_btn_home(self):
+        self.controller.show_frame(page_home.PageHome)
+
+    def Cmd_btn_edit(self):
+        # pass the value of process setting
+        if self.process_status == 2:
+            self.controller.frames[page_process_edit.PageProcessEdit].process_setting = self.process_setting
+            self.controller.frames[page_process_edit.PageProcessEdit].update_status()
+            self.controller.show_frame(page_process_edit.PageProcessEdit)
+
+    def Cmd_btn_play(self):
+        # pass the value of process setting
+        print("process_status: " + str(self.process_status))
+        if self.process_status == 2:
+            #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
+            #self.controller.frames[page_process_play.PageProcessPlay].update_status()
+            
+            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.start()
+            self.controller.frames[page_process_play.PageProcessPlay].extract_bar.start()
+            self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.start()
+            '''
+            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
+            '''
+            self.controller.frames[page_process_play.PageProcessPlay].step()
+            self.controller.show_frame(page_process_play.PageProcessPlay)
+
+    def Cmd_btn_result(self):
+        self.controller.frames[page_result_list.PageResultList].fetchResults()
+        self.controller.show_frame(page_result_list.PageResultList)
+
+    def Cmd_btn_setting(self):
+        self.controller.show_frame(page_setting.PageSetting)
+
+if __name__ == "__main__":
+    window = Tk()
+    window.geometry("1024x600")
+    window.configure(bg = "#FFFFFF")
+
+    container = Frame(window, bg="#FFFFFF")
+    container.pack(side = "top", fill = "both", expand = True)
+    container.grid_rowconfigure(0, weight = 1)
+    container.grid_columnconfigure(0, weight = 1)
+
+    window.frames = {}
+    frame = PageProcessInit(container, window)
+
+    window.frames[PageProcessInit] = frame
+    frame.grid(row = 0, column = 0, sticky ="nsew")
+    frame.process_status = 0
+    frame.update_status()
+    frame.tkraise()
+    window.mainloop()
+
+
+
+
+
+
+
+---------------------------------
+# This file was generated by the Tkinter Designer by Parth Jadhav
+# https://github.com/ParthJadhav/Tkinter-Designer
+
+from pathlib import Path
+
+# from tkinter import *
+# Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"D:\CO_BT\20230718_UI\TDVersion\build\assets\frame2")
+ASSETS_PATH = OUTPUT_PATH / Path(r"D:\CO_BT\20230718_UI\PanelTDVersion\build\assets\frame2")
 
 
 def relative_to_assets(path: str) -> Path:

@@ -40,18 +40,12 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 #from GradientFrame import GradientFrame                       # add for gradient color background
 
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
-from copic import image_test_off, image_reset_off, image_user_off, image_time_off
+from copic import image_test_off, image_reset_on, image_user_off, image_time_off, img_btn_confirm_on, img_entry_bg, img_button_cancel_off
 
 
 class PageSettingReset(Frame):
 
     # user data
-
-    OUTPUT_PATH = Path(__file__).parent
-    ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame0")
-
-    def relative_to_assets(self, path: str) -> Path:
-        return self.ASSETS_PATH / Path(path)
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -114,7 +108,7 @@ class PageSettingReset(Frame):
             image=self.img_button_home_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_home,
+            command=0, #self.Cmd_btn_home,
             bg="#F9F9F9",
             relief="flat"
         )
@@ -130,7 +124,7 @@ class PageSettingReset(Frame):
             image=self.img_button_process_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_process,  #lambda: print("button_process clicked"),
+            command=0, #self.Cmd_btn_process,  #lambda: print("button_process clicked"),
             bg="#FFFFFF",
             relief="flat"
         )
@@ -146,7 +140,7 @@ class PageSettingReset(Frame):
             image=self.img_button_result_off,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_result,
+            command=0, #self.Cmd_btn_result,
             bg="#FFFFFF",
             relief="flat"
         )
@@ -286,92 +280,80 @@ class PageSettingReset(Frame):
             height=86.0
         )
 
-entry_image_1 = PhotoImage(
-    file=relative_to_assets("entry_1.png"))
-entry_bg_1 = canvas.create_image(
-    629.0,
-    139.0,
-    image=entry_image_1
-)
-entry_1 = Entry(
-    bd=0,
-    bg="#FFFFFF",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_1.place(
-    x=438.0,
-    y=96.0,
-    width=382.0,
-    height=84.0
-)
+        self.entry_bg_1 = self.canvas.create_rectangle(430.0, 96.0, 828.0, 182.0,
+                                     fill="#FFFFFF", outline="black")
 
-entry_image_2 = PhotoImage(
-    file=relative_to_assets("entry_2.png"))
-entry_bg_2 = canvas.create_image(
-    629.0,
-    239.0,
-    image=entry_image_2
-)
-entry_2 = Entry(
-    bd=0,
-    bg="#FFFFFF",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_2.place(
-    x=438.0,
-    y=196.0,
-    width=382.0,
-    height=84.0
-)
+        self.entry_1 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            highlightthickness=0
+        )
 
-entry_image_3 = PhotoImage(
-    file=relative_to_assets("entry_3.png"))
-entry_bg_3 = canvas.create_image(
-    629.0,
-    341.0,
-    image=entry_image_3
-)
-entry_3 = Entry(
-    bd=0,
-    bg="#FFFFFF",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_3.place(
-    x=438.0,
-    y=298.0,
-    width=382.0,
-    height=84.0
-)
+        self.entry_1.place(
+            x=438.0,
+            y=98.0,
+            width=382.0,
+            height=84.0
+        )
 
-canvas.create_text(
-    148.0,
-    128.0,
-    anchor="nw",
-    text="ORIGINAL PASSWORD",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
+        self.entry_bg_2 = self.canvas.create_rectangle(430.0, 196.0, 828.0, 282.0,
+                                     fill="#FFFFFF", outline="black")
+        self.entry_2 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            highlightthickness=0
+        )
+        self.entry_2.place(
+            x=438.0,
+            y=198.0,
+            width=382.0,
+            height=84.0
+        )
 
-canvas.create_text(
-    148.0,
-    229.0,
-    anchor="nw",
-    text="NEW PASSWORD",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
+        self.entry_bg_3 = self.canvas.create_rectangle(430.0, 298.0, 828.0, 384.0,
+                                     fill="#FFFFFF", outline="black")
+        self.entry_3 = Entry(
+            bd=0,
+            bg="#FFFFFF",
+            fg="#000716",
+            highlightthickness=0
+        )
+        self.entry_3.place(
+            x=438.0,
+            y=300.0,
+            width=382.0,
+            height=84.0
+        )
 
-canvas.create_text(
-    148.0,
-    330.0,
-    anchor="nw",
-    text="REPEAT PASSWORD",
-    fill="#7D8CA7",
-    font=("Noto Sans", 24 * -1)
-)
+
+        self.canvas.create_text(
+            148.0,
+            124.0,
+            anchor="nw",
+            text="ORIGINAL PASSWORD",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            148.0,
+            222.0,
+            anchor="nw",
+            text="NEW PASSWORD",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
+
+        self.canvas.create_text(
+            148.0,
+            324.0,
+            anchor="nw",
+            text="REPEAT PASSWORD",
+            fill="#7D8CA7",
+            font=("Noto Sans", 24 * -1)
+        )
 
 
 
@@ -384,17 +366,16 @@ if __name__ == "__main__":
     window.geometry("1024x600")
     window.configure(bg = "#FFFFFF")
 
-    container = Frame(window, bg="#FFFFBB")
+    container = Frame(window, bg="#FFFFFF")
     container.pack(side = "top", fill = "both", expand = True)
     container.grid_rowconfigure(0, weight = 1)
     container.grid_columnconfigure(0, weight = 1)
 
     window.frames = {}
-    frame = PageLogin(container, window)
+    frame = PageSettingReset(container, window)
 
-    window.frames[PageLogin] = frame
-    #frame.grid(row = 0, column = 0, sticky ="nsew")
-
+    window.frames[PageSettingReset] = frame
+    frame.grid(row = 0, column = 0, sticky ="nsew")
     frame.tkraise()
     window.mainloop()
     
