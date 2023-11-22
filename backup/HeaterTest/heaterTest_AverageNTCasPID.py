@@ -449,7 +449,7 @@ try:
     # and start DAQ
     ntc_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
-    time.sleep(600)
+    time.sleep(300)
     # let's stop it
     ntc_sensor.stop()
     print("finished")
