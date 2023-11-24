@@ -7,7 +7,7 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t1_output.txt", "t3_output.txt"]
+filelist = ["output_temp1.txt", "t1_output.txt", "t3_output.txt"]
 
 for f in filelist:
 #if 1:

@@ -62,7 +62,7 @@ D = 1
 '''
 HET_Kp = 9.1;         # 12 數值是否能達到目標值
 HET_Ki = 0.3;         # 0.05 誤差積累
-HET_Kd = 1.8;         # 35 誤差變化率
+HET_Kd = 18#1.8;         # 35 誤差變化率
 TEC_Kp = 200;         # 200 數值是否能達到目標值
 TEC_Ki = 10;          # 10 誤差積累
 TEC_Kd = 5;           # 5 誤差變化率
@@ -410,7 +410,7 @@ try:
     # and start DAQ
     ntc_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
-    time.sleep(600)
+    time.sleep(300)
     # let's stop it
     ntc_sensor.stop()
     print("finished")

@@ -207,7 +207,7 @@ class CoThermal:
     def PlateTPCallback(self, data):
 
         r2, Tc = self.calT(data)
-        print("Plate TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate, data, r2, Tc))
+        #print("Plate TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate, data, r2, Tc))
         self.timestamp_plate += (1 / self.samplingRate)
  
         self.count_plate += 1
@@ -224,7 +224,7 @@ class CoThermal:
 
     def TECCoolTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("TECCool TS %f,%f:%f Ohm, %f C" % (self.timestamp_teccool, data, r2, Tc))
+        #print("TECCool TS %f,%f:%f Ohm, %f C" % (self.timestamp_teccool, data, r2, Tc))
         self.timestamp_teccool += (1 / self.samplingRate)
  
         self.count_teccool += 1
@@ -241,7 +241,7 @@ class CoThermal:
 
     def TECHeatTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("TECHeat TS %f,%f:%f Ohm, %f C" % (self.timestamp_techeat, data, r2, Tc))
+        #print("TECHeat TS %f,%f:%f Ohm, %f C" % (self.timestamp_techeat, data, r2, Tc))
         self.timestamp_techeat += (1 / self.samplingRate)
  
         self.count_techeat += 1
@@ -257,7 +257,7 @@ class CoThermal:
         
     def CameraTPCallback(self, data):
         r2, Tc = self.calT(data)
-        print("Camera TS %f,%f:%f Ohm, %f C" % (self.timestamp_camera, data, r2, Tc))
+        #print("Camera TS %f,%f:%f Ohm, %f C" % (self.timestamp_camera, data, r2, Tc))
         self.timestamp_camera += (1 / self.samplingRate)
         self.controlFlowForCamera(Tc, self.timestamp_camera)
     
