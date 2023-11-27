@@ -22,7 +22,7 @@ import random
 
 
 # basic class
-class COPcbConnector:
+class COPcbConnector:  # BT' baud = 9600
     def __init__(self, port = None, baudrate = 115200, target_desc = None):
         self.port = port
         self.baudrate = baudrate
@@ -62,10 +62,10 @@ class COPcbConnector:
 
         if self.port == None:
             ports = serial.tools.list_ports.comports(include_links=False)
-            for port in ports :
+            for port in ports:
                 print('Find port '+ port.device + ', desc = ' + port.description)
 
-                if port.description[0:len(self.target_desc)]:
+                if port.description[0:len(self.target_desc)] == self.target_desc:
                     self.port = port.device
 
         if self.port != None:
@@ -117,11 +117,11 @@ class COPcbConnector:
 
 
         if self.ser.in_waiting > len(self.func_OK_package):
-            data = self.ser.readline()
+            data = self.ser.read_all()
             #print(data)
-            if (data[0:15] == self.func_OK_package):
+            if (data[0:len(self.func_OK_package)] == self.func_OK_package):
                 try:
-                    ret_string = data[15:].decode("utf-8")
+                    ret_string = data[len(self.func_OK_package):].decode("utf-8")
                 except:
                     ret_string = self.err_decode_fail
             else:
@@ -153,20 +153,16 @@ class QRCodeReader(COPcbConnector):
 
 class ModuleA(COPcbConnector):
     def __init__(self):
-        super().__init__(target_desc = 'ModuleA')
+        super().__init__(baudrate = 9600, target_desc = 'USB Serial Port (COM13)')
         self.definePackage()
-        #self.connect()
+        self.connect()
 
     def resetPCB(self, total_time):
         self.total_time = total_time
 
 
     def definePackage(self):
-        self.init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
-        self.init_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
-        self.func_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
-        self.func_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
-        self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
+        self.func_OK_package = bytearray(b'TouchStone HW v0.01 2023.08.18\r\nTouchStone FW v0.01 2023.10.29\r\n')
 	
     def doFunc(self, timeout = 10):
         #return self.sendCmd(timeout, self.func_package)
@@ -175,6 +171,11 @@ class ModuleA(COPcbConnector):
         self.total_time -= 1
         if self.total_time < 0:
             self.total_time = random.randrange(10,180)
+
+    def initPCB(self, timeout):
+        self.state = 1
+        return
+
 
 
 if __name__ == "__main__":

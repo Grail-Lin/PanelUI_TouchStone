@@ -62,7 +62,7 @@ D = 1
 '''
 HET_Kp = 9.1;         # 12 數值是否能達到目標值
 HET_Ki = 0.3;         # 0.05 誤差積累
-HET_Kd = 18;#1.8;         # 35 誤差變化率
+HET_Kd = 1.8;         # 35 誤差變化率
 TEC_Kp = 200;         # 200 數值是否能達到目標值
 TEC_Ki = 10;          # 10 誤差積累
 TEC_Kd = 5;           # 5 誤差變化率
@@ -85,16 +85,16 @@ pid_tec.setSampleTime(1)
 # heater to 95
 pid_high = PID(HET_Kp, HET_Ki, HET_Kd)
 pid_high.SetPoint = targetHighT
-pid_high.setSampleTime(0.1)
+pid_high.setSampleTime(1)
 
 # tec to 55
 pid_low = PID(HET_Kp, HET_Ki, HET_Kd)
 pid_low.SetPoint = targetLowT
-pid_low.setSampleTime(0.1)
+pid_low.setSampleTime(1)
 
 pid_tec = PID(TEC_Kp, TEC_Ki, TEC_Kd)
 pid_tec.SetPoint = targetLowT
-pid_tec.setSampleTime(0.1)
+pid_tec.setSampleTime(1)
 
 
 
@@ -112,7 +112,7 @@ class CoThermal:
         self.t4_ofile = t4_ofile if t4_ofile is not None else None
 
         # time
-        self.sample_time = 0.1
+        self.sample_time = 0.00
         self.current_time = current_time if current_time is not None else time.time()
         self.last_time = self.current_time
         
@@ -129,7 +129,7 @@ class CoThermal:
         self.state_high_ts = 1
         
         # temperature sampling rate: 1Hz
-        self.samplingRate = 100
+        self.samplingRate = 10
 
         self.temp_plate = 0.0
         self.temp_teccool = 0.0
