@@ -152,8 +152,8 @@ class QRCodeReader(COPcbConnector):
         return self.sendCmd(timeout, self.func_package)
 
 class ModuleA(COPcbConnector):
-    def __init__(self):
-        super().__init__(baudrate = 9600, target_desc = 'USB Serial Port (COM13)')
+    def __init__(self, port = None, target_desc='USB Serial Port'):
+        super().__init__(baudrate = 9600, port = port, target_desc = target_desc)
         self.definePackage()
         self.connect()
 
