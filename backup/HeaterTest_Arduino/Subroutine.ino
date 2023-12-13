@@ -386,6 +386,36 @@ void Heater4_PID(boolean iOnOff)
     analogWrite(HET4, 0);
   }
 }
+
+void Heater1_PID_high(boolean iOnOff)
+{
+  float pid_PID;
+  unsigned int HET_PWM_Value1;
+
+  // 偵測加熱器溫度
+  NTC_HET_Steinhart1 = NTC_HET1_Thermistor.temperature();
+
+  /*
+    Serial.print(NTC_HET_Steinhart1);
+  */
+
+  // 計算 PID 數值
+  pid_PID = HET_PID2.Run(NTC_HET_Steinhart1);
+
+  HET_PWM_Value1 = map(pid_PID, 0, 255, 0, 255);
+
+  // 驅動加熱器 MOSFET
+  if (iOnOff == HIGH)
+  {
+    analogWrite(HET1, HET_PWM_Value1);
+  }
+  else
+  {
+    analogWrite(HET1, 0);
+  }
+}
+
+
 //------------------------------------------------------------------------------------------------
 void Linear_HighZ(unsigned int IndexHighZ_01mm)
 {

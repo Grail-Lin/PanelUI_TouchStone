@@ -289,11 +289,12 @@ void Step_Start() {
   //                  Processing Start                    //
   //------------------------------------------------------//
 
-  if (false) {
+  if (true) {
+    Step_HEATERTEST();
     //Step_TEC(60000);
     //Linear_HighZ(0);    
     //Show_Paras();
-
+    /*
     if (CURRENT_STAGE == 0) {
       CURRENT_STAGE = 1;
       Show_Stage();
@@ -317,6 +318,7 @@ void Step_Start() {
       CURRENT_STAGE = 0;
     }
     Show_Paras();
+    */
   } else {
     Step_11();
     delay(1000);
@@ -6648,6 +6650,170 @@ void Step_THERMALCYCLE() {
     //Step_HEAT_55_cart(60000);
     Step_HEAT_55_1(60000);
 }
+
+
+// Heat 1 only, for 75 dC
+void Step_HEAT_75_1(unsigned long iTimeMs) {
+  digitalWrite(TFT_LED, LOW);
+
+  tft.fillScreen(ILI9341_BLACK);
+  tft.setFont(Arial_bold_14);
+
+  tft.setTextScale(2);
+  tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
+  tft.printAlignedOffseted("STEP DOE_HEAT75", gTextAlignMiddleCenter, 0, -90);
+
+  tft.setTextScale(1);
+
+  tft.printAt("1. Heat 1 = 75 C", 40, 160);
+
+  digitalWrite(TFT_LED, HIGH);
+
+  // Heat 1 = 55 C //
+  NTC_HET_Steinhart1 = NTC_HET1_Thermistor.temperature();
+  NTC_HET_Steinhart3 = NTC_HET2_Thermistor.temperature();
+  NTC_ROOM_Steinhart = NTC_ROOM_Thermistor.temperature();
+  NTC_CART_Steinhart1 = NTC_CART_Thermistor.temperature();
+
+  tft.printAt("Heat1 temp. =", 40, 60);
+  dtostrf(NTC_HET_Steinhart1, 3, 1, textBuff);
+  tft.printAt(textBuff, 150, 60);
+
+  tft.printAt("Heating Time =", 40, 100);
+
+  tft.printAt("Keeping Time =", 40, 120);
+
+  tft.printAt("Cart. temp. =", 40, 140);
+  dtostrf(NTC_CART_Steinhart1, 3, 1, textBuff);
+  tft.printAt(textBuff, 150, 140);
+
+
+  tft.setTextColor(ILI9341_WHITE, ILI9341_BLUE);
+  tft.printAt(" ON ", 250, 160);
+
+  unsigned long startTime = 0;
+  unsigned long currentTime = 0;
+
+  float deltaTime = 0;
+
+  startTime = millis();
+  // HET_SetPoint1 = 55
+  while (NTC_HET_Steinhart1 < HET_SetPoint2) {
+    Heater1_PID_high(HIGH);
+    //Heater3_PID(LOW);
+    
+    // showing the Heating Time
+    currentTime = millis();
+    deltaTime = currentTime - startTime;
+    tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
+    dtostrf(deltaTime, 3, 1, textBuff);
+    tft.printAt(textBuff, 160, 100);
+
+    // showing the temperature
+    dtostrf(NTC_HET_Steinhart1, 3, 1, textBuff);
+    tft.printAt(textBuff, 150, 60);
+
+    NTC_CART_Steinhart1 = NTC_CART_Thermistor.temperature();
+    dtostrf(NTC_CART_Steinhart1, 3, 1, textBuff);
+    tft.printAt(textBuff, 150, 140);
+
+
+    if (DOE_TEST_PRINT_TEMP) {  // Grail, 20221128, add for temperature records
+      Serial.println(deltaTime);
+      Serial.println(NTC_HET_Steinhart1);
+      Serial.println(NTC_HET_Steinhart3);
+      Serial.println(NTC_CART_Steinhart1);
+    }
+
+    if (NTC_HET_Steinhart1 >= 120) break;
+  }
+
+
+  startTime = millis();
+  deltaTime = 0;
+
+  while (deltaTime < iTimeMs) {   // 60000 ms = 60 sec
+    Heater1_PID(HIGH);
+    //Heater3_PID(LOW);
+
+    // showing the Heating Time
+    currentTime = millis();
+    deltaTime = currentTime - startTime;
+    tft.setTextColor(ILI9341_WHITE, ILI9341_BLACK);
+    dtostrf(deltaTime, 3, 1, textBuff);
+    tft.printAt(textBuff, 160, 120);
+
+    // showing the temperature
+    dtostrf(NTC_HET_Steinhart1, 3, 1, textBuff);
+    tft.printAt(textBuff, 150, 60);
+    //dtostrf(NTC_HET_Steinhart3, 3, 1, textBuff);
+    //tft.printAt(textBuff, 150, 80);
+
+    NTC_CART_Steinhart1 = NTC_CART_Thermistor.temperature();
+    dtostrf(NTC_CART_Steinhart1, 3, 1, textBuff);
+    tft.printAt(textBuff, 150, 140);
+
+
+    if (DOE_TEST_PRINT_TEMP) {  // Grail, 20221128, add for temperature records
+      Serial.println(deltaTime);
+      Serial.println(NTC_HET_Steinhart1);
+      Serial.println(NTC_HET_Steinhart3);
+      Serial.println(NTC_CART_Steinhart1);
+
+    }
+
+    if (NTC_HET_Steinhart1 >= 120) break;
+    //if (NTC_HET_Steinhart3 >= 120) break;
+  }
+
+  Heater1_PID(LOW);
+  //Heater3_PID(LOW);
+  
+if ((NTC_HET_Steinhart1 >= 120) || (NTC_HET_Steinhart3 >= 120)) {
+    tft.setTextColor(ILI9341_WHITE, ILI9341_RED);
+    tft.printAt(" WARN ", 250, 160);
+  } else {
+    tft.setTextColor(ILI9341_WHITE, ILI9341_GREEN);
+    tft.printAt(" OK ", 250, 160);
+  }
+}
+
+
+
+void Step_HEATERTEST() {
+    // Heat1 to 75 and keep 60 sec
+    Step_HEAT_75_1(60000);
+
+    // Heat1 to 55 and keep 60 sec
+    Step_HEAT_55_1(60000);
+
+    // Heat1 to 75 and keep 60 sec
+    Step_HEAT_75_1(60000);
+
+    // Heat1 to 55 and keep 60 sec
+    Step_HEAT_55_1(60000);
+
+    // Heat1 to 75 and keep 60 sec
+    Step_HEAT_75_1(60000);
+
+    // Heat1 to 55 and keep 60 sec
+    Step_HEAT_55_1(60000);
+    
+    // Heat1 to 75 and keep 60 sec
+    Step_HEAT_75_1(60000);
+
+    // Heat1 to 55 and keep 60 sec
+    Step_HEAT_55_1(60000);
+
+    // Heat1 to 75 and keep 60 sec
+    Step_HEAT_75_1(60000);
+
+    // Heat1 to 55 and keep 60 sec
+    Step_HEAT_55_1(60000);
+
+}
+
+
 
 void Show_Stage() {
 

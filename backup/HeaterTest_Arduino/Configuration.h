@@ -227,7 +227,7 @@ float NTC_CART_Steinhart1;
 #include <PID_v2.h>
 
 float HET_SetPoint1 = 55;   // 55 預計數值目標
-float HET_SetPoint2 = 95;   // 95 預計數值目標
+float HET_SetPoint2 = 75;   // 95 預計數值目標
 float HET_Kp = 9.1;         // 12 數值是否能達到目標值
 float HET_Ki = 0.3;         // 0.05 誤差積累
 float HET_Kd = 1.8;         // 35 誤差變化率
