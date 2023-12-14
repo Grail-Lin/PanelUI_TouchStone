@@ -6733,7 +6733,7 @@ void Step_HEAT_75_1(unsigned long iTimeMs) {
   deltaTime = 0;
 
   while (deltaTime < iTimeMs) {   // 60000 ms = 60 sec
-    Heater1_PID(HIGH);
+    Heater1_PID_high(HIGH);
     //Heater3_PID(LOW);
 
     // showing the Heating Time
@@ -6766,7 +6766,7 @@ void Step_HEAT_75_1(unsigned long iTimeMs) {
     //if (NTC_HET_Steinhart3 >= 120) break;
   }
 
-  Heater1_PID(LOW);
+  Heater1_PID_high(LOW);
   //Heater3_PID(LOW);
   
 if ((NTC_HET_Steinhart1 >= 120) || (NTC_HET_Steinhart3 >= 120)) {
