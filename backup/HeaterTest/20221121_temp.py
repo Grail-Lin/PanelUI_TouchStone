@@ -64,6 +64,11 @@ class CoThermal:
         self.c2 = 2.378405444e-04
         self.c3 = 2.019202697e-07
         '''
+        self._sr = 9900
+        self._nr = 98000
+        self._bc = 3950
+        self._nt = 25.0
+
         self.board = Arduino(PORT)
         
         # output file
@@ -83,7 +88,7 @@ class CoThermal:
 
         
     def myPrintCallback(self, data):
-        r2, Tc = self.calT(data)
+        r2, Tc = self.calTA(data)
         print("a0: %f,%f:%f Ohm, %f C" % (self.timestamp, data, r2, Tc))
         self.timestamp += (1 / self.samplingRate)
 
@@ -102,7 +107,7 @@ class CoThermal:
         '''
 
     def myPrintCallback2(self, data):
-        r2, Tc = self.calT(data)
+        r2, Tc = self.calTA(data)
         print("a2: %f,%f:%f Ohm, %f C" % (self.timestamp2, data, r2, Tc))
         self.timestamp2 += (1 / self.samplingRate)
         if self.output_file_2 is not None:
@@ -113,11 +118,19 @@ class CoThermal:
         self.board.exit()
         
     def calT(self, data):
-        r2 = self.r1 * ( 1.0/data - 1.0)
+        r2 = self.r1 * ( 1.0/(data) - 1.0)
         log_r2 = math.log(r2)
         T = (1.0 / (self.c1 + self.c2 * log_r2 + self.c3 * log_r2 * log_r2 * log_r2))
         Tc = T - 273.15
         return r2, Tc
+
+    def calTA(self, data):
+        a1 = self._sr / (1.0/data - 1.0)
+
+        sh = math.log(a1 / self._nr) / self._bc + 1.0 /(self._nt + 273.15)
+
+        Tc = 1.0 / sh - 273.15
+        return a1, Tc
 
     def turnOnOff(self, value=1):
         self.board.digital[self.heater_pin].write(value)
