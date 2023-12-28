@@ -40,10 +40,10 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 #from GradientFrame import GradientFrame                       # add for gradient color background
 
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
-from copic import image_test_off, image_reset_on, image_user_off, image_time_off, img_btn_confirm_on, img_entry_bg, img_button_cancel_off
+from copic import image_test_off, image_reset_off, image_user_on, image_time_off, img_btn_confirm_on, img_entry_bg, img_button_cancel_off
 
 
-class PageSettingReset(Frame):
+class PageSettingUserNew(Frame):
 
     # user data
 
@@ -153,12 +153,12 @@ class PageSettingReset(Frame):
 
 
         # btn for left side
-        self.image_user_off = PhotoImage(data = image_user_off)
+        self.image_user_on = PhotoImage(data = image_user_on)
         self.button_user = Button(self,
-            image=self.image_user_off,
+            image=self.image_user_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("image_user_off clicked"),
+            command=lambda: print("image_user_on clicked"),
             relief="flat"
         )
         self.button_user.place(
@@ -198,12 +198,12 @@ class PageSettingReset(Frame):
             height=103.0
         )
 
-        self.image_reset_on = PhotoImage(data = image_reset_on)
+        self.image_reset_off = PhotoImage(data = image_reset_off)
         self.button_reset = Button(self,
-            image=self.image_reset_on,
+            image=self.image_reset_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("image_reset_on clicked"),
+            command=lambda: print("image_reset_off clicked"),
             relief="flat"
         )
         self.button_reset.place(
@@ -234,7 +234,7 @@ class PageSettingReset(Frame):
             148.0,
             24.0,
             anchor="nw",
-            text="SETTINGS / RESET PASSWORD",
+            text="SETTINGS / USERS / NEW",
             fill="#569FCB",
             font=("Noto Sans", 32 * -1, "bold")
         )
@@ -332,7 +332,7 @@ class PageSettingReset(Frame):
             148.0,
             124.0,
             anchor="nw",
-            text="ORIGINAL PASSWORD",
+            text="USER NAME",
             fill="#7D8CA7",
             font=("Noto Sans", 24 * -1)
         )
@@ -341,7 +341,7 @@ class PageSettingReset(Frame):
             148.0,
             222.0,
             anchor="nw",
-            text="NEW PASSWORD",
+            text="ROLE",
             fill="#7D8CA7",
             font=("Noto Sans", 24 * -1)
         )
@@ -350,7 +350,7 @@ class PageSettingReset(Frame):
             148.0,
             324.0,
             anchor="nw",
-            text="REPEAT PASSWORD",
+            text="PASSWORD",
             fill="#7D8CA7",
             font=("Noto Sans", 24 * -1)
         )
@@ -372,9 +372,9 @@ if __name__ == "__main__":
     container.grid_columnconfigure(0, weight = 1)
 
     window.frames = {}
-    frame = PageSettingReset(container, window)
+    frame = PageSettingUserNew(container, window)
 
-    window.frames[PageSettingReset] = frame
+    window.frames[PageSettingUserNew] = frame
     frame.grid(row = 0, column = 0, sticky ="nsew")
     frame.tkraise()
     window.mainloop()
