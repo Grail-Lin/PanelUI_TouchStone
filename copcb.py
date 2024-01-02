@@ -41,6 +41,7 @@ class COPcbConnector:  # BT' baud = 9600
         self.err_timeout = "ERROR: TIMEOUT"
         self.err_decode_fail = "ERROR: DECODED_FAIL"
         self.err_func_fail = "ERROR: FUNCTION_FAIL"
+        self.code_ok = "OK"
 
         # state
         # 0: uninit
@@ -81,8 +82,12 @@ class COPcbConnector:  # BT' baud = 9600
     def definePackage(self):
         return
 		
-    def initPCB(self, timeout):
+    def initPCB(self, timeout = 5):
         self.definePackage()
+        # check if initialized
+        if self.state < 1:
+            return self.err_uninit
+
         self.ser.write(self.init_package)
         time.sleep(1)
         while self.ser.in_waiting:
@@ -91,7 +96,7 @@ class COPcbConnector:  # BT' baud = 9600
                 self.state = 1
             else:
                 self.state = 0
-        return
+        return self.code_ok
 
     # need to inplement in child class
     def sendCmd(self, timeout, cmd_str):
@@ -172,7 +177,7 @@ class ModuleA(COPcbConnector):
         if self.total_time < 0:
             self.total_time = random.randrange(10,180)
 
-    def initPCB(self, timeout):
+    def initPCB(self, timeout = 5):
         self.state = 1
         return
 
@@ -181,6 +186,6 @@ class ModuleA(COPcbConnector):
 if __name__ == "__main__":
     # test QRCodeReader
     qrcr = QRCodeReader()
-    qrcr.initPCB(10)
+    qrcr.initPCB()
     ret = qrcr.scan(10)
     print("QRCode scan result: " + ret)

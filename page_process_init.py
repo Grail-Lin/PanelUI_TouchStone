@@ -24,6 +24,8 @@ from copic import img_button_insert_on, img_button_insert_off
 from copic import img_button_eject_on, img_button_eject_off
 from copic import img_state_aborted, img_state_completed, img_state_not_started
 
+import copcb
+
 class PageProcessInit(Frame):
 
     # user data
@@ -59,6 +61,9 @@ class PageProcessInit(Frame):
         controller.geometry(alignstr)
         controller.resizable(width=False, height=False)
 
+        # init QRCodeReader
+        self.qrcr = copcb.QRCodeReader()
+        self.qrcr.initPCB()
 
         self.canvas = Canvas(
             self,
@@ -364,27 +369,20 @@ class PageProcessInit(Frame):
     def Cmd_btn_insert(self):
         # open cartridge
         # read QR code to get id and test name
-        temp_string = ''.join(random.choice(string.digits) for x in range(4))  \
-            +'-'+''.join(random.choice(string.digits) for x in range(4))       \
-            +'-'+''.join(random.choice(string.digits) for x in range(4))
+        ret = self.qrcr.scan(10)
+        if ret[:6] == "ERROR:":
+            # if no response or can't init
+            temp_string = ''.join(random.choice(string.digits) for x in range(4))  \
+                +'-'+''.join(random.choice(string.digits) for x in range(4))       \
+                +'-'+''.join(random.choice(string.digits) for x in range(4))
+        else:
+            temp_string = ret
+
         self.str_cartridgeID.set(temp_string)
 
         temp_string = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(10)) + " Test"
         self.str_testname.set(temp_string)
 
-
-        #self.var_preextracttime = random.randrange(10,180)
-        #self.var_extracttime = random.randrange(10,240)
-        #self.var_qpcrtime = random.randrange(10,180)
-
-        #self.var_processtime = self.var_preextracttime+ self.var_extracttime + self.var_qpcrtime
-        #self.str_processtime.set(time.strftime("%M:%S", time.gmtime(self.var_processtime)))
-
-
-        # set the time for play page
-        # self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.reset(self.var_preextracttime)
-        # self.controller.frames[page_process_play.PageProcessPlay].extract_bar.reset(self.var_extracttime)
-        # self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.reset(self.var_qpcrtime)
 
         # init all step setting
         all_steps_setting = []
