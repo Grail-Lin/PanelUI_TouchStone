@@ -74,6 +74,7 @@ class COPcbConnector:  # BT' baud = 9600
             self.ser.flushInput()
             self.ser.flushOutput()
             print('Connect ' + self.ser.name)
+            self.state = 1
         else:
             self.state = -1
         return
@@ -142,7 +143,8 @@ class COPcbConnector:  # BT' baud = 9600
 
 class QRCodeReader(COPcbConnector):
     def __init__(self):
-        super().__init__(target_desc = 'ELMO GMAS')
+        #super().__init__(target_desc = 'ELMO GMAS')
+        super().__init__(target_desc = 'USB')
         self.definePackage()
         self.connect()
 

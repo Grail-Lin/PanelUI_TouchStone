@@ -240,9 +240,10 @@ class PageLogin(Frame):
         self.button_1['image']=self.img_button_login_on
         self.button_1['command']=self.Cmd_btn_login
 
-        if self.value_vk_on == False:
-            self.value_vk_on = True
-            win_popup_kb.popup_keyboard(self)
+        #if self.value_vk_on == False:
+        #    self.value_vk_on = True
+        #    win_popup_kb.popup_keyboard(self)
+        win_popup_kb.popup_keyboard(self)
 
 
 
@@ -256,9 +257,10 @@ class PageLogin(Frame):
         #self.button_1['state']="normal"
         self.button_1['image']=self.img_button_login_on
         self.button_1['command']=self.Cmd_btn_login
-        if self.value_vk_on == False:
-            self.value_vk_on = True
-            win_popup_kb.popup_keyboard(self)
+        #if self.value_vk_on == False:
+        #    self.value_vk_on = True
+        #    win_popup_kb.popup_keyboard(self)
+        win_popup_kb.popup_keyboard(self)
 
 
 
