@@ -185,8 +185,8 @@ class CoThermal:
 
         # temperature pin
         self.tp_pin_t1 = 0 
-        self.tp_pin_t2 = 1
-        self.tp_pin_t3 = 2
+        self.tp_pin_t2 = 2
+        self.tp_pin_t3 = 1
         self.tp_pin_t4 = 3
         
         # reset pins
@@ -331,7 +331,7 @@ class CoThermal:
             self.pinOut(self.pwm_pin_heater, targetPwm)
             
             # check temperature
-            if temperature >= self.T_high:
+            if temperature >= (self.T_high - 3):
                 self.last_ts_high = timestamp
                 self.state_high_ts = 2
             

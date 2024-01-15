@@ -7,7 +7,10 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["output_temp1.txt", "t1_output.txt", "t3_output.txt"]
+filelist = ["20240115_05_75_55_changestatus-2/t1_output.txt", 
+            "20240115_05_75_55_changestatus-2/t3_output.txt",
+            "20240115_06_75_55_changestatus-3/t1_output.txt", 
+            "20240115_06_75_55_changestatus-3/t3_output.txt"]
 
 for f in filelist:
 #if 1:
