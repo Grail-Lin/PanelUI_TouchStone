@@ -160,7 +160,7 @@ class QRCodeReader(COPcbConnector):
 
 class ModuleA(COPcbConnector):
     def __init__(self, port = None, target_desc='USB Serial Port'):
-        super().__init__(baudrate = 9600, port = port, target_desc = target_desc)
+        super().__init__(baudrate = 115200, port = port, target_desc = target_desc)
         self.definePackage()
         self.connect()
 
@@ -181,6 +181,57 @@ class ModuleA(COPcbConnector):
 
     def initPCB(self, timeout = 5):
         self.state = 1
+        return
+
+class ModuleBT(COPcbConnector):
+    def __init__(self, port = None, target_desc='USB Serial Port'):
+        super().__init__(baudrate = 115200, port = port, target_desc = target_desc)
+        self.definePackage()
+        self.connect()
+
+    def resetPCB(self, total_time):
+        self.total_time = total_time
+
+
+    def definePackage(self):
+        self.func_OK_package = bytearray(b'')
+	
+    def doFunc(self, timeout = 10):
+        #return self.sendCmd(timeout, self.func_package)
+        # return remain_time, other value
+        ret = self.total_time
+        self.total_time -= 1
+        if self.total_time < 0:
+            self.total_time = random.randrange(10,180)
+
+    def initPCB(self, timeout = 5):
+        self.state = 1
+        return
+
+    # device functions, TODO: error handling
+    def openDoor(self, timeout = 5):
+        self.sendCmd(10, b'20,2,58000,0\n')
+        return
+    def closeDoor(self, timeout = 5):
+        self.sendCmd(10, b'20,1,58000,0\n')
+        return
+    def openWaterFan(self, timeout = 5)
+        self.sendCmd(1, b'15,1,0,0\n')
+        return
+    def closeWaterFan(self, timeout = 5)
+        self.sendCmd(1, b'15,2,0,0\n')
+        return
+    def openSDFan(self, timeout = 5)
+        self.sendCmd(1, b'16,1,0,0\n')
+        return
+    def closeSDFan(self, timeout = 5)
+        self.sendCmd(1, b'16,2,0,0\n')
+        return
+    def openODFan(self, timeout = 5)
+        self.sendCmd(1, b'17,1,0,0\n')
+        return
+    def closeODFan(self, timeout = 5)
+        self.sendCmd(1, b'17,2,0,0\n')
         return
 
 
