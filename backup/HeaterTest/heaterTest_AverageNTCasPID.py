@@ -52,7 +52,7 @@ PORT = 'COM3'
 #PORT = Arduino.AUTODETECT
 
 b_USE_TEC = False
-targetHighT = 75
+targetHighT = 95
 targetLowT = 55
 
 '''
@@ -184,9 +184,10 @@ class CoThermal:
         self.relay_pin_sfan = 8
 
         # temperature pin
-        self.tp_pin_t1 = 0 
+        # 1 = plate temp., 0 = heater temp.
+        self.tp_pin_t1 = 1 
         self.tp_pin_t2 = 2
-        self.tp_pin_t3 = 1
+        self.tp_pin_t3 = 0
         self.tp_pin_t4 = 3
         
         # reset pins

@@ -7,10 +7,8 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["20240115_05_75_55_changestatus-2/t1_output.txt", 
-            "20240115_05_75_55_changestatus-2/t3_output.txt",
-            "20240115_06_75_55_changestatus-3/t1_output.txt", 
-            "20240115_06_75_55_changestatus-3/t3_output.txt"]
+filelist = ["20240119_02_95_55_changestatus-3/t1_output.txt", 
+            "20240119_02_95_55_changestatus-3/t3_output.txt"]
 
 for f in filelist:
 #if 1:
@@ -36,7 +34,7 @@ for f in filelist:
     ax1.set_ylim(0, 200)
     ax1.plot(time_list, tc_list, color = 'blue', linewidth = 1)
 	
-    ax1.hlines(75,0,300,color="red")
+    ax1.hlines(95,0,300,color="red")
     ax1.hlines(55,0,300,color="red")
     ax1.hlines(tc_list[0],0,300,color="red")
     ax1.vlines(250,0,200,color="green")
