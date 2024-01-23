@@ -135,7 +135,7 @@ class COPcbConnector:  # BT' baud = 9600
 
         else:
             ret_string = self.err_decode_fail
-        return ret_string
+        return ret_string.strip()
 
     # need to inplement in child class
     #def decode(self, ret_string):
@@ -209,30 +209,146 @@ class ModuleBT(COPcbConnector):
         return
 
     # device functions, TODO: error handling
-    def openDoor(self, timeout = 5):
-        self.sendCmd(10, b'20,2,58000,0\n')
-        return
-    def closeDoor(self, timeout = 5):
-        self.sendCmd(10, b'20,1,58000,0\n')
-        return
-    def openWaterFan(self, timeout = 5)
-        self.sendCmd(1, b'15,1,0,0\n')
-        return
-    def closeWaterFan(self, timeout = 5)
-        self.sendCmd(1, b'15,2,0,0\n')
-        return
-    def openSDFan(self, timeout = 5)
-        self.sendCmd(1, b'16,1,0,0\n')
-        return
-    def closeSDFan(self, timeout = 5)
-        self.sendCmd(1, b'16,2,0,0\n')
-        return
-    def openODFan(self, timeout = 5)
-        self.sendCmd(1, b'17,1,0,0\n')
-        return
-    def closeODFan(self, timeout = 5)
-        self.sendCmd(1, b'17,2,0,0\n')
-        return
+    def checkOK(self, ret):
+        ret_array = ret.split(',')
+        if ret_array[3] == 1:
+            return True
+        if len(ret_array) >= 4:
+            return ret_array[-1]
+        return False
+
+    # 1: cartridge rotation
+    def rotateCart(self, timeout = 10, pos = 0):
+        if pos == 0:
+            ret = self.sendCmd(timeout, b'1,1,10000,0\n')
+            print("Rotate Cartridge to zero position....")
+        else:
+            ret = self.sendCmd(timeout, b'1,2,%d,0\n' % pos)
+            print("Rotate Cartridge to %d position...." % pos)
+        return self.checkOK(ret)
+
+    # 2: cup driver
+    # 3: rocker arm
+    def moveRArm(self, timeout = 5, release = True):
+        if release == True:
+            ret = self.sendCmd(timeout, b'3,1,2000,0\n')
+            print("Release rocker arm....")
+        else:
+            ret = self.sendCmd(timeout, b'3,2,2000,0\n')
+            print("Contact rocker arm....")
+        return self.checkOK(ret)
+
+    # 4: optical position
+    # 5: reverses motor
+    # 6: cartridge rotation
+    def openDoor(self, timeout = 1):
+        ret = self.sendCmd(timeout, b'6,1,1000,0\n')
+        print("Open door....")
+        return self.checkOK(ret)
+    def closeDoor(self, timeout = 1):
+        ret = self.sendCmd(timeout, b'6,2,1000,0\n')
+        print("Close door....")
+        return self.checkOK(ret)
+
+    # 7: Cartridge Roller
+    # 8: vertical position
+    def moveVertPosTop(self, timeout = 36):
+        ret = self.sendCmd(timeout, b'8,1,36000,0\n')
+        print("move vertical position to TOP")
+        return self.checkOK(ret)
+    def moveVertPosMid(self, timeout = 18):
+        ret = self.sendCmd(timeout, b'8,2,18000,0\n')
+        print("move vertical position to MID")
+        return self.checkOK(ret)
+    def moveVertPosBtn(self, timeout = 36):
+        ret = self.sendCmd(timeout, b'8,3,36000,0\n')
+        print("move vertical position to BTN")
+        return self.checkOK(ret)
+
+    # 9: BLDC Motor
+    def startBLDCMotor(self, timeout = 5, clockwise = True):
+        if clockwise == True:
+            # clockwise
+            ret = self.sendCmd(timeout, b'9,1,100,0\n')
+            print("turn on BLDC Motor: clockwise....")
+        else:
+            # counter clockwise
+            ret = self.sendCmd(timeout, b'9,2,100,0\n')
+            print("turn on BLDC Motor: counter clockwise....")
+        return self.checkOK(ret)
+
+    def stopBLDCMotor(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'9,3,0,0\n')
+        print("turn off BLDC Motor....")
+        return self.checkOK(ret)
+
+    def setBLDCMotorRPM(self, timeout = 10, rpm = 5000):
+        input_rpm = rpm
+        if rpm < 3000:
+            input_rpm = 3000
+        if rpm > 12000:
+            input_rpm = 12000
+
+        ret = self.sendCmd(timeout, b'9,5,%d,0\n' % input_rpm)
+        print("set BLDC Motor to RPM: %d...." % input_rpm)
+        return self.checkOK(ret)
+
+    def readBLDCMotorRPM(self, timeout = 10):
+        ret = self.sendCmd(timeout, b'9,4,0,0\n')
+        if self.checkOK(ret):
+            ret_rpm = ret.strip().split(',')[-2]
+            print("read BLDC Motor to RPM: %d...." % ret_rpm)
+            return ret_rpm
+        print("read BLDC Motor to RPM: failed....")
+        return False
+
+    # 10: vacuum air pump
+    def turnOnVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'10,1,0,0\n')
+        print("turn on Vacuum Air Pump....")
+        return self.checkOK(ret)
+    def turnOffVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'10,2,0,0\n')
+        print("turn off Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    # 11: reserves air pump
+    # 12: heater
+    # 13: reserves heater
+    # 14: TEC
+    # 15: Water Cooler Fan
+    def turnOnWaterFan(self, timeout = 5)
+        ret = self.sendCmd(timeout, b'15,1,0,0\n')
+        return self.checkOK(ret)
+    def turnOffWaterFan(self, timeout = 5)
+        ret = self.sendCmd(timeout, b'15,2,0,0\n')
+        return self.checkOK(ret)
+
+    # 16: system dissipation fan
+    def turnOnSDFan(self, timeout = 5)
+        ret = self.sendCmd(timeout, b'16,1,0,0\n')
+        return self.checkOK(ret)
+    def turnOffSDFan(self, timeout = 5)
+        ret = self.sendCmd(timeout, b'16,2,0,0\n')
+        return self.checkOK(ret)
+
+    # 17: optical dissipation fan
+    def turnOnODFan(self, timeout = 5)
+        ret = self.sendCmd(timeout, b'17,1,0,0\n')
+        return self.checkOK(ret)
+    def turnOffODFan(self, timeout = 5)
+        ret = self.sendCmd(timeout, b'17,2,0,0\n')
+        return self.checkOK(ret)
+
+    # 20 combo cmd
+    def insertCart(self, timeout = 6):
+        ret = self.sendCmd(timeout, b'20,2,6000,0\n')
+        return self.checkOK(ret)
+    def ejectCart(self, timeout = 6):
+        ret = self.sendCmd(timeout, b'20,1,6000,0\n')
+        return self.checkOK(ret)
+
+
 
 
 
