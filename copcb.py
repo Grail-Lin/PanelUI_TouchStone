@@ -215,7 +215,7 @@ class ModuleBT(COPcbConnector):
             return True
         if len(ret_array) >= 4:
             return ret_array[-1]
-        return False
+        return ret_array
 
     # 1: cartridge rotation
     def rotateCart(self, timeout = 10, pos = 0):
@@ -224,10 +224,20 @@ class ModuleBT(COPcbConnector):
             print("Rotate Cartridge to zero position....")
         else:
             ret = self.sendCmd(timeout, b'1,2,%d,0\n' % pos)
-            print("Rotate Cartridge to %d position...." % pos)
+            print("Not Ready: Rotate Cartridge to %d position...." % pos)
         return self.checkOK(ret)
 
     # 2: cup driver
+    def moveCDriver(self, timeout = 3, back = True):
+        if back == True:
+            ret = self.sendCmd(timeout, b'2,1,3000,0\n')
+            print("Move cup driver backward....")
+        else:
+            ret = self.sendCmd(timeout, b'2,2,3000,0\n')
+            print("Move cup driver forward....")
+        return self.checkOK(ret)
+
+
     # 3: rocker arm
     def moveRArm(self, timeout = 5, release = True):
         if release == True:
@@ -239,6 +249,16 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 4: optical position
+    def moveOPos(self, timeout = 5, up = True):
+        if up == True:
+            ret = self.sendCmd(timeout, b'4,1,2000,0\n')
+            print("Move optical position up....")
+        else:
+            ret = self.sendCmd(timeout, b'4,2,2000,0\n')
+            print("Move optical position down....")
+        return self.checkOK(ret)
+
+
     # 5: reverses motor
     # 6: cartridge rotation
     def openDoor(self, timeout = 1):
@@ -251,6 +271,16 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 7: Cartridge Roller
+    def moveCartRoller(self, timeout = 6, back = True):
+        if up == True:
+            ret = self.sendCmd(timeout, b'7,1,6000,0\n')
+            print("Move cartridge roller backward....")
+        else:
+            ret = self.sendCmd(timeout, b'7,2,6000,0\n')
+            print("Move cartridge roller forward....")
+        return self.checkOK(ret)
+
+
     # 8: vertical position
     def moveVertPosTop(self, timeout = 36):
         ret = self.sendCmd(timeout, b'8,1,36000,0\n')
@@ -305,11 +335,11 @@ class ModuleBT(COPcbConnector):
     # 10: vacuum air pump
     def turnOnVacAirPump(self, timeout = 5):
         ret = self.sendCmd(timeout, b'10,1,0,0\n')
-        print("turn on Vacuum Air Pump....")
+        print("Not Ready: turn on Vacuum Air Pump....")
         return self.checkOK(ret)
     def turnOffVacAirPump(self, timeout = 5):
         ret = self.sendCmd(timeout, b'10,2,0,0\n')
-        print("turn off Vacuum Air Pump....")
+        print("Not Ready: turn off Vacuum Air Pump....")
         return self.checkOK(ret)
 
     # 11: reserves air pump
@@ -317,40 +347,59 @@ class ModuleBT(COPcbConnector):
     # 13: reserves heater
     # 14: TEC
     # 15: Water Cooler Fan
-    def turnOnWaterFan(self, timeout = 5)
+    def turnOnWaterFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,1,0,0\n')
+        print("turn on Water Fan....")
         return self.checkOK(ret)
-    def turnOffWaterFan(self, timeout = 5)
+
+    def turnOffWaterFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,2,0,0\n')
+        print("turn off Water Fan....")
         return self.checkOK(ret)
 
     # 16: system dissipation fan
-    def turnOnSDFan(self, timeout = 5)
+    def turnOnSDFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'16,1,0,0\n')
+        print("turn on System Dissipation Fan....")
         return self.checkOK(ret)
-    def turnOffSDFan(self, timeout = 5)
+    def turnOffSDFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'16,2,0,0\n')
+        print("turn off System Dissipation Fan....")
         return self.checkOK(ret)
 
     # 17: optical dissipation fan
-    def turnOnODFan(self, timeout = 5)
+    def turnOnODFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'17,1,0,0\n')
+        print("Not Ready: turn on Optical Dissipation Fan....")
         return self.checkOK(ret)
-    def turnOffODFan(self, timeout = 5)
+
+    def turnOffODFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'17,2,0,0\n')
+        print("Not Ready: turn off Optical Dissipation Fan....")
         return self.checkOK(ret)
 
     # 20 combo cmd
-    def insertCart(self, timeout = 6):
-        ret = self.sendCmd(timeout, b'20,2,6000,0\n')
+    def insertCart(self, timeout = 60):
+        ret = self.sendCmd(timeout, b'20,2,60000,0\n')
+        if self.checkOK(ret) == True:
+            return True
+        else:
+            # force insert
+            self.forceCloseCart()
+            return ret
+
+    def ejectCart(self, timeout = 60):
+        ret = self.sendCmd(timeout, b'20,1,60000,0\n')
         return self.checkOK(ret)
-    def ejectCart(self, timeout = 6):
-        ret = self.sendCmd(timeout, b'20,1,6000,0\n')
-        return self.checkOK(ret)
 
-
-
-
+    def forceCloseCart(self, timeout = 4):
+        ret1 = self.moveCDriver()
+        time.sleep(3)
+        if ret1 == True:
+            ret2 = self.closeDoor()
+            time.sleep(1)
+            return ret2
+        return ret1
 
 if __name__ == "__main__":
     # test QRCodeReader
