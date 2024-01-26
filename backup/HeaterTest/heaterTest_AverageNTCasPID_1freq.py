@@ -165,6 +165,12 @@ class CoThermal:
         self.c2 = 2.378405444e-04
         self.c3 = 2.019202697e-07
         '''
+
+        self._sr = 9900
+        self._nr = 98000
+        self._bc = 3950
+        self._nt = 25.0
+
         self.board = Arduino(PORT)
 
         # arduino pwm pin, 3 5 6 9 10 11
@@ -265,12 +271,20 @@ class CoThermal:
         self.board.samplingOff()
         self.board.exit()
         
-    def calT(self, data):
+    def calTP(self, data):
         r2 = self.r1 * ( 1.0/data - 1.0)
         log_r2 = math.log(r2)
         T = (1.0 / (self.c1 + self.c2 * log_r2 + self.c3 * log_r2 * log_r2 * log_r2))
         Tc = T - 273.15
         return r2, Tc
+
+    def calT(self, data):
+        a1 = self._sr / (1.0/data - 1.0)
+
+        sh = math.log(a1 / self._nr) / self._bc + 1.0 /(self._nt + 273.15)
+
+        Tc = 1.0 / sh - 273.15
+        return a1, Tc
 
     # pin output
     def pinOut(self, pin, value=1.0):

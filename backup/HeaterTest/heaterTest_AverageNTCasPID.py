@@ -185,9 +185,9 @@ class CoThermal:
 
         # temperature pin
         # 1 = plate temp., 0 = heater temp.
-        self.tp_pin_t1 = 1 
-        self.tp_pin_t2 = 2
-        self.tp_pin_t3 = 0
+        self.tp_pin_t1 = 1
+        self.tp_pin_t2 = 0
+        self.tp_pin_t3 = 2
         self.tp_pin_t4 = 3
         
         # reset pins
@@ -212,13 +212,13 @@ class CoThermal:
         #self.board.analog[self.tp_pin_t4].enable_reporting()
 
     def PlateTPCallback(self, data):
-
-        r2, Tc = self.calT(data)
-        #print("Plate TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate, data, r2, Tc))
+        # -0.0166
+        r2_plate, Tc_plate = self.calT(data)
+        #print("Plate TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate, data, r2_plate, Tc_plate))
         self.timestamp_plate += (1 / self.samplingRate)
  
         self.count_plate += 1
-        self.temp_plate += Tc
+        self.temp_plate += Tc_plate
 
         if self.count_plate == 10:
             self.temp_plate /= 10.0
@@ -280,14 +280,14 @@ class CoThermal:
         return r2, Tc
 
     def calT(self, data):
+
+        #print("data = %f" % data)
         a1 = self._sr / (1.0/data - 1.0)
 
         sh = math.log(a1 / self._nr) / self._bc + 1.0 /(self._nt + 273.15)
 
         Tc = 1.0 / sh - 273.15
         return a1, Tc
-
-
 
     # pin output
     def pinOut(self, pin, value=1.0):
@@ -318,21 +318,22 @@ class CoThermal:
                 state_high_ts 1 = keep on heating
                 use PID
             '''
-
+            
             # stop the cooling and turn off fan
             #self.pinOut(self.pwm_pin_heater, 0.0)
             self.pinOut(self.relay_pin_bfan, 0.0)
             self.pinOut(self.relay_pin_sfan, 0.0)
-
+            
             self.pid_high.update(temperature)
+            
             targetPwm = self.pid_high.output
             targetPwm = max(min( targetPwm, 100.0 ), 0.0)
             targetPwm = targetPwm / 100.0
             print("targetPwm = %f" % targetPwm)
-            self.pinOut(self.pwm_pin_heater, targetPwm)
             
+            self.pinOut(self.pwm_pin_heater, targetPwm)
             # check temperature
-            if temperature >= (self.T_high - 3):
+            if temperature >= (self.T_high - 5):
                 self.last_ts_high = timestamp
                 self.state_high_ts = 2
             
@@ -466,7 +467,7 @@ try:
     # and start DAQ
     ntc_sensor.start()
     # let's acquire data for 100secs. We could do something else but we just sleep!
-    time.sleep(300)
+    time.sleep(900)
     # let's stop it
     ntc_sensor.stop()
     print("finished")

@@ -45,14 +45,22 @@ class CoThermal:
         self.total_pt = 60
 
         # sampling rate: 1Hz
-        self.samplingRate = 1
+        self.samplingRate = 100
         self.timestamp = 0
         self.timestamp2 = 0
-        self.r1 = 100000
+
+
+        self.r1 = 10000
+        self.c1 = 1.009249522e-03 
+        self.c2 = 2.378405444e-04
+        self.c3 = 2.019202697e-07
+
+        '''
+		self.r1 = 100000
         self.c1 = 4.391855325e-04
         self.c2 = 2.531872891e-04
         self.c3 = -6.257262991e-11
-        '''
+        
         self.r1 = 100000
         self.c1 = 6.66082410500e-04
         self.c2 = 2.23928204100e-04
@@ -76,25 +84,25 @@ class CoThermal:
         self.output_file_2 = output_file_2 if output_file_2 is not None else None
 
     def start(self):
-        self.board.analog[0].register_callback(self.myPrintCallback)
+        self.board.analog[2].register_callback(self.myPrintCallback)
         #self.board.analog[2].register_callback(self.myPrintCallback2)
 
         self.board.samplingOn(1000 / self.samplingRate)
 
-        self.board.analog[0].enable_reporting()
+        self.board.analog[2].enable_reporting()
         #self.board.analog[2].enable_reporting()
 
 
 
         
     def myPrintCallback(self, data):
-        r2, Tc = self.calTA(data)
+        r2, Tc = self.calT(data)
         print("a0: %f,%f:%f Ohm, %f C" % (self.timestamp, data, r2, Tc))
         self.timestamp += (1 / self.samplingRate)
 
         if self.output_file_1 is not None:
             print("%f\t%f\t%f" % (self.timestamp, Tc, 0), file=self.output_file_1)
-
+        self.board.digital[3].write(1)
         #self.controlFlow(Tc, self.timestamp)
         
         '''
@@ -119,6 +127,7 @@ class CoThermal:
         
     def calT(self, data):
         r2 = self.r1 * ( 1.0/(data) - 1.0)
+        #r2 = self.r1 * (data / (1.0 - data))
         log_r2 = math.log(r2)
         T = (1.0 / (self.c1 + self.c2 * log_r2 + self.c3 * log_r2 * log_r2 * log_r2))
         Tc = T - 273.15
