@@ -65,6 +65,10 @@ class PageProcessInit(Frame):
         self.qrcr = copcb.QRCodeReader()
         self.qrcr.initPCB()
 
+        # init BT PCB
+        self.btpcb = copcb.ModuleBT()
+        self.btpcb.initPCB()
+
         self.canvas = Canvas(
             self,
             bg = "#FFFFFF",
@@ -368,6 +372,15 @@ class PageProcessInit(Frame):
     # btn insert cartridge
     def Cmd_btn_insert(self):
         # open cartridge
+        
+        if self.btpcb.ejectCart() != True:
+            print("Error: eject cartridge failed")
+            return
+
+        if self.btpcb.insertCart() != True:
+            print("Error: insert cartridge failed")
+            return
+
         # read QR code to get id and test name
         ret = self.qrcr.scan(10)
         if ret[:6] == "ERROR:":
@@ -410,6 +423,13 @@ class PageProcessInit(Frame):
         return
     # btn eject cartridge
     def Cmd_btn_eject(self):
+        # open cartridge
+        
+        if self.btpcb.ejectCart() != True:
+            print("Error: eject cartridge failed")
+            return
+        ret = self.btpcb.forceCloseCart()
+
         # empty id and test name
         self.str_cartridgeID.set("")
 
