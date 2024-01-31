@@ -7,12 +7,17 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame, StringVar
 #from GradientFrame import GradientFrame                       # add for gradient color background
 
-from copic import img_button_setting_on, img_button_home_off, img_button_process_off
+from copic import img_button_setting_on, img_button_home_off, img_button_process_off, img_entry_bg
 from copic import img_button_logout, img_button_result_off, img_button_settime_on, img_button_cancel_off
 from copic import image_test_off, image_reset_off, image_user_off, image_time_on, img_entry_bg
+
+import time, datetime
+from tkcalendar import Calendar, DateEntry
+import os
+
 
 class PageSettingTime(Frame):
 
@@ -32,6 +37,7 @@ class PageSettingTime(Frame):
         self.controller = controller
 
         # set user data
+        self.nowtime_after = None
 
         # set window size
         width = 1024
@@ -216,7 +222,7 @@ class PageSettingTime(Frame):
             image=self.img_button_settime_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_10 clicked"),
+            command=self.Cmd_btn_settime,
             relief="flat"
         )
         self.button_settime.place(
@@ -231,7 +237,7 @@ class PageSettingTime(Frame):
             image=self.img_button_cancel_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_11 clicked"),
+            command=self.Cmd_btn_cancel,
             relief="flat"
         )
         self.button_cancel.place(
@@ -250,51 +256,46 @@ class PageSettingTime(Frame):
             image=self.img_entry_bg
         )
         '''
-
-        self.entry_1 = Entry(self,
-            bd=0,
-            bg="#FFFFFF",
-            fg="#000716",
-            highlightthickness=0,
-            font = ("Noto Sans", 24 * -1),
-            #textvariable = self.uname_input
-        )
-
-        self.entry_1.place(
-            x=430.0,
-            y=96.0,
-            width=398.0,
-            height=84.0
-        )
-        #self.entry_1.bind("<1>", self.Focus_entry_uname)
-
+        # date frame
+        self.frame_date = self.canvas.create_rectangle(381.0, 103.0, 828.0, 189.0,
+                                     fill="#EBEBEB", outline="")
         '''
-        self.entry_bg_2 = self.canvas.create_image(
-            430.0,
-            196.0,
-            image=self.img_entry_bg
+        self.id_date = self.canvas.create_text(
+            419.5, 122.0, anchor="nw", 
+            text="",
+            fill="#17171B",
+            font=("Noto Sans", 24 * -1),
         )
         '''
+        self.entry_date = DateEntry(self.canvas, width=25, font=("Noto Sans", 24 * -1), date_pattern='yyyy/mm/dd',
+                                 fieldbackground="#EBEBEB", style='flat.TButton')
 
-        self.entry_2 = Entry(self,
-            bd=0,
-            bg="#FFFFFF",
-            fg="#000716",
-            highlightthickness=0,
-            font = ("Noto Sans", 24 * -1),
-            #textvariable = self.uname_input
-        )
+        self.entry_date.place(x=419.5, y=122)
 
-        self.entry_2.place(
-            x=430.0,
-            y=196.0,
-            width=398.0,
-            height=84.0
+
+        self.frame_time = self.canvas.create_rectangle(381.0, 204.0, 828.0, 290.0,
+                                     fill="#EBEBEB", outline="")
+
+        self.time_input = StringVar(self.canvas, "")
+        self.entry_time = Entry(self.canvas, bd=0, bg="#EBEBEB", 
+	                         font = ("Noto Sans", 24 * -1), textvariable = self.time_input)
+
+        self.entry_time.place(x=419.5, y=222)
+
+        self.entry_time.bind("<1>", self.Focus_entry_time)
+
+        '''
+        self.id_time = self.canvas.create_text(
+            419.5, 222.0, anchor="nw", 
+            text="",
+            fill="#17171B",
+            font=("Noto Sans", 24 * -1),
+            #state="hidden"
         )
-        #self.entry_2.bind("<1>", self.Focus_entry_uname)
+        '''
 
         self.canvas.create_text(
-            148.0, 128.0,
+            148.0, 120.0,
             anchor="nw",
             text="DATE",
             fill="#7D8CA7",
@@ -302,12 +303,46 @@ class PageSettingTime(Frame):
         )
 
         self.canvas.create_text(
-            148.0, 229.0,
+            148.0, 221.0,
             anchor="nw",
             text="TIME",
             fill="#7D8CA7",
             font=("Noto Sans", 24 * -1)
         )
+
+        self.update_time()
+
+    def update_time(self):
+        #current_date = time.strftime('%Y/%m/%d')
+
+        current_time = time.strftime('%H:%M:%S')
+        #self.canvas.itemconfig(self.id_date, text=current_date)
+        #self.canvas.itemconfig(self.id_time, text=current_time)
+        self.time_input.set(current_time)
+        self.nowtime_after = self.canvas.after(1000, self.update_time)
+
+    def Focus_entry_time(self, event):
+        if self.nowtime_after is not None:
+            self.canvas.after_cancel(self.nowtime_after)
+
+    def Cmd_btn_settime(self):
+        # get date and time
+        date_str = self.entry_date.get()
+        _date_value = datetime.datetime.strptime(date_str, "%Y/%m/%d")
+
+        time_str = self.entry_time.get()
+        _time_value = time_str
+        # set value to system
+        os.system('date {}'.format(_date_value))
+        os.system('time {}'.format(_time_value))
+        return
+
+    def Cmd_btn_cancel(self):
+        # get date and time
+        # set value to system
+        self.entry_date.set_date(datetime.datetime.now())
+        self.update_time()
+        return
 
 
 if __name__ == "__main__":
@@ -327,5 +362,6 @@ if __name__ == "__main__":
     frame.grid(row = 0, column = 0, sticky ="nsew")
 
     frame.tkraise()
+
     window.mainloop()
     
