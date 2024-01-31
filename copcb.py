@@ -272,7 +272,7 @@ class ModuleBT(COPcbConnector):
 
     # 7: Cartridge Roller
     def moveCartRoller(self, timeout = 6, back = True):
-        if up == True:
+        if back == True:
             ret = self.sendCmd(timeout, b'7,1,6000,0\n')
             print("Move cartridge roller backward....")
         else:
@@ -290,9 +290,9 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'8,2,18000,0\n')
         print("move vertical position to MID")
         return self.checkOK(ret)
-    def moveVertPosBtn(self, timeout = 36):
+    def moveVertPosBtm(self, timeout = 36):
         ret = self.sendCmd(timeout, b'8,3,36000,0\n')
-        print("move vertical position to BTN")
+        print("move vertical position to BTM")
         return self.checkOK(ret)
 
     # 9: BLDC Motor
