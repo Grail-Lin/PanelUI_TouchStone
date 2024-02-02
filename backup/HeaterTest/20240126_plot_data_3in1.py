@@ -17,12 +17,12 @@ from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
 '''
-f1 = "20240126_05_95_55_changestatus-5_PID_Plate1023/t1_output.txt"
-f2 = "20240126_05_95_55_changestatus-5_PID_Plate1023/t2_output.txt"
-f3 = "20240126_05_95_55_changestatus-5_PID_Plate1023/t3_output.txt"
+f1 = "20240202_01_2pid_95_55/t1_output.txt"
+f2 = "20240202_01_2pid_95_55/t2_output.txt"
+f3 = "20240202_01_2pid_95_55/t3_output.txt"
 
-value_f1 = "Plate1(PID)"
-value_f2 = "Heater"
+value_f1 = "Heater"
+value_f2 = "Plate1"
 value_f3 = "Plate2"
 
 
@@ -93,7 +93,8 @@ if 1:
     content3 = np.loadtxt(f3)
     
     #time_list = content[:, 0]
-    time_list = np.arange(0, 900.2, 0.1)
+    #time_list = np.arange(0, 900.2, 0.1)
+    time_list = np.arange(0, 298.5, 0.1)
     tc1_list = content1[:, 1]
     pwm_list = content1[:, 2]
     

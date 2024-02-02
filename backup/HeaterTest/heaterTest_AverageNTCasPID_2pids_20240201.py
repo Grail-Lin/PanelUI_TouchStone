@@ -139,9 +139,9 @@ TEC_Ki = 10;          # 10 誤差積累
 TEC_Kd = 5;           # 5 誤差變化率
 '''
 
-PID1_Kp = 9.1
-PID1_Ki = 0.3
-PID1_Kd = 1.8
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
 
 PID2_Kp = 9.1
 PID2_Ki = 0.3
@@ -239,8 +239,8 @@ class CoThermal:
 
         # temperature pin
         # 1 = plate temp., 0 = heater temp.
-        self.tp_pin_t1 = 1
-        self.tp_pin_t2 = 0
+        self.tp_pin_t1 = 0
+        self.tp_pin_t2 = 1
         self.tp_pin_t3 = 2
         
         # reset pins
@@ -273,7 +273,7 @@ class CoThermal:
 
         if self.count_heater == 10:
             self.temp_heater /= 10.0
-            print("Plate avg TS %f, %f C" % (self.timestamp_heater, self.temp_heater))
+            print("Heater avg TS %f, %f C" % (self.timestamp_heater, self.temp_heater))
             self.controlFlowPrintTPOnly(self.t1_ofile, self.temp_heater, self.timestamp_heater)
 
             self.controlFlowForPID(self.pid1, self.temp_heater)
@@ -308,7 +308,7 @@ class CoThermal:
 
         if self.count_plate1 == 10:
             self.temp_plate1 /= 10.0
-            print("Plate1 avg TS %f, %f C" % (self.timestamp_plate2, self.temp_plate2))
+            print("Plate1 avg TS %f, %f C" % (self.timestamp_plate1, self.temp_plate1))
             self.controlFlowPrintTPOnly(self.t2_ofile, self.temp_plate1, self.timestamp_plate1)
 
             self.temp_plate1 = 0
@@ -652,7 +652,7 @@ class CoThermal:
 
         return
 
-    def controlFlowForPID(self, current_pid, temperature, timestamp):
+    def controlFlowForPID(self, current_pid, temperature):
         current_pid.update(temperature)
 
         targetPwm = current_pid.output
