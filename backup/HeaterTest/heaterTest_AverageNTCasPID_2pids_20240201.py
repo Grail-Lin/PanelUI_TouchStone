@@ -276,19 +276,26 @@ class CoThermal:
             print("Heater avg TS %f, %f C" % (self.timestamp_heater, self.temp_heater))
             self.controlFlowPrintTPOnly(self.t1_ofile, self.temp_heater, self.timestamp_heater)
 
-            self.controlFlowForPID(self.pid1, self.temp_heater)
+            if self.state_high_ts == 1:
+                # use heater temp to control PID1
+                self.controlFlowForPID(self.pid1, self.temp_heater)
 
-            if self.temp_heater >= self.T_high:
-                self.state_high_ts = 2
-                print("state_high_ts = 2")
-                self.last_ts_high = self.timestamp_heater
+                # check temperature >= high?
+                if self.temp_heater >= self.T_high:
+                    self.state_high_ts = 2
+                    print("temperature > highTP, state_high_ts = 2")
+                    self.last_ts_high = self.timestamp_heater
 
-                self.board.analog[self.tp_pin_t1].unregister_callback()
-                self.board.analog[self.tp_pin_t2].unregister_callback()
+                    #self.board.analog[self.tp_pin_t1].unregister_callback()
+                    #self.board.analog[self.tp_pin_t2].unregister_callback()
 
-                self.board.analog[self.tp_pin_t1].register_callback(self.heaterTP2Callback)
-                self.board.analog[self.tp_pin_t2].register_callback(self.plate1TP2Callback)
+                    #self.board.analog[self.tp_pin_t1].register_callback(self.heaterTP2Callback)
+                    #self.board.analog[self.tp_pin_t2].register_callback(self.plate1TP2Callback)
 
+            #elif self.state_high_ts == 2:
+            #elif self.state_high_ts == 3:
+            #elif self.state_high_ts == 4:
+            #else:    # state_high_ts = 2/3/4, do nothing
 
             # reset temp and count
             self.temp_heater = 0
@@ -311,8 +318,41 @@ class CoThermal:
             print("Plate1 avg TS %f, %f C" % (self.timestamp_plate1, self.temp_plate1))
             self.controlFlowPrintTPOnly(self.t2_ofile, self.temp_plate1, self.timestamp_plate1)
 
+            #if self.state_high_ts == 1:
+            # do nothing
+            if self.state_high_ts == 2:
+                self.controlFlowForPID(self.pid2, self.temp_plate1)
+
+                if (self.timestamp_plate1 - self.last_ts_high) >= self.high_pt:
+                    self.state_high_ts = 3
+                    print("time period long enough, state_high_ts = 3")
+                    self.pinOut(self.pwm_pin_heater, 0.0)
+
+                    #self.board.analog[self.tp_pin_t2].unregister_callback()
+                    #self.board.analog[self.tp_pin_t2].register_callback(self.plate1TP3Callback)
+
+            elif self.state_high_ts == 3:
+                if self.temp_plate1 <= T_low:
+                    self.state_high_ts = 4
+                    print("temperature <= lowT, state_high_ts = 4")
+                    self.last_ts_low = self.timestamp_plate1
+
+            elif self.state_high_ts == 4:
+                self.controlFlowForPID(self.pid3, self.temp_plate1)
+
+                if (self.timestamp_plate1 - self.last_ts_low) >= self.low_pt:
+                    self.state_high_ts = 1
+                    print("time period long enough, state_high_ts = 1")
+                    #self.board.analog[self.tp_pin_t1].unregister_callback()
+                    #self.board.analog[self.tp_pin_t2].unregister_callback()
+
+                    #self.board.analog[self.tp_pin_t1].register_callback(self.heaterTP1Callback)
+                    #self.board.analog[self.tp_pin_t2].register_callback(self.plate1TP1Callback)
+
+            # reset temp and count
             self.temp_plate1 = 0
             self.count_plate1 = 0
+
         return
 
     # plate2TP1 cb, record only
@@ -334,6 +374,7 @@ class CoThermal:
         return
 
     # heaterTP2 cb, record only
+    '''
     def heaterTP2Callback(self, data):
         r2, Tc = self.calT(data)
         #print("TECHeat TS %f,%f:%f Ohm, %f C" % (self.timestamp_plate2, data, r2, Tc))
@@ -350,8 +391,8 @@ class CoThermal:
             self.temp_heater = 0
             self.count_heater = 0
         return
-
-
+    
+    
     # plate1TP2 cb, use plate1TP + PID2 to count V_heater, when time > pt, stage2->3
     def plate1TP2Callback(self, data):
         r2, Tc = self.calT(data)
@@ -402,7 +443,7 @@ class CoThermal:
             self.count_plate1 = 0
 
         return
-
+    '''
     # plate1TP3 cb, record only, when TP <= lowT, stage3->4
     # plate1TP4 cb, use plate1TP + PID3 to count V_heater, when time > pt, stage4->1
 
@@ -495,152 +536,7 @@ class CoThermal:
         print("set digital[%d] value: %f" % (pin, value))
         self.board.digital[pin].write(value)
 
-    
-    def controlFlowForAll(self, temperature, timestamp):
-        '''
-            T_low to T_high --> inc_period_time
-            stay in T_high --> high_period_time
-            T_high to T_low --> dec_period_time
-            stay in T_low --> low_period_time
-        '''
-        '''
-            state_high_ts 1 = keep on heating to 95
-            state_high_ts 2 = achieve target temperature: 95
-            state_high_ts 3 = stop heating, wait cooling to 55
-            state_high_ts 4 = achieve target temperature: 55
-        '''
-        print("state_high_ts = %d" % self.state_high_ts)
-
-        targetPwm = 0.0
-
-        if self.state_high_ts == 1:
-            print("state_high_ts = 1")
-            '''
-                state_high_ts 1 = keep on heating
-                use PID
-            '''
-            
-            # stop the cooling and turn off fan
-            #self.pinOut(self.pwm_pin_heater, 0.0)
-            #self.pinOut(self.relay_pin_bfan, 0.0)
-            #self.pinOut(self.relay_pin_sfan, 0.0)
-            
-            self.pid_high.update(temperature)
-            
-            targetPwm = self.pid_high.output
-            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-            targetPwm = targetPwm / 100.0
-            print("targetPwm = %f" % targetPwm)
-            
-            self.pinOut(self.pwm_pin_heater, targetPwm)
-            # check temperature
-            if temperature >= (self.T_high - 5):
-                self.last_ts_high = timestamp
-                self.state_high_ts = 2
-            
-        elif self.state_high_ts == 2:
-            print("state_high_ts = 2")
-            '''
-                state_high_ts 2 = achieve target temperature: 95
-            '''
-
-            # stop the cooling and turn off fan
-            #self.pinOut(self.pwm_pin_heater, 0.0)
-            #self.pinOut(self.relay_pin_bfan, 0.0)
-            #self.pinOut(self.relay_pin_sfan, 0.0)
-
-            self.pid_high.update(temperature)
-            targetPwm = self.pid_high.output
-            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-            targetPwm = targetPwm / 100.0
-            self.pinOut(self.pwm_pin_heater, targetPwm)
-
-            # check timestamp
-            if (timestamp - self.last_ts_high) >= self.high_pt:
-                self.state_high_ts = 3
-                self.pinOut(self.pwm_pin_heater, 0.0)
-                # change state_low_ts to 3 when state_high_ts about to 3
-                # self.state_low_ts = 3
-			
-			
-        elif self.state_high_ts == 3:
-            print("state_high_ts = 3")
-            '''
-                state_high_ts 3 = stop heating
-            '''
-
-            # stop the cooling and turn on fan
-            self.pinOut(self.pwm_pin_heater, 0.0)
-            #self.pinOut(self.relay_pin_bfan, 1.0)
-            #self.pinOut(self.relay_pin_sfan, 1.0)
-
-            if 0:
-                tempT = targetLowT - (temperature - targetLowT)
-                self.pid_tec.update(tempT)
-                targetPwm = self.pid_tec.output
-                targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-                targetPwm = targetPwm / 100.0
-                print("targetPwm = %f" % targetPwm)
-                #if b_USE_TEC:
-                #self.pinOut(self.pwm_pin_tec, targetPwm)
-            
-            # check temperature
-            if temperature <= self.T_low:
-                self.last_ts_low = timestamp
-                #self.pinOut(self.pwm_pin_tec, 0.0)
-                self.state_high_ts = 4
-
-        elif self.state_high_ts == 4:
-            print("state_high_ts = 4")
-            '''
-                state_high_ts 4 = achieve target temperature: 55
-                stop tec, keep fan
-            '''
-            #self.pinOut(self.pwm_pin_tec, 0.0)
-            #self.pinOut(self.relay_pin_bfan, 1.0)
-            #self.pinOut(self.relay_pin_sfan, 1.0)
-
-            self.pid_low.update(temperature)
-            targetPwm = self.pid_low.output
-            targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-            targetPwm = targetPwm / 100.0
-            self.pinOut(self.pwm_pin_heater, targetPwm)
-
-            # check timestamp
-            if (timestamp - self.last_ts_low) >= self.low_pt:
-                self.state_high_ts = 1
-                # change state_low_ts to 3 when state_high_ts about to 3
-                # self.state_low_ts = 3
-
-        else:
-            '''
-                default value
-            '''
-            # turn off all item
-            print("state_high_ts = else")
-            self.pinOut(self.pwm_pin_heater, 0.9)
-            #self.pinOut(self.pwm_pin_tec, 0.0)
-            #self.pinOut(self.relay_pin_bfan, 0.0)
-            #self.pinOut(self.relay_pin_sfan, 0.0)
-
-        if self.t1_ofile is not None:
-            print("%d\t%f\t%f" % (timestamp, temperature, targetPwm), file=self.t1_ofile)
-        return
-
-
-    def controlFlowForTECCool(self, temperature, timestamp):
-        '''
-            print the data only
-        '''
-        if self.t2_ofile is not None:
-            print("%d\t%f\t%f" % (timestamp, temperature, 0.0), file=self.t2_ofile)
-
-    def controlFlowForTECHeat(self, temperature, timestamp):
-        '''
-            print the data only
-        '''
-        if self.t3_ofile is not None:
-            print("%d\t%f\t%f" % (timestamp, temperature, 0.0), file=self.t3_ofile)
+       
 
     # 20240202
     def controlFlowPrintTPOnly(self, t_ofile, temperature, timestamp):
