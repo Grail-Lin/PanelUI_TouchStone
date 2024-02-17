@@ -69,6 +69,13 @@ class PCBsStep:
         if pcb_id_list[self.cur_pcb_num] == 0:
             ret = self.pcb.doFunc(10)
 
+class UserData:
+    def __init__(self, username = None, password = None, timestamp = None, role = 3):
+        self.username = username
+        self.password = password
+        self.timestamp = timestamp
+        self.role = role
+        return
 
 class PCRResults:
     def __init__(self, test_id = None, test_name = None, timestamp = None, ct1 = None, ct2 = None, well1_array = None, well2_array = None):
@@ -153,6 +160,33 @@ class COSQLite:
             return True
         return False
 
+    def updatePasswd(self, username, password):
+        try:
+            self.cursor.execute('UPDATE USERDATA SET PASSWORD="%s" WHERE USERNAME="%s"' % (password, username))
+            self.conn.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def queryUserLists(self):
+        ret_users = []
+        self.cursor.execute('SELECT * from USERDATA')
+
+        for ret in self.cursor.fetchall():
+            '''
+            ret[0] = uid
+            ret[1] = username
+            ret[2] = password
+            ret[3] = timestamp
+            ret[4] = role (0 = not use, 1 = admin, 2 = advance, 3 = normal)
+            '''
+            temp_user = UserData(username = ret[1], password = ret[2], timestamp = ret[3], role = ret[4])
+
+            ret_users.append(temp_user)
+
+        return ret_users
+
     def queryPCRResults(self):
         ret_results = []
         self.cursor.execute('SELECT * from PCRRESULT')
@@ -174,6 +208,7 @@ class COSQLite:
             ret_results.append(temp_result)
 
         return ret_results
+
 
     def addPCRResult(self, pcrresult):
         tid = pcrresult.test_id

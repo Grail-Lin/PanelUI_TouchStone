@@ -10,8 +10,11 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
+
+
+
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"D:\CO_BT\20230718_UI\TDVersion\build\assets\frame8")
+ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame8")
 
 
 def relative_to_assets(path: str) -> Path:

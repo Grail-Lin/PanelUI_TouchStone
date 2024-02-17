@@ -202,25 +202,10 @@ class PageLogin(Frame):
             self.canvas.itemconfigure(self.error_password, state="normal")
         else:
             cosql = coutil.COSQLite('data.db')
-
-            #conn = sqlite3.connect('data.db')
-            #with conn:
-            #    cursor = conn.cursor()
-            #cursor.execute('SELECT * from USERDATA where USERNAME="%s" and PASSWORD="%s"' % (uname, pwd))
         
-            #if cursor.fetchone():
             if cosql.queryLogin(uname, pwd):
-                # set current username
-                # TBD: fetch user's mode
-                # go to home page
-                #self.controller.frames[page_home.PageHome].UserInfoMsg.set("Username: %s" % uname)
-
-                # modify page_menu's text
-                #self.controller.frames[page_menu.PageMenu].BTNLoginout["text"] = "Logout"
                 self.controller.show_frame(page_home.PageHome)
             else:
-                #cursor.execute('SELECT * from USERDATA where USERNAME="%s"' % (uname))
-                #if cursor.fetchone():
                 if cosql.queryUser(uname):
                     # username exists, password wrong
                     self.canvas.itemconfigure(self.error_username, state="hidden")

@@ -42,16 +42,24 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 from copic import img_button_home_off, img_button_process_off, img_button_setting_on, img_button_result_off, img_button_logout
 from copic import image_test_off, image_reset_on, image_user_off, image_time_off, img_btn_confirm_on, img_entry_bg, img_button_cancel_off
 
+import coutil
+
 
 class PageSettingReset(Frame):
 
     # user data
+    text_op = ""
+    text_np = ""
+    text_rp = ""
+
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         self.controller = controller
 
         # set user data
+        self.uname = "demo"
+
 
         # set window size
         width = 1024
@@ -255,7 +263,7 @@ class PageSettingReset(Frame):
             image=self.img_btn_confirm_on,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_10 clicked"),
+            command=self.Cmd_btn_confirm,
             relief="flat"
         )
         self.button_confirm.place(
@@ -270,7 +278,7 @@ class PageSettingReset(Frame):
             image=self.img_button_cancel_off,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_11 clicked"),
+            command=self.Cmd_btn_cancel,
             relief="flat"
         )
         self.button_cancel.place(
@@ -283,54 +291,60 @@ class PageSettingReset(Frame):
         self.entry_bg_1 = self.canvas.create_rectangle(430.0, 96.0, 828.0, 182.0,
                                      fill="#FFFFFF", outline="black")
 
-        self.entry_1 = Entry(
+        self.entry_op = Entry(
             bd=0,
             bg="#FFFFFF",
             fg="#000716",
-            highlightthickness=0
+            highlightthickness=0,
+            font = ("Noto Sans", 24 * -1),
+            textvariable = self.text_op
         )
 
-        self.entry_1.place(
+        self.entry_op.place(
             x=438.0,
             y=98.0,
-            width=382.0,
+            width=250.0,
             height=84.0
         )
 
         self.entry_bg_2 = self.canvas.create_rectangle(430.0, 196.0, 828.0, 282.0,
                                      fill="#FFFFFF", outline="black")
-        self.entry_2 = Entry(
+        self.entry_np = Entry(
             bd=0,
             bg="#FFFFFF",
             fg="#000716",
-            highlightthickness=0
+            highlightthickness=0,
+            font = ("Noto Sans", 24 * -1),
+            textvariable = self.text_np
         )
-        self.entry_2.place(
+        self.entry_np.place(
             x=438.0,
             y=198.0,
-            width=382.0,
+            width=250.0,
             height=84.0
         )
 
         self.entry_bg_3 = self.canvas.create_rectangle(430.0, 298.0, 828.0, 384.0,
                                      fill="#FFFFFF", outline="black")
-        self.entry_3 = Entry(
+        self.entry_rp = Entry(
             bd=0,
             bg="#FFFFFF",
             fg="#000716",
-            highlightthickness=0
+            highlightthickness=0,
+            font = ("Noto Sans", 24 * -1),
+            textvariable = self.text_rp
         )
-        self.entry_3.place(
+        self.entry_rp.place(
             x=438.0,
             y=300.0,
-            width=382.0,
+            width=250.0,
             height=84.0
         )
 
 
         self.canvas.create_text(
             148.0,
-            124.0,
+            120.0,
             anchor="nw",
             text="ORIGINAL PASSWORD",
             fill="#7D8CA7",
@@ -339,7 +353,7 @@ class PageSettingReset(Frame):
 
         self.canvas.create_text(
             148.0,
-            222.0,
+            220.0,
             anchor="nw",
             text="NEW PASSWORD",
             fill="#7D8CA7",
@@ -348,7 +362,7 @@ class PageSettingReset(Frame):
 
         self.canvas.create_text(
             148.0,
-            324.0,
+            322.0,
             anchor="nw",
             text="REPEAT PASSWORD",
             fill="#7D8CA7",
@@ -358,6 +372,65 @@ class PageSettingReset(Frame):
 
 
         # add elements here
+        self.error_oldpass = self.canvas.create_text(
+            826.0,
+            120.0,
+            anchor="ne",
+            text="Wrong Passwd",
+            fill="#F02C95",
+            font=("Noto Sans", 20 * -1)
+        )
+        self.canvas.itemconfigure(self.error_oldpass, state="hidden")
+
+        self.error_notmatch = self.canvas.create_text(
+            826.0,
+            220.0,
+            anchor="ne",
+            text="Not Match",
+            fill="#F02C95",
+            font=("Noto Sans", 20 * -1)
+        )
+        self.canvas.itemconfigure(self.error_notmatch, state="hidden")
+
+
+
+
+    def Cmd_btn_confirm(self):
+        # check if new password == repeat password
+        input_op = self.entry_op.get()
+        input_np = self.entry_np.get()
+        input_rp = self.entry_rp.get()
+
+        if input_np != input_rp:
+            # show error
+            print("new password not the same")
+            self.canvas.itemconfigure(self.error_oldpass, state="hidden")
+            self.canvas.itemconfigure(self.error_notmatch, state="normal")
+            return
+
+        cosql = coutil.COSQLite('data.db')
+
+        # check if the old password is correct
+        if cosql.queryLogin(self.uname, input_op):
+            # update the new password
+            if cosql.updatePasswd(self.uname, input_np):
+                print("update password ok, new password=%s" % input_np)
+                self.canvas.itemconfigure(self.error_oldpass, state="hidden")
+                self.canvas.itemconfigure(self.error_notmatch, state="hidden")
+                return
+            else:
+                print("update password error")
+        else:
+            print("old password error, username=%s, password=%s" % (self.uname, input_op))
+            self.canvas.itemconfigure(self.error_oldpass, state="normal")
+            self.canvas.itemconfigure(self.error_notmatch, state="hidden")
+
+        return
+
+    def Cmd_btn_cancel(self):
+        self.canvas.itemconfigure(self.error_oldpass, state="hidden")
+        self.canvas.itemconfigure(self.error_notmatch, state="hidden")
+        return
 
 
 
