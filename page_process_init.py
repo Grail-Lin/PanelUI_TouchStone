@@ -535,9 +535,9 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
+        # 1004, 1 sec
+        self.steps_preextract.append(1004)
+        self.paras_preextract.append((5, 2, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
@@ -570,7 +570,11 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(802)
         self.paras_preextract.append((18))
         # 901
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
         # 903
+        self.steps_preextract.append(903)
+        self.paras_preextract.append((5))
         # 902
         # 101
         self.steps_preextract.append(101)

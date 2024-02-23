@@ -342,6 +342,13 @@ class ModuleBT(COPcbConnector):
         print("Not Ready: turn off Vacuum Air Pump....")
         return self.checkOK(ret)
 
+    def setVacAirPump(self, timeout = 5, number = 1, time=100):
+        ret = self.sendCmd(timeout, b'10,%d,%d,0\n' % (number+2, time))
+        print("Not Ready: set Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+
+
     # 11: reserves air pump
     # 12: heater
     # 13: reserves heater
