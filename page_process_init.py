@@ -69,6 +69,22 @@ class PageProcessInit(Frame):
         self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
+        # TODO: 2024/02/21 init PCB Steps
+        self.steps_preextract = []
+        self.steps_extract = []
+        self.steps_qpcr = []
+
+        self.paras_preextract = []
+        self.paras_extract = []
+        self.paras_qpcr = []
+
+        self.paras_config = []
+
+        '''
+        
+
+        '''
+
         self.canvas = Canvas(
             self,
             bg = "#FFFFFF",
@@ -473,6 +489,202 @@ class PageProcessInit(Frame):
 
     def Cmd_btn_setting(self):
         self.controller.show_frame(page_setting.PageSetting)
+
+    def init_process_steps(self):
+        '''
+        self.steps_preextract = []
+        self.steps_extract = []
+        self.steps_qpcr = []
+
+        self.paras_preextract = []
+        self.paras_extract = []
+        self.paras_qpcr = []
+
+        self.paras_config = []
+        '''
+        # pre-processing
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+
+        # 901
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
+
+        # 903, 6000
+        self.steps_preextract.append(903)
+        self.paras_preextract.append((10, 6000))
+
+        # 0 = sleep, 3min
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((180))
+
+        # 902
+        self.steps_preextract.append(902)
+        self.paras_preextract.append((5))
+
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+
+        # 801
+        self.steps_preextract.append(801)
+        self.paras_preextract.append((18))
+
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+        # 803
+        self.steps_preextract.append(803)
+        self.paras_preextract.append((18))
+
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+        # 901
+        # 903
+        # 902
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+        # 801
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+
+        # 803
+        self.steps_preextract.append(803)
+        self.paras_preextract.append((18))
+
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+        # 803
+        self.steps_preextract.append(803)
+        self.paras_preextract.append((18))
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+        # 803
+        self.steps_preextract.append(803)
+        self.paras_preextract.append((18))
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+        # 901
+        # 903
+        # 902
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+        # 801
+        self.steps_preextract.append(801)
+        self.paras_preextract.append((18))
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 0 = sleep, 30sec
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((30))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+
+
+        # pre-cool
+
+        # extraction
+
+        # QPCR
+
+        return
+
 
 if __name__ == "__main__":
     window = Tk()
