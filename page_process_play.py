@@ -40,6 +40,17 @@ class PageProcessPlay(Frame):
         self.play_after = None
 
         # set pcb boards
+
+        self.steps_preextract = []
+        self.steps_extract = []
+        self.steps_qpcr = []
+
+        self.paras_preextract = []
+        self.paras_extract = []
+        self.paras_qpcr = []
+
+        self.paras_config = []
+		
         # initial all pcb here
         self.pcb_a1 = copcb.ModuleA()
         self.pcb_a2 = copcb.ModuleA()

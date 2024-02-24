@@ -550,6 +550,7 @@ class PageProcessInit(Frame):
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
+
         # 803
         self.steps_preextract.append(803)
         self.paras_preextract.append((18))
@@ -693,17 +694,17 @@ class PageProcessInit(Frame):
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
+
         # 803
         self.steps_preextract.append(803)
         self.paras_preextract.append((18))
+
         # 1001
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
-
         # 1003, 1sec
         self.steps_preextract.append(1003)
         self.paras_preextract.append((5, 1, 1000))
-
         # 1002
         self.steps_preextract.append(1002)
         self.paras_preextract.append((5))
@@ -762,78 +763,241 @@ class PageProcessInit(Frame):
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
+
         # 801
         self.steps_preextract.append(801)
         self.paras_preextract.append((18))
+
         # 1001
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
-
         # 1003, 1sec
         self.steps_preextract.append(1003)
         self.paras_preextract.append((5, 1, 1000))
-
         # 1002
         self.steps_preextract.append(1002)
         self.paras_preextract.append((5))
-
-
 
         # pre-cool
         self.steps_preextract.append(1401)
         self.paras_preextract.append((5))
 
-
-
-
         # extraction
-'''
-802
-"901
-903
-902"
-101
-801
-"1001
-1005
-1002"
-802
-101
-803
-"1001
-1003
-1002"
-802
-"901
-903
-902"
-101
-801
-"1001
-1006
-1002"
-'''
 
+        # 802
+        self.steps_extract.append(802)
+        self.paras_extract.append((18))
+
+        # 901, cw 12000rpm, 3m
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, True))
+
+        # 903, 12000
+        self.steps_extract.append(903)
+        self.paras_extract.append((10, 12000))
+
+        # 0 = sleep, 3min
+        self.steps_extract.append(0)
+        self.paras_extract.append((180))
+
+        # 902
+        self.steps_extract.append(902)
+        self.paras_extract.append((5))
+
+        # 101
+        self.steps_extract.append(101)
+        self.paras_extract.append((10, 0))
+
+        # 801
+        self.steps_extract.append(801)
+        self.paras_extract.append((18))
+
+        # 1001
+        self.steps_extract.append(1001)
+        self.paras_extract.append((5))
+
+        # 1005, 1 sec
+        self.steps_extract.append(1005)
+        self.paras_extract.append((5, 2, 1000))
+
+        # 1002
+        self.steps_extract.append(1002)
+        self.paras_extract.append((5))
+
+        # 802
+        self.steps_extract.append(802)
+        self.paras_extract.append((18))
+
+        # 101
+        self.steps_extract.append(101)
+        self.paras_extract.append((10, 0))
+
+        # 803
+        self.steps_extract.append(803)
+        self.paras_extract.append((18))
+
+        # 1001
+        self.steps_extract.append(1001)
+        self.paras_extract.append((5))
+
+        # 1003, 1 sec
+        self.steps_extract.append(1003)
+        self.paras_extract.append((5, 2, 1000))
+
+        # 1002
+        self.steps_extract.append(1002)
+        self.paras_extract.append((5))
+
+        # 802
+        self.steps_extract.append(802)
+        self.paras_extract.append((18))
+
+        # 901, 3000rpm 20s/cycle, 3 cycles
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, True))
+        # 903
+        self.steps_extract.append(903)
+        self.paras_extract.append((10, 3000))
+        # 0, 20s 
+        self.steps_extract.append(0)
+        self.paras_extract.append((20))
+        # 901, ccw
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, False))
+        # 0, 20s 
+        self.steps_extract.append(0)
+        self.paras_extract.append((20))
+
+        # 901, cw
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, True))
+        # 0, 20s 
+        self.steps_extract.append(0)
+        self.paras_extract.append((20))
+        # 901, ccw
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, False))
+        # 0, 20s 
+        self.steps_extract.append(0)
+        self.paras_extract.append((20))
+
+        # 901, cw
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, True))
+        # 0, 20s 
+        self.steps_extract.append(0)
+        self.paras_extract.append((20))
+        # 901, ccw
+        self.steps_extract.append(901)
+        self.paras_extract.append((5, False))
+        # 0, 20s 
+        self.steps_extract.append(0)
+        self.paras_extract.append((20))
+
+        # 902
+        self.steps_extract.append(902)
+        self.paras_extract.append((5))
+
+        # 101
+        self.steps_extract.append(101)
+        self.paras_extract.append((10, 0))
+
+        # 801
+        self.steps_extract.append(801)
+        self.paras_extract.append((18))
+
+        # 1001
+        self.steps_extract.append(1001)
+        self.paras_extract.append((5))
+
+        # 1006, 1 sec
+        self.steps_extract.append(1006)
+        self.paras_extract.append((5, 2, 1000))
+
+        # 1002
+        self.steps_extract.append(1002)
+        self.paras_extract.append((5))
 
         # QPCR
-'''
-802
-1201
-1202
-401
-1201
-1202
-401
-1201
-1202
-401
-1201
-1202
-401
-1201
 
-'''
+        # 802
+        self.steps_qpcr.append(802)
+        self.paras_qpcr.append((18))
 
+        # 1201, 95c for 30sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((30, 95))
+
+        # 1201, 55c for 60sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((60, 55))
+
+        # 401, close Optical
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, False))
+
+        # perform Optical
+
+        # 401, open Optical        
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, True))
+
+
+        # 1201, 95c for 30sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((30, 95))
+
+        # 1201, 55c for 60sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((60, 55))
+
+        # 401, close Optical
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, False))
+
+        # perform Optical
+
+        # 401, open Optical        
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, True))
+
+        # 1201, 95c for 30sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((30, 95))
+
+        # 1201, 55c for 60sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((60, 55))
+
+        # 401, close Optical
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, False))
+
+        # perform Optical
+
+        # 401, open Optical        
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, True))
+
+        # 1201, 95c for 30sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((30, 95))
+
+        # 1201, 55c for 60sec
+        self.steps_qpcr.append(1201)
+        self.paras_qpcr.append((60, 55))
+
+        # 401, close Optical
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, False))
+
+        # perform Optical
+
+        # 401, open Optical        
+        self.steps_qpcr.append(401)
+        self.paras_qpcr.append((5, True))
+
+        # show results
 
         return
 
