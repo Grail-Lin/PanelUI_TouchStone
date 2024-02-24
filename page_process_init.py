@@ -558,9 +558,9 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
+        # 1003, 1sec
+        self.steps_preextract.append(1003)
+        self.paras_preextract.append((5, 1, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
@@ -569,30 +569,79 @@ class PageProcessInit(Frame):
         # 802
         self.steps_preextract.append(802)
         self.paras_preextract.append((18))
-        # 901
+
+        # 901, 3000rpm 20s/cycle, 3 cycles
         self.steps_preextract.append(901)
         self.paras_preextract.append((5, True))
         # 903
         self.steps_preextract.append(903)
-        self.paras_preextract.append((5))
+        self.paras_preextract.append((10, 3000))
+        # 0, 20s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((20))
+        # 901, ccw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, False))
+        # 0, 20s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((20))
+
+        # 901, cw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
+        # 0, 20s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((20))
+        # 901, ccw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, False))
+        # 0, 20s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((20))
+
+        # 901, cw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
+        # 0, 20s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((20))
+        # 901, ccw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, False))
+        # 0, 20s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((20))
+
+
         # 902
+        self.steps_preextract.append(902)
+        self.paras_preextract.append((5))
+
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
+
         # 801
+        self.steps_preextract.append(801)
+        self.paras_preextract.append((18))
+
         # 1001
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
+        # 1005, 1sec
+        self.steps_preextract.append(1005)
+        self.paras_preextract.append((5, 1, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
         self.paras_preextract.append((5))
 
         # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+
+
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
@@ -605,9 +654,9 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
+        # 1003, 1sec
+        self.steps_preextract.append(1003)
+        self.paras_preextract.append((5, 1, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
@@ -616,6 +665,31 @@ class PageProcessInit(Frame):
         # 802
         self.steps_preextract.append(802)
         self.paras_preextract.append((18))
+
+        # 101
+        self.steps_preextract.append(101)
+        self.paras_preextract.append((10, 0))
+
+        # 803
+        self.steps_preextract.append(803)
+        self.paras_preextract.append((18))
+
+        # 1001
+        self.steps_preextract.append(1001)
+        self.paras_preextract.append((5))
+
+        # 1003, 1sec
+        self.steps_preextract.append(1003)
+        self.paras_preextract.append((5, 1, 1000))
+
+        # 1002
+        self.steps_preextract.append(1002)
+        self.paras_preextract.append((5))
+
+        # 802
+        self.steps_preextract.append(802)
+        self.paras_preextract.append((18))
+
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
@@ -626,9 +700,9 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
+        # 1003, 1sec
+        self.steps_preextract.append(1003)
+        self.paras_preextract.append((5, 1, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
@@ -637,30 +711,54 @@ class PageProcessInit(Frame):
         # 802
         self.steps_preextract.append(802)
         self.paras_preextract.append((18))
-        # 101
-        self.steps_preextract.append(101)
-        self.paras_preextract.append((10, 0))
-        # 803
-        self.steps_preextract.append(803)
-        self.paras_preextract.append((18))
-        # 1001
-        self.steps_preextract.append(1001)
-        self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
-
-        # 1002
-        self.steps_preextract.append(1002)
-        self.paras_preextract.append((5))
-
-        # 802
-        self.steps_preextract.append(802)
-        self.paras_preextract.append((18))
-        # 901
+        # 901, 3000rpm 10s/cycle, 3 cycles
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
         # 903
+        self.steps_preextract.append(903)
+        self.paras_preextract.append((10, 3000))
+        # 0, 10s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((10))
+        # 901, ccw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, False))
+        # 0, 10s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((10))
+
+        # 901, cw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
+        # 0, 10s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((10))
+        # 901, ccw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, False))
+        # 0, 10s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((10))
+
+        # 901, cw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, True))
+        # 0, 10s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((10))
+        # 901, ccw
+        self.steps_preextract.append(901)
+        self.paras_preextract.append((5, False))
+        # 0, 10s 
+        self.steps_preextract.append(0)
+        self.paras_preextract.append((10))
+
+
         # 902
+        self.steps_preextract.append(902)
+        self.paras_preextract.append((5))
+
         # 101
         self.steps_preextract.append(101)
         self.paras_preextract.append((10, 0))
@@ -671,9 +769,9 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 0 = sleep, 30sec
-        self.steps_preextract.append(0)
-        self.paras_preextract.append((30))
+        # 1003, 1sec
+        self.steps_preextract.append(1003)
+        self.paras_preextract.append((5, 1, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
@@ -682,10 +780,60 @@ class PageProcessInit(Frame):
 
 
         # pre-cool
+        self.steps_preextract.append(1401)
+        self.paras_preextract.append((5))
+
+
+
 
         # extraction
+'''
+802
+"901
+903
+902"
+101
+801
+"1001
+1005
+1002"
+802
+101
+803
+"1001
+1003
+1002"
+802
+"901
+903
+902"
+101
+801
+"1001
+1006
+1002"
+'''
+
 
         # QPCR
+'''
+802
+1201
+1202
+401
+1201
+1202
+401
+1201
+1202
+401
+1201
+1202
+401
+1201
+
+'''
+
 
         return
 
