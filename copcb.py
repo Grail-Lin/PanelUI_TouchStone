@@ -110,6 +110,7 @@ class COPcbConnector:  # BT' baud = 9600
             data = self.ser.readline()
 
         # send start cmd
+        print("CMD String: %s" % str(cmd_str))
         self.ser.write(cmd_str)
         time.sleep(0.1)
         nowtime = time.time()
@@ -210,6 +211,7 @@ class ModuleBT(COPcbConnector):
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
+        print("return value: %s" % str(ret))
         ret_array = ret.split(',')
         if ret_array[3] == 1:
             return True
@@ -260,7 +262,7 @@ class ModuleBT(COPcbConnector):
 
 
     # 5: reverses motor
-    # 6: cartridge rotation
+    # 6: door
     def openDoor(self, timeout = 1):
         ret = self.sendCmd(timeout, b'6,1,1000,0\n')
         print("Open door....")
@@ -299,11 +301,11 @@ class ModuleBT(COPcbConnector):
     def startBLDCMotor(self, timeout = 5, clockwise = True):
         if clockwise == True:
             # clockwise
-            ret = self.sendCmd(timeout, b'9,1,100,0\n')
+            ret = self.sendCmd(timeout, b'9,1,5000,0\n')
             print("turn on BLDC Motor: clockwise....")
         else:
             # counter clockwise
-            ret = self.sendCmd(timeout, b'9,2,100,0\n')
+            ret = self.sendCmd(timeout, b'9,2,5000,0\n')
             print("turn on BLDC Motor: counter clockwise....")
         return self.checkOK(ret)
 
@@ -351,18 +353,49 @@ class ModuleBT(COPcbConnector):
 
     # 11: reserves air pump
     # 12: heater
+    def turnOnHeater(self, temp = 95):
+        ret = self.sendCmd(timeout, b'12,1,%d,0\n' % temp)
+        print("turn on Heater, Value = %d...." % temp)
+        return self.checkOK(ret)
+
+    def turnOffHeater(self):
+        ret = self.sendCmd(timeout, b'12,2,0,0\n')
+        print("turn off Heater...." % temp)
+        return self.checkOK(ret)
+
     # 13: reserves heater
+    def turnOnRHeater(self, temp = 95):
+        ret = self.sendCmd(timeout, b'13,1,%d,0\n' % temp)
+        print("turn on Heater, Value = %d...." % temp)
+        return self.checkOK(ret)
+
+    def turnOffRHeater(self):
+        ret = self.sendCmd(timeout, b'13,2,0,0\n')
+        print("turn off Heater...." % temp)
+        return self.checkOK(ret)
+
     # 14: TEC
     # 15: Water Cooler Fan
     def turnOnWaterFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,1,0,0\n')
-        print("turn on Water Fan....")
+        print("turn on Water Cooler Fan....")
         return self.checkOK(ret)
 
     def turnOffWaterFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,2,0,0\n')
-        print("turn off Water Fan....")
+        print("turn off Water Cooler Fan....")
         return self.checkOK(ret)
+
+    def turnOnWaterPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,3,0,0\n')
+        print("turn on Water Cooler Pump....")
+        return self.checkOK(ret)
+
+    def turnOffWaterPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,4,0,0\n')
+        print("turn off Water Cooler Pump....")
+        return self.checkOK(ret)
+
 
     # 16: system dissipation fan
     def turnOnSDFan(self, timeout = 5):
