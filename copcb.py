@@ -361,7 +361,7 @@ class ModuleBT(COPcbConnector):
         print("Not Ready: turn off reserves Vacuum Air Pump....")
         return self.checkOK(ret)
 
-    def setVacRAirPump(self, timeout = 5, number = 1, time=100):
+    def setRVacAirPump(self, timeout = 5, number = 1, time=100):
         ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
         print("Not Ready: set reserves Vacuum Air Pump....")
         return self.checkOK(ret)
@@ -412,11 +412,18 @@ class ModuleBT(COPcbConnector):
         print("turn off TEC....")
         return self.checkOK(ret)
 
-    def measureTEC(self, timeout = 5):
+    def measureTECcold(self, timeout = 5):
         ret = self.sendCmd(timeout, b'14,4,0,0\n')
-        print("measure TEC....%s" % str(ret))
+        print("measure TEC cold side....%s" % str(ret))
         #return self.checkOK(ret)
         return float(ret.split(',')[-1])
+
+    def measureTEChot(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'14,5,0,0\n')
+        print("measure TEC hot side....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
 
     # 15: Water Cooler Fan
     def turnOnWaterFan(self, timeout = 5):
@@ -495,6 +502,15 @@ class ModuleBT(COPcbConnector):
             time.sleep(1)
             return ret2
         return ret1
+
+    # turn on heater (1/2/both) for pwm 1~20 (not more than 20), turn off ODFan
+    # turn off
+    # turn on TEC (turn on the fan, turn off the heater, etc)
+    # turn off
+    # Water Fan is turn on/off by temperature of Water In
+	# System Fan is turn on/off by temperature of PCB
+
+
 
 if __name__ == "__main__":
     # test QRCodeReader
