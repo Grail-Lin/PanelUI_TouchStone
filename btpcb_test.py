@@ -36,6 +36,29 @@ if __name__ == "__main__":
         print("Result: " + str(ret))
         input("Press any key to do next test")
     
+    # 3: rocker arm
+    print("TEST #3-2 lock rocker arm, 3 cmd: 3,2,2000,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.moveRArm(release = False)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    # 7: move cartridge roller
+    print("TEST #7-1 move Carttridge Roller forward, 7 cmd: 7,2,6000,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.moveCartRoller(back = False)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #7-2 move Carttridge Roller backward, 7 cmd: 7,1,6000,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.moveCartRoller(back = True)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
     # 1: cartridge rotation
     print("TEST #1-1 rotate cartridge to pos = 0, 1 cmd: 1,1,10000,0")
     keyin = input("Press any key to start test; 0 to skip test")
@@ -57,6 +80,15 @@ if __name__ == "__main__":
         ret = btpcb.rotateCart(pos=150)
         print("Result: " + str(ret))
         input("Press any key to do next test")
+
+    # 3: rocker arm
+    print("TEST #3-1 release rocker arm, 3 cmd: 3,1,2000,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.moveRArm(release = True)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
 
     # 6: door
     print("TEST #6-1 open door, 6 cmd: 6,1,1000,0")
@@ -92,20 +124,7 @@ if __name__ == "__main__":
 
 
 
-    # 3: rocker arm
-    print("TEST #3-1 release rocker arm, 3 cmd: 3,1,2000,0")
-    keyin = input("Press any key to start test; 0 to skip test")
-    if keyin != "0":
-        ret = btpcb.moveRArm(release = True)
-        print("Result: " + str(ret))
-        input("Press any key to do next test")
 
-    print("TEST #3-2 release rocker arm, 3 cmd: 3,2,2000,0")
-    keyin = input("Press any key to start test; 0 to skip test")
-    if keyin != "0":
-        ret = btpcb.moveRArm(release = False)
-        print("Result: " + str(ret))
-        input("Press any key to do next test")
 
     # 4: optical position
     print("TEST #4-1 move optical position up, 4 cmd: 4,1,2000,0")
@@ -127,20 +146,6 @@ if __name__ == "__main__":
     input("Press any key to next test")
 
 
-    # 7: move cartridge roller
-    print("TEST #7-1 move Carttridge Roller forward, 7 cmd: 7,2,6000,0")
-    keyin = input("Press any key to start test; 0 to skip test")
-    if keyin != "0":
-        ret = btpcb.moveCartRoller(back = False)
-        print("Result: " + str(ret))
-        input("Press any key to do next test")
-
-    print("TEST #7-2 move Carttridge Roller backward, 7 cmd: 7,1,6000,0")
-    keyin = input("Press any key to start test; 0 to skip test")
-    if keyin != "0":
-        ret = btpcb.moveCartRoller(back = True)
-        print("Result: " + str(ret))
-        input("Press any key to do next test")
 
     # 8: vertical position
     print("TEST #8-1 move vertical position to Btm, 8 cmd: 8,3,36000,0")
@@ -351,18 +356,60 @@ if __name__ == "__main__":
         input("Press any key to do next test")
 
     # 11: reserves air pump
-    print("NOTYET, TEST #11 reverse air pump, 11 cmd:")
-    input("Press any key to next test")
-
-    # 12: heater
-    print("TEST #12-1 turn on heater for 95 degree, 12 cmd: 12,1,95,0")
+    print("TEST #11-1 turn on reserves vacuum air pump, 11 cmd: 11,1,0,0")
     keyin = input("Press any key to start test; 0 to skip test")
     if keyin != "0":
-        ret = btpcb.turnOnHeater(temp = 95)
+        ret = btpcb.turnOnRVacAirPump()
         print("Result: " + str(ret))
         input("Press any key to do next test")
 
-    print("TEST #12-2 turn off heater, 12 cmd: 12,2,0,0")
+    print("TEST #11-2 set reserves vacuum air pump 1 for 1000ms, 11 cmd: 11,3,1000,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.setRVacAirPump(timeout = 5, number = 1, time = 1000)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #11-3 set reserves vacuum air pump 2 for 2000ms, 11 cmd: 11,4,2000,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.setRVacAirPump(timeout = 5, number = 2, time = 2000)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #11-4 turn off vacuum air pump, 11 cmd: 11,2,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.turnOffRVacAirPump()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    # 12: heater
+    print("TEST #12-1 turn on heater for 95 degree, 12 cmd: 12,1,5,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        pwm_value = 5
+        if keyin != "":
+            pwm_value = int(keyin)
+        ret = btpcb.turnOnHeater(pwm = pwm_value)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #12-2 measure heater, 12 cmd: 12,4,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.measureHeater()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #12-3 measure heater, 12 cmd: 12,4,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.measureHeater()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #12-4 turn off heater, 12 cmd: 12,2,0,0")
     keyin = input("Press any key to start test; 0 to skip test")
     if keyin != "0":
         ret = btpcb.turnOffHeater()
@@ -370,24 +417,38 @@ if __name__ == "__main__":
         input("Press any key to do next test")
 
     # 13: reserves heater
-    print("TEST #13-1 turn on heater for 55 degree, 12 cmd: 12,1,95,0")
+    print("TEST #13-1 turn on reserves heater, 13 cmd: 13,1,5,0")
     keyin = input("Press any key to start test; 0 to skip test")
     if keyin != "0":
-        ret = btpcb.turnOnRHeater(temp = 55)
+        pwm_value = 5
+        if keyin != "":
+            pwm_value = int(keyin)
+        ret = btpcb.turnOnRHeater(pwm = pwm_value)
         print("Result: " + str(ret))
         input("Press any key to do next test")
 
-    print("TEST #13-2 turn off heater, 12 cmd: 12,2,0,0")
+    print("TEST #13-2 measure reserves heater, 13 cmd: 13,4,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.measureRHeater()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #13-3 measure reserves heater, 13 cmd: 13,4,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.measureRHeater()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+
+    print("TEST #13-4 turn off reserves heater, 13 cmd: 13,2,0,0")
     keyin = input("Press any key to start test; 0 to skip test")
     if keyin != "0":
         ret = btpcb.turnOffRHeater()
         print("Result: " + str(ret))
         input("Press any key to do next test")
 
-
-    # 14: TEC
-    print("NOTYET, TEST #14 TEC, 14 cmd:")
-    input("Press any key to next test")
 
     # 15: Water Cooler Fan
     print("TEST #15-1 open water cooler fan, 15 cmd: 15,1,0,0")
@@ -397,6 +458,48 @@ if __name__ == "__main__":
         print("Result: " + str(ret))
         input("Press any key to do next test")
 
+    print("TEST #15-3 open water cooler pump, 15 cmd: 15,3,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.turnOnWaterPump()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+
+    # 14: TEC
+    print("TEST #14-1 turn on TEC, 14 cmd: 14,1,5,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        pwm_value = 5
+        if keyin != "":
+            pwm_value = int(keyin)
+        ret = btpcb.turnOnTEC(pwm = pwm_value)
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #14-2 measure TEC, 13 cmd: 14,4,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.measureTEC()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+    print("TEST #14-3 measure TEC, 14 cmd: 14,4,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.measureTEC()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+
+    print("TEST #14-4 turn off TEC, 14 cmd: 14,2,0,0")
+    keyin = input("Press any key to start test; 0 to skip test")
+    if keyin != "0":
+        ret = btpcb.turnOffTEC()
+        print("Result: " + str(ret))
+        input("Press any key to do next test")
+
+
     print("TEST #15-2 close water cooler fan, 15 cmd: 15,2,0,0")
     keyin = input("Press any key to start test; 0 to skip test")
     if keyin != "0":
@@ -404,12 +507,6 @@ if __name__ == "__main__":
         print("Result: " + str(ret))
         input("Press any key to do next test")
 
-    print("TEST #15-3 open water cooler pump, 15 cmd: 15,3,0,0")
-    keyin = input("Press any key to start test; 0 to skip test")
-    if keyin != "0":
-        ret = btpcb.turnOnWaterPump()
-        print("Result: " + str(ret))
-        input("Press any key to do next test")
 
     print("TEST #15-4 close water cooler pump, 15 cmd: 15,4,0,0")
     keyin = input("Press any key to start test; 0 to skip test")

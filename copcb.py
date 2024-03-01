@@ -352,8 +352,22 @@ class ModuleBT(COPcbConnector):
 
 
     # 11: reserves air pump
-    # 12: heater
-    def turnOnHeater(self, temp = 95):
+    def turnOnRVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'11,1,0,0\n')
+        print("Not Ready: turn on reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+    def turnOffRVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'11,2,0,0\n')
+        print("Not Ready: turn off reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    def setVacRAirPump(self, timeout = 5, number = 1, time=100):
+        ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
+        print("Not Ready: set reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    # 12: heater, pwm = 0~250
+    def turnOnHeater(self, pwm = 5):
         ret = self.sendCmd(timeout, b'12,1,%d,0\n' % temp)
         print("turn on Heater, Value = %d...." % temp)
         return self.checkOK(ret)
@@ -363,18 +377,44 @@ class ModuleBT(COPcbConnector):
         print("turn off Heater...." % temp)
         return self.checkOK(ret)
 
+    def measureHeater(self):
+        ret = self.sendCmd(timeout, b'12,4,0,0\n')
+        print("measure Heater...." % temp)
+        return self.checkOK(ret)
+
+
     # 13: reserves heater
-    def turnOnRHeater(self, temp = 95):
+    def turnOnRHeater(self, pwm = 5):
         ret = self.sendCmd(timeout, b'13,1,%d,0\n' % temp)
-        print("turn on Heater, Value = %d...." % temp)
+        print("turn on reserves Heater, Value = %d...." % temp)
         return self.checkOK(ret)
 
     def turnOffRHeater(self):
         ret = self.sendCmd(timeout, b'13,2,0,0\n')
-        print("turn off Heater...." % temp)
+        print("turn off reserves Heater...." % temp)
+        return self.checkOK(ret)
+
+    def measureRHeater(self):
+        ret = self.sendCmd(timeout, b'13,4,0,0\n')
+        print("measure reserves Heater...." % temp)
         return self.checkOK(ret)
 
     # 14: TEC
+    def turnOnTEC(self, pwm = 5):
+        ret = self.sendCmd(timeout, b'14,1,%d,0\n' % temp)
+        print("turn on TEC, Value = %d...." % temp)
+        return self.checkOK(ret)
+
+    def turnOffTEC(self):
+        ret = self.sendCmd(timeout, b'14,2,0,0\n')
+        print("turn off TEC...." % temp)
+        return self.checkOK(ret)
+
+    def measureTEC(self):
+        ret = self.sendCmd(timeout, b'14,4,0,0\n')
+        print("measure TEC...." % temp)
+        return self.checkOK(ret)
+
     # 15: Water Cooler Fan
     def turnOnWaterFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,1,0,0\n')
