@@ -367,52 +367,52 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 12: heater, pwm = 0~250
-    def turnOnHeater(self, pwm = 5):
-        ret = self.sendCmd(timeout, b'12,1,%d,0\n' % temp)
-        print("turn on Heater, Value = %d...." % temp)
+    def turnOnHeater(self, timeout = 5, pwm = 5):
+        ret = self.sendCmd(timeout, b'12,1,%d,0\n' % pwm)
+        print("turn on Heater, Value = %d...." % pwm)
         return self.checkOK(ret)
 
-    def turnOffHeater(self):
+    def turnOffHeater(self, timeout = 5):
         ret = self.sendCmd(timeout, b'12,2,0,0\n')
-        print("turn off Heater...." % temp)
+        print("turn off Heater....")
         return self.checkOK(ret)
 
-    def measureHeater(self):
+    def measureHeater(self, timeout = 5):
         ret = self.sendCmd(timeout, b'12,4,0,0\n')
-        print("measure Heater...." % temp)
+        print("measure Heater....%s" % str(ret))
         return self.checkOK(ret)
 
 
     # 13: reserves heater
-    def turnOnRHeater(self, pwm = 5):
-        ret = self.sendCmd(timeout, b'13,1,%d,0\n' % temp)
-        print("turn on reserves Heater, Value = %d...." % temp)
+    def turnOnRHeater(self, timeout = 5, pwm = 5):
+        ret = self.sendCmd(timeout, b'13,1,%d,0\n' % pwm)
+        print("turn on reserves Heater, Value = %d...." % pwm)
         return self.checkOK(ret)
 
-    def turnOffRHeater(self):
+    def turnOffRHeater(self, timeout = 5):
         ret = self.sendCmd(timeout, b'13,2,0,0\n')
-        print("turn off reserves Heater...." % temp)
+        print("turn off reserves Heater....")
         return self.checkOK(ret)
 
-    def measureRHeater(self):
+    def measureRHeater(self, timeout = 5):
         ret = self.sendCmd(timeout, b'13,4,0,0\n')
-        print("measure reserves Heater...." % temp)
+        print("measure reserves Heater....%s" % str(ret))
         return self.checkOK(ret)
 
     # 14: TEC
-    def turnOnTEC(self, pwm = 5):
-        ret = self.sendCmd(timeout, b'14,1,%d,0\n' % temp)
-        print("turn on TEC, Value = %d...." % temp)
+    def turnOnTEC(self, timeout = 5, pwm = 5):
+        ret = self.sendCmd(timeout, b'14,1,%d,0\n' % pwm)
+        print("turn on TEC, Value = %d...." % pwm)
         return self.checkOK(ret)
 
-    def turnOffTEC(self):
+    def turnOffTEC(self, timeout = 5):
         ret = self.sendCmd(timeout, b'14,2,0,0\n')
-        print("turn off TEC...." % temp)
+        print("turn off TEC....")
         return self.checkOK(ret)
 
-    def measureTEC(self):
+    def measureTEC(self, timeout = 5):
         ret = self.sendCmd(timeout, b'14,4,0,0\n')
-        print("measure TEC...." % temp)
+        print("measure TEC....%s" % str(ret))
         return self.checkOK(ret)
 
     # 15: Water Cooler Fan
@@ -450,12 +450,12 @@ class ModuleBT(COPcbConnector):
     # 17: optical dissipation fan
     def turnOnODFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'17,1,0,0\n')
-        print("Not Ready: turn on Optical Dissipation Fan....")
+        print("turn on Optical Dissipation Fan....")
         return self.checkOK(ret)
 
     def turnOffODFan(self, timeout = 5):
         ret = self.sendCmd(timeout, b'17,2,0,0\n')
-        print("Not Ready: turn off Optical Dissipation Fan....")
+        print("turn off Optical Dissipation Fan....")
         return self.checkOK(ret)
 
     # 20 combo cmd
@@ -475,7 +475,7 @@ class ModuleBT(COPcbConnector):
     def forceCloseCart(self, timeout = 4):
         ret1 = self.moveCDriver()
         time.sleep(3)
-        if ret1 == True:
+        if ret1 == '1':
             ret2 = self.closeDoor()
             time.sleep(1)
             return ret2
