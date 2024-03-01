@@ -380,7 +380,8 @@ class ModuleBT(COPcbConnector):
     def measureHeater(self, timeout = 5):
         ret = self.sendCmd(timeout, b'12,4,0,0\n')
         print("measure Heater....%s" % str(ret))
-        return self.checkOK(ret)
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
 
 
     # 13: reserves heater
@@ -397,7 +398,8 @@ class ModuleBT(COPcbConnector):
     def measureRHeater(self, timeout = 5):
         ret = self.sendCmd(timeout, b'13,4,0,0\n')
         print("measure reserves Heater....%s" % str(ret))
-        return self.checkOK(ret)
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
 
     # 14: TEC
     def turnOnTEC(self, timeout = 5, pwm = 5):
@@ -413,7 +415,8 @@ class ModuleBT(COPcbConnector):
     def measureTEC(self, timeout = 5):
         ret = self.sendCmd(timeout, b'14,4,0,0\n')
         print("measure TEC....%s" % str(ret))
-        return self.checkOK(ret)
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
 
     # 15: Water Cooler Fan
     def turnOnWaterFan(self, timeout = 5):
@@ -435,6 +438,18 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'15,4,0,0\n')
         print("turn off Water Cooler Pump....")
         return self.checkOK(ret)
+
+    def measureWaterIn(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,5,0,0\n')
+        print("measure WaterIn....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+    def measureWaterOut(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,6,0,0\n')
+        print("measure WaterOut....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
 
 
     # 16: system dissipation fan
