@@ -356,6 +356,10 @@ class PageProcessPlay(Frame):
         5, check the temperature to control 
 
         '''
+        if self.force_wait == True:
+
+        else:
+
         if len(self.step_array) > self.cur_step_num:
             self.step_array[self.cur_step_num].rtime -= 1
             self.cur_step_ctime += 1
