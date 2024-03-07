@@ -3,7 +3,7 @@
 launch program
 
 inital qr code reader
-	send 57 00 00 03 04 01 00 00 00 00 00 1F 71 50 41
+    send 57 00 00 03 04 01 00 00 00 00 00 1F 71 50 41
     recv 31 00 00 03 04 01 00 00 00 00 00 FF F8 50 41
 
 if error, exit
@@ -82,7 +82,7 @@ class COPcbConnector:  # BT' baud = 9600
     # need to inplement in child class
     def definePackage(self):
         return
-		
+        
     def initPCB(self, timeout = 5):
         self.definePackage()
         # check if initialized
@@ -155,7 +155,7 @@ class QRCodeReader(COPcbConnector):
         self.func_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
         self.func_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
         self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
-	
+    
     def scan(self, timeout = 10):
         return self.sendCmd(timeout, self.func_package)
 
@@ -171,7 +171,7 @@ class ModuleA(COPcbConnector):
 
     def definePackage(self):
         self.func_OK_package = bytearray(b'TouchStone HW v0.01 2023.08.18\r\nTouchStone FW v0.01 2023.10.29\r\n')
-	
+    
     def doFunc(self, timeout = 10):
         #return self.sendCmd(timeout, self.func_package)
         # return remain_time, other value
@@ -196,7 +196,7 @@ class ModuleBT(COPcbConnector):
 
     def definePackage(self):
         self.func_OK_package = bytearray(b'')
-	
+    
     def doFunc(self, timeout = 10):
         #return self.sendCmd(timeout, self.func_package)
         # return remain_time, other value
@@ -526,7 +526,7 @@ class ModuleBT(COPcbConnector):
 
         return
 
-    def controlPIDBothHeater(self, timeout = 20, pid, target_temp = 95, mode = 3)
+    def controlPIDBothHeater(self, timeout = 20, pid = None, target_temp = 95, mode = 3):
         # mode = 1 means heater only
         # mode = 2 means r heater only
         # mode = 3 means both heater
@@ -553,7 +553,7 @@ class ModuleBT(COPcbConnector):
         return ret
 
     # turn on TEC (turn on the fan, turn off the heater, etc
-    def controlPIDTEC(self, timeout = 20, pid, target_temp = 4, cool_temp = 40)
+    def controlPIDTEC(self, timeout = 20, pid = None, target_temp = 4, cool_temp = 40):
         # get temp from sample
         temp = self.measureTECcold()
         # calculate pwm
@@ -569,15 +569,15 @@ class ModuleBT(COPcbConnector):
     def checkWaterFan(self, timeout = 5, curstate = True, temp = 40):
         # curstate = True means turn on, False means turn off
         # if temp of Water in is higher than target temp, turn on the Fan
-        cur_temp = self.measureWaterIn(timeout)	
+        cur_temp = self.measureWaterIn(timeout)    
 
         if cur_temp > temp:
             self.turnOnWaterFan(timeout)
         else:
-            self.turnOffWaterFan(timeout)		
+            self.turnOffWaterFan(timeout)        
         return
 
-	# System Fan is turn on/off by temperature of PCB
+    # System Fan is turn on/off by temperature of PCB
     def checkSystemFan(self, timeout = 5, curstate = True, temp = 40):
         # curstate = True means turn on, False means turn off
         # if temp of System is higher than target temp, turn on the Fan
@@ -586,9 +586,11 @@ class ModuleBT(COPcbConnector):
         if cur_temp > temp:
             self.turnOnSDFan(timeout)
         else:
-            self.turnOffSDFan(timeout)		
+            self.turnOffSDFan(timeout)        
         return
 
+    def measureSystem(self, timeout = 5):
+        return
 
 
 

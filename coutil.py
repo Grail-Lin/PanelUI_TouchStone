@@ -4,20 +4,21 @@ import sqlite3
 import io
 
 class PCBStep:
-    def __init__(self, name, counter, para_array, pcb, pcb_id, run_time=1, repeat=1):
+    def __init__(self, name, counter, para_array, pcb, pcb_id, repeat=0):
 
 
         self.name = name
         self.pcb = pcb
         self.pcb_id = pcb_id
-        self.rtime = run_time  #pcb.total_time
+        self.rtime = para_array[0]  #pcb.total_time
+        # use para_array[0] as timeout or continue time
 
         #self.pcb_list = pcb_list
         self.para_array = para_array
 
         self.repeat = repeat
-		
-		
+        self.wait_time = None
+        
 
     def doFunc(self):
         # use pcb_id to do target method
@@ -30,53 +31,65 @@ class PCBStep:
             ret = self.pcb.rotateCart(self.para_array[0], self.para_array[1])
         # 401: moveOPos
         elif self.pcb_id == 401:
-		    ret = self.pcb.moveOPos(self.para_array[0], self.para_array[1])
+            ret = self.pcb.moveOPos(self.para_array[0], self.para_array[1])
         # 801: moveVertPosTop
         elif self.pcb_id == 801:
-		    ret = self.pcb.moveVertPosTop(self.para_array[0])
+            ret = self.pcb.moveVertPosTop(self.para_array[0])
         # 802: moveVertPosMid
         elif self.pcb_id == 802:
-		    ret = self.pcb.moveVertPosMid(self.para_array[0])
+            ret = self.pcb.moveVertPosMid(self.para_array[0])
         # 803: moveVertPosBtm
         elif self.pcb_id == 803:
-		    ret = self.pcb.moveVertPosBtm(self.para_array[0])
+            ret = self.pcb.moveVertPosBtm(self.para_array[0])
         # 901: startBLDCMotor
         elif self.pcb_id == 901:
-		    ret = self.pcb.startBLDCMotor(self.para_array[0], self.para_array[1])
+            ret = self.pcb.startBLDCMotor(self.para_array[0], self.para_array[1])
+            if self.wait_time == None:
+                time.time()+para_array[0]
         # 902: stopBLDCMotor
         elif self.pcb_id == 902:
-		    ret = self.pcb.stopBLDCMotor(self.para_array[0])
+            ret = self.pcb.stopBLDCMotor(self.para_array[0])
         # 903: setBLDCMotorRPM
         elif self.pcb_id == 903:
-		    ret = self.pcb.setBLDCMotorRPM(self.para_array[0], self.para_array[1])
+            ret = self.pcb.setBLDCMotorRPM(self.para_array[0], self.para_array[1])
+
             # need to wait for count time?
+            if self.wait_time == None:
+                time.time()+para_array[0]
         # 1001: turnOnVacAirPump
         elif self.pcb_id == 1001:
-		    ret = self.pcb.turnOnVacAirPump(self.para_array[0])
+            ret = self.pcb.turnOnVacAirPump(self.para_array[0])
         # 1002: turnOffVacAirPump
         elif self.pcb_id == 1002:
-		    ret = self.pcb.turnOffVacAirPump(self.para_array[0])
+            ret = self.pcb.turnOffVacAirPump(self.para_array[0])
         # 1003: setVacAirPump
         elif self.pcb_id == 1003:
-		    ret = self.pcb.setVacAirPump(self.para_array[0], self.para_array[1], self.para_array[2])
-		# 1402: turnOffTEC
+            ret = self.pcb.setVacAirPump(self.para_array[0], self.para_array[1], self.para_array[2])
+        # 1402: turnOffTEC
         elif self.pcb_id == 1402:
-		    ret = self.pcb.turnOffTEC(self.para_array[0])
-		# 1503: turnOnWaterPump
+            ret = self.pcb.turnOffTEC(self.para_array[0])
+        # 1503: turnOnWaterPump
         elif self.pcb_id == 1503:
-		    ret = self.pcb.turnOnWaterPump(self.para_array[0])
-		# 1504: turnOffWaterPump
+            ret = self.pcb.turnOnWaterPump(self.para_array[0])
+        # 1504: turnOffWaterPump
         elif self.pcb_id == 1504:
-		    ret = self.pcb.turnOffWaterPump(self.para_array[0])
+            ret = self.pcb.turnOffWaterPump(self.para_array[0])
         # 2004: controlBothHeater
         elif self.pcb_id == 2004:
-		    ret = self.pcb.controlBothHeater(self.para_array[0], self.para_array[1], self.para_array[2])
+            ret = self.pcb.controlBothHeater(self.para_array[0], self.para_array[1], self.para_array[2])
+            repeat = 1
         # 2005: controlPIDBothHeater
         elif self.pcb_id == 2005:
-		    ret = self.pcb.controlPIDBothHeater(self.para_array[0], self.para_array[1], self.para_array[2], self.para_array[3])
-		# 2006: controlPIDTEC
+            ret = self.pcb.controlPIDBothHeater(self.para_array[0], self.para_array[1], self.para_array[2], self.para_array[3])
+            repeat = 1
+            if self.wait_time == None:
+                time.time()+para_array[0]
+        # 2006: controlPIDTEC
         elif self.pcb_id == 2006:
-		    ret = self.pcb.controlPIDTEC(self.para_array[0], self.para_array[1], self.para_array[2], self.para_array[3])
+            ret = self.pcb.controlPIDTEC(self.para_array[0], self.para_array[1], self.para_array[2], self.para_array[3])
+            repeat = 1
+            if self.wait_time == None:
+                time.time()+para_array[0]
 
         return ret
 
@@ -96,8 +109,8 @@ class PCBsStep:
         self.para_list = para_list
 
         self.repeat = repeat
-		
-		
+        
+        
         self.cur_pcb_num = 0
         self.cur_repeat_num = 0
 
@@ -260,7 +273,7 @@ class COSQLite:
             ret[7] = w2array
             '''
             temp_result = PCRResults(test_id = ret[1], test_name = ret[2], timestamp = ret[3],
-	                                 ct1 = ret[4], ct2 = ret[5], well1_array = self.convert_array(ret[6]), well2_array = self.convert_array(ret[7]))
+                                     ct1 = ret[4], ct2 = ret[5], well1_array = self.convert_array(ret[6]), well2_array = self.convert_array(ret[7]))
 
             ret_results.append(temp_result)
 

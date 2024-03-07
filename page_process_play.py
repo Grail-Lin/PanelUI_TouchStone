@@ -356,10 +356,38 @@ class PageProcessPlay(Frame):
         5, check the temperature to control 
 
         '''
-        if self.force_wait == True:
 
-        else:
+        # check cur_step_num is not the last
+		#     check if need wait
+		#     if not, perform cur_step
+		#     if yes, wait until time count down
+        #     perform check system temperature
+		# if yes, go to finish report
 
+        
+
+        if len(self.step_array) > self.cur_step_num:
+            if self.wait_time != None:
+                if time.time() >= self.wait_time:
+                    # do current step
+                    todo_step = self.step_array[self.cur_step_num]
+                    todo_step.doFunc()
+                    self.cur_step_num += 1
+                else:
+					# check if repeat
+					# do current-1 step
+                    todo_step = self.step_array[self.cur_step_num-1]
+                    if todo_step.repeat == 1:
+                        todo_step.doFunc()
+                    
+            else:
+                # do current step
+                todo_step = self.step_array[self.cur_step_num]
+                todo_step.doFunc()
+                self.cur_step_num += 1
+
+
+        '''
         if len(self.step_array) > self.cur_step_num:
             self.step_array[self.cur_step_num].rtime -= 1
             self.cur_step_ctime += 1
@@ -403,22 +431,45 @@ class PageProcessPlay(Frame):
                 # check status
                 self.step_array[self.cur_step_num].doFunc()
                 self.cur_step_ctime = 0
+        '''
+        # update STEPS
 
+        if self.cur_step_num > (self.len_preextract+self.len_extract):
+            number_3 = self.cur_step_num - self.len_preextract - self.len_extract
+            number_2 = self.len_extract
+            number_1 = self.len_preextract
+        elif self.cur_step_num > self.len_preextract:
+            number_3 = 0
+            number_2 = self.cur_step_num - self.len_preextract
+            number_1 = self.len_preextract
+        else:
+            number_3 = 0
+            number_2 = 0
+            number_1 = self.cur_step_num
+		
+        self.canvas.itemconfigure(self.text_preext, text="%d / %d STEPS" % (number_1, self.len_preextract))
+        self.canvas.itemconfigure(self.text_ext, text="%d / %d STEPS" % (number_2, self.len_extract))
+        self.canvas.itemconfigure(self.text_qpcr, text="%d / %d STEPS" % (number_3, self.len_qpcr))
+
+        # update bar
+        # self.preextract_steps = step_array[:self.len_preextract]
+        # self.extract_steps = step_array[self.len_preextract:self.len_preextract+self.len_extract]
+        # self.qpcr_steps = step_array[-self.len_qpcr:]
         rtime = 0
         total_time = self.preextract_bar.total_time
-        for ss in self.preextract_steps:
+        for ss in self.step_array[:self.len_preextract]:
             rtime += ss.rtime
         self.preextract_bar.reset(total_time, total_time - rtime)
 
         rtime = 0
         total_time = self.extract_bar.total_time
-        for ss in self.extract_steps:
+        for ss in self.step_array[self.len_preextract:self.len_preextract+self.len_extract]:
             rtime += ss.rtime
         self.extract_bar.reset(total_time, total_time - rtime)
 
         rtime = 0
         total_time = self.qpcr_bar.total_time
-        for ss in self.qpcr_steps:
+        for ss in self.step_array[-self.len_qpcr:]:
             rtime += ss.rtime
         self.qpcr_bar.reset(total_time, total_time - rtime)
 
@@ -432,9 +483,7 @@ class PageProcessPlay(Frame):
 
     # todo: createStep
     def createStep(self, prefix, ii, pcb, step_no, paras):
-        run_time = paras[0]
-        repeat = 1
-        step = coutil.PCBStep("%s-%d" % (prefix, ii), paras, pcb, step_no, run_time, repeat)
+        step = coutil.PCBStep("%s-%d" % (prefix, ii), paras, pcb, step_no, 0)
         return step
 
     # todo: all_steps_settings
