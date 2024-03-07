@@ -26,12 +26,6 @@ class PageProcessPlay(Frame):
 
     # user data
 
-    #OUTPUT_PATH = Path(__file__).parent
-    #ASSETS_PATH = OUTPUT_PATH / Path(r".\assets\frame_process")
-
-    #def relative_to_assets(self, path: str) -> Path:
-    #    return self.ASSETS_PATH / Path(path)
-
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         self.controller = controller
@@ -71,9 +65,17 @@ class PageProcessPlay(Frame):
         #self.pcb_a.initPCB(10)self
  
         self.step_array = []
-        self.preextract_steps = []
-        self.extract_steps = []
-        self.qpcr_steps = []
+
+        self.len_preextract = 0
+        self.len_extract = 0
+        self.len_qpcr = 0
+
+        # self.preextract_steps = step_array[:self.len_preextract]
+        # self.extract_steps = step_array[self.len_preextract:self.len_preextract+self.len_extract]
+        # self.qpcr_steps = step_array[-self.len_qpcr:]
+        #self.preextract_steps = []
+        #self.extract_steps = []
+        #self.qpcr_steps = []
 
         self.cur_step_num = 0
         self.cur_step_ctime = 0 # check time
@@ -343,17 +345,24 @@ class PageProcessPlay(Frame):
         self.controller.show_frame(page_check.PageCheck)
 
     def step(self):
+ 
         '''
         1, check current stage
 		2, call current stage pcb
+           *todo* perform pcb function
         3, update the remaining time
         4, update bars
+
+        5, check the temperature to control 
+
         '''
         if len(self.step_array) > self.cur_step_num:
             self.step_array[self.cur_step_num].rtime -= 1
             self.cur_step_ctime += 1
             if self.step_array[self.cur_step_num].rtime <= 0:
                 # check if need to do next step
+                # *todo* use multi thread to 
+
                 self.step_array[self.cur_step_num].doFunc()
                 print("cur_step_num: " + str(self.cur_step_num))
                 self.cur_step_ctime = 0
@@ -417,8 +426,15 @@ class PageProcessPlay(Frame):
 
         self.play_after = self.canvas.after(1000, self.step)
 
+    # todo: createStep
+    def createStep(self, prefix, ii, pcb, step_no, paras):
+        run_time = paras[0]
+        repeat = 1
+        step = coutil.PCBStep("%s-%d" % (prefix, ii), paras, pcb, step_no, run_time, repeat)
+        return step
 
-    def initial_step_array(self, all_steps_setting):
+    # todo: all_steps_settings
+    def initial_step_array(self, BTpcb, all_steps_setting, steps_preextract, paras_preextract, steps_extract, paras_extract, steps_qpcr, paras_qpcr):
         if self.play_after is not None:
             self.canvas.after_cancel(self.play_after)
 
@@ -427,6 +443,27 @@ class PageProcessPlay(Frame):
 
         self.step_array = []
 
+        self.len_preextract = len(steps_preextract)
+        self.len_extract = len(steps_extract)
+        self.len_qpcr = len(steps_qpcr)
+
+
+        # parsing preextract
+        for ii in range(self.len_preextract):
+            step = self.createStep("preextract", ii, BTpcb, steps_preextract[ii], paras_preextract[ii])
+            self.step_array.append(step)
+
+        # parsing extract
+        for ii in range(self.len_extract):
+            step = self.createStep("extract", ii, BTpcb, steps_extract[ii], paras_extract[ii])
+            self.step_array.append(step)
+
+        # parsing qpcr
+        for ii in range(self.len_qpcr):
+            step = self.createStep("qpcr", ii, BTpcb, steps_qpcr[ii], paras_qpcr[ii])
+            self.step_array.append(step)
+
+        '''
         self.pcb_a1.resetPCB(random.randrange(10,20))
         self.pcb_a2.resetPCB(random.randrange(10,20))
         self.pcb_b1.resetPCB(random.randrange(10,20))
@@ -473,24 +510,27 @@ class PageProcessPlay(Frame):
         self.preextract_steps = self.step_array[:2]
         self.extract_steps = self.step_array[2:10]
         self.qpcr_steps = self.step_array[10:]
+        '''
+
 
         rtime = 0
-        for ss in self.preextract_steps:
-            rtime += ss.pcb.total_time
+        for ss in self.step_array[:self.len_preextract]:
+            rtime += ss.rtime
         self.preextract_bar.reset(rtime)
 
         rtime = 0
-        for ss in self.extract_steps:
-            rtime += ss.pcb.total_time
+        for ss in self.step_array[self.len_preextract:-self.len_qpcr]:
+            rtime += ss.rtime
         self.extract_bar.reset(rtime)
 
         rtime = 0
-        for ss in self.qpcr_steps:
-            rtime += ss.pcb.total_time
+        for ss in self.step_array[-self.len_qpcr:]:
+            rtime += ss.rtime
         self.qpcr_bar.reset(rtime)
 
-        self.canvas.itemconfigure(self.text_preext, text="0 / 2 STEPS")
-        self.canvas.itemconfigure(self.text_ext, text="0 / 8 STEPS")
+        self.canvas.itemconfigure(self.text_preext, text="0 / %d STEPS" % self.len_preextract)
+        self.canvas.itemconfigure(self.text_ext, text="0 / %d STEPS" % self.len_extract)
+        self.canvas.itemconfigure(self.text_qpcr, text="0 / %d STEPS" % self.len_qpcr)
 
 
     def conf_step(self, step_num, step_para):

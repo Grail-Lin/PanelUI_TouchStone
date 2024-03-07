@@ -200,10 +200,13 @@ class ModuleBT(COPcbConnector):
     def doFunc(self, timeout = 10):
         #return self.sendCmd(timeout, self.func_package)
         # return remain_time, other value
+        '''
         ret = self.total_time
         self.total_time -= 1
         if self.total_time < 0:
             self.total_time = random.randrange(10,180)
+        '''
+        return
 
     def initPCB(self, timeout = 5):
         self.state = 1
@@ -349,13 +352,12 @@ class ModuleBT(COPcbConnector):
         print("Not Ready: set Vacuum Air Pump....")
         return self.checkOK(ret)
 
-
-
     # 11: reserves air pump
     def turnOnRVacAirPump(self, timeout = 5):
         ret = self.sendCmd(timeout, b'11,1,0,0\n')
         print("Not Ready: turn on reserves Vacuum Air Pump....")
         return self.checkOK(ret)
+
     def turnOffRVacAirPump(self, timeout = 5):
         ret = self.sendCmd(timeout, b'11,2,0,0\n')
         print("Not Ready: turn off reserves Vacuum Air Pump....")
@@ -487,7 +489,7 @@ class ModuleBT(COPcbConnector):
             return True
         else:
             # force insert
-            self.forceCloseCart()
+            ret = self.forceCloseCart()
             return ret
 
     def ejectCart(self, timeout = 60):
@@ -504,11 +506,90 @@ class ModuleBT(COPcbConnector):
         return ret1
 
     # turn on heater (1/2/both) for pwm 1~20 (not more than 20), turn off ODFan
-    # turn off
-    # turn on TEC (turn on the fan, turn off the heater, etc)
+    def controlBothHeater(self, timeout = 20, pwm1 = 5, pwm2 = 5):
+        # turn off TEC
+        #self.turnOffTEC()
+        # turn off fans
+        #self.turnOffODFan()
+        #self.turnOffWaterFan()
+        #self.turnOffWaterPump()
+        # turn on heater
+        if pwm1 > 0:
+            self.turnOnHeater(timeout, pwm1)
+        else:
+            self.turnOffHeater(timeout, pwm1)
+
+        if pwm2 > 0:
+            self.turnOnRHeater(timeout, pwm2)
+        else:
+            self.turnOffRHeater(timeout, pwm2)
+
+        return
+
+    def controlPIDBothHeater(self, timeout = 20, pid, target_temp = 95, mode = 3)
+        # mode = 1 means heater only
+        # mode = 2 means r heater only
+        # mode = 3 means both heater
+        # get temp from plate (TEC Cold)
+        temp = self.measureTECcold()
+        # todo: calculate PID for pwm/pwm
+        
+        pwm = 0
+        if mode == 3:
+            pwm1 = pwm
+            pwm2 = pwm
+        elif mode == 2:
+            pwm1 = 0
+            pwm2 = pwm
+        elif mode == 2:
+            pwm1 = pwm
+            pwm2 = 0
+        else:
+            pwm1 = 0
+            pwm2 = 0
+
+        ret = self.controlBothHeater(timeout, pwm1, pwm2)
+
+        return ret
+
+    # turn on TEC (turn on the fan, turn off the heater, etc
+    def controlPIDTEC(self, timeout = 20, pid, target_temp = 4, cool_temp = 40)
+        # get temp from sample
+        temp = self.measureTECcold()
+        # calculate pwm
+        pwm = 0
+        self.turnOnTEC(timeout, pwm)
+
+        # check Water Fan
+        self.checkWaterFan(timeout, True, cool_temp)
+        return
+
     # turn off
     # Water Fan is turn on/off by temperature of Water In
+    def checkWaterFan(self, timeout = 5, curstate = True, temp = 40):
+        # curstate = True means turn on, False means turn off
+        # if temp of Water in is higher than target temp, turn on the Fan
+        cur_temp = self.measureWaterIn(timeout)	
+
+        if cur_temp > temp:
+            self.turnOnWaterFan(timeout)
+        else:
+            self.turnOffWaterFan(timeout)		
+        return
+
 	# System Fan is turn on/off by temperature of PCB
+    def checkSystemFan(self, timeout = 5, curstate = True, temp = 40):
+        # curstate = True means turn on, False means turn off
+        # if temp of System is higher than target temp, turn on the Fan
+        cur_temp = self.measureSystem(timeout)
+
+        if cur_temp > temp:
+            self.turnOnSDFan(timeout)
+        else:
+            self.turnOffSDFan(timeout)		
+        return
+
+
 
 
 
