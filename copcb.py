@@ -212,6 +212,45 @@ class ModuleBT(COPcbConnector):
         self.state = 1
         return
 
+    def sendCmd(self, timeout, cmd_str):
+        # check if initialized
+        if self.state < 1:
+            print("Log: the state < 1, error due to uninit")
+            return self.err_uninit
+        
+        # flush the reading data
+        if self.ser.in_waiting > 0:
+            data = self.ser.readline()
+
+        # send start cmd
+        print("CMD String: %s" % str(cmd_str))
+        self.ser.write(cmd_str)
+        time.sleep(0.1)
+        nowtime = time.time()
+
+        while self.ser.in_waiting <= len(self.func_OK_package):
+            time.sleep(0.1)
+            difftime = time.time() - nowtime
+            if difftime >= timeout:
+                self.ser.write(self.stop_package)
+                return self.err_timeout
+
+
+        if self.ser.in_waiting > len(self.func_OK_package):
+            data = self.ser.read_all()
+            #print(data)
+            if (data[0:len(self.func_OK_package)] == self.func_OK_package):
+                try:
+                    ret_string = data[len(self.func_OK_package):].decode("utf-8")
+                except:
+                    ret_string = self.err_decode_fail
+            else:
+                ret_string = self.err_func_fail
+
+        else:
+            ret_string = self.err_decode_fail
+        return ret_string.strip()
+
     # device functions, TODO: error handling
     def checkOK(self, ret):
         print("return value: %s" % str(ret))
@@ -590,8 +629,414 @@ class ModuleBT(COPcbConnector):
         return
 
     def measureSystem(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'0,5,0,0\n')
+        print("measure Temperature of System ....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+class ModuleBTMock(COPcbConnector):
+    def __init__(self, port = None, target_desc='USB Serial Port'):
+        super().__init__(baudrate = 115200, port = port, target_desc = target_desc)
+        self.definePackage()
+        #self.connect()
+
+    def resetPCB(self, total_time):
+        self.total_time = total_time
+
+
+    def definePackage(self):
+        self.func_OK_package = bytearray(b'')
+    
+    def doFunc(self, timeout = 10):
         return
 
+    def initPCB(self, timeout = 5):
+        self.state = 1
+        print("Log: ModuleBT (Mock), initPCB")
+        return
+
+    # device functions, TODO: error handling
+    def checkOK(self, ret):
+        print("Log: return value: %s" % str(ret))
+        ret_array = ret.split(',')
+        if len(ret_array) == 4 and ret_array[3] == 1:
+            return True
+        if len(ret_array) >= 4:
+            return ret_array[-1]
+        return ret_array
+
+    # 1: cartridge rotation
+    def rotateCart(self, timeout = 10, pos = 0):
+        if pos == 0:
+            ret = self.sendCmd(timeout, b'1,1,10000,0\n')
+            print("Rotate Cartridge to zero position....")
+        else:
+            ret = self.sendCmd(timeout, b'1,2,%d,0\n' % pos)
+            print("Not Ready: Rotate Cartridge to %d position...." % pos)
+        return self.checkOK(ret)
+
+    # 2: cup driver
+    def moveCDriver(self, timeout = 3, back = True):
+        if back == True:
+            ret = self.sendCmd(timeout, b'2,1,3000,0\n')
+            print("Move cup driver backward....")
+        else:
+            ret = self.sendCmd(timeout, b'2,2,3000,0\n')
+            print("Move cup driver forward....")
+        return self.checkOK(ret)
+
+
+    # 3: rocker arm
+    def moveRArm(self, timeout = 5, release = True):
+        if release == True:
+            ret = self.sendCmd(timeout, b'3,1,2000,0\n')
+            print("Release rocker arm....")
+        else:
+            ret = self.sendCmd(timeout, b'3,2,2000,0\n')
+            print("Contact rocker arm....")
+        return self.checkOK(ret)
+
+    # 4: optical position
+    def moveOPos(self, timeout = 5, up = True):
+        if up == True:
+            ret = self.sendCmd(timeout, b'4,1,2000,0\n')
+            print("Move optical position up....")
+        else:
+            ret = self.sendCmd(timeout, b'4,2,2000,0\n')
+            print("Move optical position down....")
+        return self.checkOK(ret)
+
+
+    # 5: reverses motor
+    # 6: door
+    def openDoor(self, timeout = 1):
+        ret = self.sendCmd(timeout, b'6,1,1000,0\n')
+        print("Open door....")
+        return self.checkOK(ret)
+    def closeDoor(self, timeout = 1):
+        ret = self.sendCmd(timeout, b'6,2,1000,0\n')
+        print("Close door....")
+        return self.checkOK(ret)
+
+    # 7: Cartridge Roller
+    def moveCartRoller(self, timeout = 6, back = True):
+        if back == True:
+            ret = self.sendCmd(timeout, b'7,1,6000,0\n')
+            print("Move cartridge roller backward....")
+        else:
+            ret = self.sendCmd(timeout, b'7,2,6000,0\n')
+            print("Move cartridge roller forward....")
+        return self.checkOK(ret)
+
+
+    # 8: vertical position
+    def moveVertPosTop(self, timeout = 36):
+        ret = self.sendCmd(timeout, b'8,1,36000,0\n')
+        print("move vertical position to TOP")
+        return self.checkOK(ret)
+    def moveVertPosMid(self, timeout = 18):
+        ret = self.sendCmd(timeout, b'8,2,18000,0\n')
+        print("move vertical position to MID")
+        return self.checkOK(ret)
+    def moveVertPosBtm(self, timeout = 36):
+        ret = self.sendCmd(timeout, b'8,3,36000,0\n')
+        print("move vertical position to BTM")
+        return self.checkOK(ret)
+
+    # 9: BLDC Motor
+    def startBLDCMotor(self, timeout = 5, clockwise = True):
+        if clockwise == True:
+            # clockwise
+            ret = self.sendCmd(timeout, b'9,1,5000,0\n')
+            print("turn on BLDC Motor: clockwise....")
+        else:
+            # counter clockwise
+            ret = self.sendCmd(timeout, b'9,2,5000,0\n')
+            print("turn on BLDC Motor: counter clockwise....")
+        return self.checkOK(ret)
+
+    def stopBLDCMotor(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'9,3,0,0\n')
+        print("turn off BLDC Motor....")
+        return self.checkOK(ret)
+
+    def setBLDCMotorRPM(self, timeout = 10, rpm = 5000):
+        input_rpm = rpm
+        if rpm < 3000:
+            input_rpm = 3000
+        if rpm > 12000:
+            input_rpm = 12000
+
+        ret = self.sendCmd(timeout, b'9,5,%d,0\n' % input_rpm)
+        print("set BLDC Motor to RPM: %d...." % input_rpm)
+        return self.checkOK(ret)
+
+    def readBLDCMotorRPM(self, timeout = 10):
+        ret = self.sendCmd(timeout, b'9,4,0,0\n')
+        if self.checkOK(ret):
+            ret_rpm = ret.strip().split(',')[-2]
+            print("read BLDC Motor to RPM: %d...." % ret_rpm)
+            return ret_rpm
+        print("read BLDC Motor to RPM: failed....")
+        return False
+
+    # 10: vacuum air pump
+    def turnOnVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'10,1,0,0\n')
+        print("Not Ready: turn on Vacuum Air Pump....")
+        return self.checkOK(ret)
+    def turnOffVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'10,2,0,0\n')
+        print("Not Ready: turn off Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    def setVacAirPump(self, timeout = 5, number = 1, time=100):
+        ret = self.sendCmd(timeout, b'10,%d,%d,0\n' % (number+2, time))
+        print("Not Ready: set Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    # 11: reserves air pump
+    def turnOnRVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'11,1,0,0\n')
+        print("Not Ready: turn on reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    def turnOffRVacAirPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'11,2,0,0\n')
+        print("Not Ready: turn off reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    def setRVacAirPump(self, timeout = 5, number = 1, time=100):
+        ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
+        print("Not Ready: set reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+
+    # 12: heater, pwm = 0~250
+    def turnOnHeater(self, timeout = 5, pwm = 5):
+        ret = self.sendCmd(timeout, b'12,1,%d,0\n' % pwm)
+        print("turn on Heater, Value = %d...." % pwm)
+        return self.checkOK(ret)
+
+    def turnOffHeater(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'12,2,0,0\n')
+        print("turn off Heater....")
+        return self.checkOK(ret)
+
+    def measureHeater(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'12,4,0,0\n')
+        print("measure Heater....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+
+    # 13: reserves heater
+    def turnOnRHeater(self, timeout = 5, pwm = 5):
+        ret = self.sendCmd(timeout, b'13,1,%d,0\n' % pwm)
+        print("turn on reserves Heater, Value = %d...." % pwm)
+        return self.checkOK(ret)
+
+    def turnOffRHeater(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'13,2,0,0\n')
+        print("turn off reserves Heater....")
+        return self.checkOK(ret)
+
+    def measureRHeater(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'13,4,0,0\n')
+        print("measure reserves Heater....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+    # 14: TEC
+    def turnOnTEC(self, timeout = 5, pwm = 5):
+        ret = self.sendCmd(timeout, b'14,1,%d,0\n' % pwm)
+        print("turn on TEC, Value = %d...." % pwm)
+        return self.checkOK(ret)
+
+    def turnOffTEC(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'14,2,0,0\n')
+        print("turn off TEC....")
+        return self.checkOK(ret)
+
+    def measureTECcold(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'14,4,0,0\n')
+        print("measure TEC cold side....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+    def measureTEChot(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'14,5,0,0\n')
+        print("measure TEC hot side....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+
+    # 15: Water Cooler Fan
+    def turnOnWaterFan(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,1,0,0\n')
+        print("turn on Water Cooler Fan....")
+        return self.checkOK(ret)
+
+    def turnOffWaterFan(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,2,0,0\n')
+        print("turn off Water Cooler Fan....")
+        return self.checkOK(ret)
+
+    def turnOnWaterPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,3,0,0\n')
+        print("turn on Water Cooler Pump....")
+        return self.checkOK(ret)
+
+    def turnOffWaterPump(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,4,0,0\n')
+        print("turn off Water Cooler Pump....")
+        return self.checkOK(ret)
+
+    def measureWaterIn(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,5,0,0\n')
+        print("measure WaterIn....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+    def measureWaterOut(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'15,6,0,0\n')
+        print("measure WaterOut....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
+
+
+    # 16: system dissipation fan
+    def turnOnSDFan(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'16,1,0,0\n')
+        print("turn on System Dissipation Fan....")
+        return self.checkOK(ret)
+    def turnOffSDFan(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'16,2,0,0\n')
+        print("turn off System Dissipation Fan....")
+        return self.checkOK(ret)
+
+    # 17: optical dissipation fan
+    def turnOnODFan(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'17,1,0,0\n')
+        print("turn on Optical Dissipation Fan....")
+        return self.checkOK(ret)
+
+    def turnOffODFan(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'17,2,0,0\n')
+        print("turn off Optical Dissipation Fan....")
+        return self.checkOK(ret)
+
+    # 20 combo cmd
+    def insertCart(self, timeout = 60):
+        ret = self.sendCmd(timeout, b'20,2,60000,0\n')
+        if self.checkOK(ret) == True:
+            return True
+        else:
+            # force insert
+            ret = self.forceCloseCart()
+            return ret
+
+    def ejectCart(self, timeout = 60):
+        ret = self.sendCmd(timeout, b'20,1,60000,0\n')
+        return self.checkOK(ret)
+
+    def forceCloseCart(self, timeout = 4):
+        ret1 = self.moveCDriver()
+        time.sleep(3)
+        if ret1 == '1':
+            ret2 = self.closeDoor()
+            time.sleep(1)
+            return ret2
+        return ret1
+
+    # turn on heater (1/2/both) for pwm 1~20 (not more than 20), turn off ODFan
+    def controlBothHeater(self, timeout = 20, pwm1 = 5, pwm2 = 5):
+        # turn off TEC
+        #self.turnOffTEC()
+        # turn off fans
+        #self.turnOffODFan()
+        #self.turnOffWaterFan()
+        #self.turnOffWaterPump()
+        # turn on heater
+        if pwm1 > 0:
+            self.turnOnHeater(timeout, pwm1)
+        else:
+            self.turnOffHeater(timeout, pwm1)
+
+        if pwm2 > 0:
+            self.turnOnRHeater(timeout, pwm2)
+        else:
+            self.turnOffRHeater(timeout, pwm2)
+
+        return
+
+    def controlPIDBothHeater(self, timeout = 20, pid = None, target_temp = 95, mode = 3):
+        # mode = 1 means heater only
+        # mode = 2 means r heater only
+        # mode = 3 means both heater
+        # get temp from plate (TEC Cold)
+        temp = self.measureTECcold()
+        # todo: calculate PID for pwm/pwm
+        
+        pwm = 0
+        if mode == 3:
+            pwm1 = pwm
+            pwm2 = pwm
+        elif mode == 2:
+            pwm1 = 0
+            pwm2 = pwm
+        elif mode == 2:
+            pwm1 = pwm
+            pwm2 = 0
+        else:
+            pwm1 = 0
+            pwm2 = 0
+
+        ret = self.controlBothHeater(timeout, pwm1, pwm2)
+
+        return ret
+
+    # turn on TEC (turn on the fan, turn off the heater, etc
+    def controlPIDTEC(self, timeout = 20, pid = None, target_temp = 4, cool_temp = 40):
+        # get temp from sample
+        temp = self.measureTECcold()
+        # calculate pwm
+        pwm = 0
+        self.turnOnTEC(timeout, pwm)
+
+        # check Water Fan
+        self.checkWaterFan(timeout, True, cool_temp)
+        return
+
+    # turn off
+    # Water Fan is turn on/off by temperature of Water In
+    def checkWaterFan(self, timeout = 5, curstate = True, temp = 40):
+        # curstate = True means turn on, False means turn off
+        # if temp of Water in is higher than target temp, turn on the Fan
+        cur_temp = self.measureWaterIn(timeout)    
+
+        if cur_temp > temp:
+            self.turnOnWaterFan(timeout)
+        else:
+            self.turnOffWaterFan(timeout)        
+        return
+
+    # System Fan is turn on/off by temperature of PCB
+    def checkSystemFan(self, timeout = 5, curstate = True, temp = 40):
+        # curstate = True means turn on, False means turn off
+        # if temp of System is higher than target temp, turn on the Fan
+        cur_temp = self.measureSystem(timeout)
+
+        if cur_temp > temp:
+            self.turnOnSDFan(timeout)
+        else:
+            self.turnOffSDFan(timeout)        
+        return
+
+    def measureSystem(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'0,5,0,0\n')
+        print("measure Temperature of System ....%s" % str(ret))
+        #return self.checkOK(ret)
+        return float(ret.split(',')[-1])
 
 
 
