@@ -159,6 +159,25 @@ class QRCodeReader(COPcbConnector):
     def scan(self, timeout = 10):
         return self.sendCmd(timeout, self.func_package)
 
+class QRCodeReaderMock(COPcbConnector):
+    def __init__(self):
+        #super().__init__(target_desc = 'ELMO GMAS')
+        #super().__init__(target_desc = 'USB')
+        self.definePackage()
+        #self.connect()
+
+    def definePackage(self):
+        self.init_package = bytearray(b'\x57\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\x1F\x71\x50\x41')
+        self.init_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x01\x00\x00\x00\x00\x00\xFF\xF8\x50\x41')
+        self.func_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x00\x00\x00\x00\xF7\x81\x50\x41')
+        self.func_OK_package = bytearray(b'\x31\x00\x00\x03\x04\x03\x00\x00\x00\x00\x00\xFE\x1A\x50\x41')
+        self.stop_package = bytearray(b'\x57\x00\x00\x03\x04\x03\x00\x00\x00\x04\x00\x01\x00\x00\x00\xF6\x7D\x50\x41')
+    
+    def scan(self, timeout = 10):
+        #return self.sendCmd(timeout, self.func_package)
+        return "QRCodeReaderMock"
+
+
 class ModuleA(COPcbConnector):
     def __init__(self, port = None, target_desc='USB Serial Port'):
         super().__init__(baudrate = 115200, port = port, target_desc = target_desc)
@@ -198,18 +217,11 @@ class ModuleBT(COPcbConnector):
         self.func_OK_package = bytearray(b'')
     
     def doFunc(self, timeout = 10):
-        #return self.sendCmd(timeout, self.func_package)
-        # return remain_time, other value
-        '''
-        ret = self.total_time
-        self.total_time -= 1
-        if self.total_time < 0:
-            self.total_time = random.randrange(10,180)
-        '''
         return
 
     def initPCB(self, timeout = 5):
         self.state = 1
+        print("Log: ModuleBT, initPCB")
         return
 
     def sendCmd(self, timeout, cmd_str):
@@ -253,7 +265,7 @@ class ModuleBT(COPcbConnector):
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
-        print("return value: %s" % str(ret))
+        print("Log: return value: %s" % str(ret))
         ret_array = ret.split(',')
         if ret_array[3] == 1:
             return True
@@ -654,6 +666,9 @@ class ModuleBTMock(COPcbConnector):
         self.state = 1
         print("Log: ModuleBT (Mock), initPCB")
         return
+
+    def sendCmd(self, timeout, cmd_str):
+        return "0,0,0,1"
 
     # device functions, TODO: error handling
     def checkOK(self, ret):

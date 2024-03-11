@@ -37,6 +37,8 @@ class PageProcessInit(Frame):
     # 1: completed
     # -1: error
     # 2: not started, with cartridge
+    # 3: door opened, not closed yet
+
 
     process_status = 0
 
@@ -62,11 +64,11 @@ class PageProcessInit(Frame):
         controller.resizable(width=False, height=False)
 
         # init QRCodeReader
-        self.qrcr = copcb.QRCodeReader()
+        self.qrcr = copcb.QRCodeReaderMock()
         self.qrcr.initPCB()
 
         # init BT PCB
-        self.btpcb = copcb.ModuleBT()
+        self.btpcb = copcb.ModuleBTMock()
         self.btpcb.initPCB()
 
         # TODO: 2024/02/21 init PCB Steps
@@ -388,14 +390,29 @@ class PageProcessInit(Frame):
     # btn insert cartridge
     def Cmd_btn_insert(self):
         # open cartridge
-        
-        if self.btpcb.ejectCart() != True:
-            print("Error: eject cartridge failed")
+        if self.process_status == 0:
+            # door closed, not started, no cartridge
+            # open door
+            if self.btpcb.ejectCart() != True:
+                print("Error: eject cartridge failed")
+            else:
+                self.process_status = 3
             return
 
-        if self.btpcb.insertCart() != True:
-            print("Error: insert cartridge failed")
-            return
+        elif self.process_status == 3:
+
+            ret = self.btpcb.insertCart()
+            if ret == True:
+                print("Cartridge Inserted")
+                self.process_status = 2
+            elif ret != False:
+                print("Error: insert cartridge failed, closed directly")
+                self.process_status = 0
+                return
+            else:
+                print("Error: close door error....")
+                self.process_status = -1
+                return
 
         # read QR code to get id and test name
         ret = self.qrcr.scan(10)
@@ -417,8 +434,8 @@ class PageProcessInit(Frame):
         all_steps_setting = []
         self.controller.frames[page_process_play.PageProcessPlay].initial_step_array(self.btpcb, all_steps_setting, 
             self.steps_preextract, self.paras_preextract, 
-			self.steps_extract, self.paras_extract, 
-			self.steps_qpcr, paras_qpcr)
+            self.steps_extract, self.paras_extract, 
+            self.steps_qpcr, paras_qpcr)
         # initial_step_array(self, BTpcb, all_steps_setting, steps_preextract, paras_preextract, steps_extract, paras_extract, steps_qpcr, paras_qpcr):
 
 
@@ -436,7 +453,6 @@ class PageProcessInit(Frame):
         self.process_setting['pcrcycle'] = random.randrange(0,3)
         self.process_setting['processtime'] = self.str_processtime.get()
 
-        self.process_status = 2
         self.update_status()
 
 

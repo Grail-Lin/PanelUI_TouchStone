@@ -15,7 +15,7 @@ if __name__ == "__main__":
     # init moduleBT
     print("==== Init the BT PCB ====")
     print("target desc: USB Serial Port")
-    btpcb = copcb.ModuleBT()
+    btpcb = copcb.ModuleBTMock()
     btpcb.initPCB()
     
 
