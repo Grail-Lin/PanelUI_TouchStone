@@ -461,20 +461,23 @@ class PageProcessPlay(Frame):
         # self.qpcr_steps = step_array[-self.len_qpcr:]
         rtime = 0
         total_time = self.preextract_bar.total_time
-        for ss in self.step_array[:self.len_preextract]:
+        for ss in self.step_array[self.len_preextract-number_1:self.len_preextract]:
             rtime += ss.rtime
+        print("rtime for preextract bar = %d" % rtime)
         self.preextract_bar.reset(total_time, total_time - rtime)
 
         rtime = 0
         total_time = self.extract_bar.total_time
-        for ss in self.step_array[self.len_preextract:self.len_preextract+self.len_extract]:
+        for ss in self.step_array[self.len_preextract+self.len_extract-number_2:self.len_preextract+self.len_extract]:
             rtime += ss.rtime
+        print("rtime for extract bar = %d" % rtime)
         self.extract_bar.reset(total_time, total_time - rtime)
 
         rtime = 0
         total_time = self.qpcr_bar.total_time
-        for ss in self.step_array[-self.len_qpcr:]:
+        for ss in self.step_array[-self.len_qpcr+number_3:]:
             rtime += ss.rtime
+        print("rtime for qpcr bar = %d" % rtime)
         self.qpcr_bar.reset(total_time, total_time - rtime)
 
         """Increment extent and update arc and label displaying how much completed."""
