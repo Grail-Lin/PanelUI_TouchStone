@@ -431,11 +431,12 @@ class PageProcessInit(Frame):
 
 
         # init all step setting
+        self.init_process_steps()
         all_steps_setting = []
         self.controller.frames[page_process_play.PageProcessPlay].initial_step_array(self.btpcb, all_steps_setting, 
             self.steps_preextract, self.paras_preextract, 
             self.steps_extract, self.paras_extract, 
-            self.steps_qpcr, paras_qpcr)
+            self.steps_qpcr, self.paras_qpcr)
         # initial_step_array(self, BTpcb, all_steps_setting, steps_preextract, paras_preextract, steps_extract, paras_extract, steps_qpcr, paras_qpcr):
 
 
@@ -553,8 +554,8 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((1))
 
-        # 1004, 1 sec
-        self.steps_preextract.append(1004)
+        # 1003, 1 sec
+        self.steps_preextract.append(1003)
         self.paras_preextract.append((1, 2, 1000))
 
         # 1002
@@ -631,9 +632,9 @@ class PageProcessInit(Frame):
         self.steps_preextract.append(1001)
         self.paras_preextract.append((5))
 
-        # 1005, 1sec
-        self.steps_preextract.append(1005)
-        self.paras_preextract.append((5, 1, 1000))
+        # 1003, 1sec
+        self.steps_preextract.append(1003)
+        self.paras_preextract.append((5, 3, 1000))
 
         # 1002
         self.steps_preextract.append(1002)
@@ -763,7 +764,7 @@ class PageProcessInit(Frame):
 
         # pre-cool
         self.steps_preextract.append(2006)
-        self.paras_preextract.append((5))
+        self.paras_preextract.append((5, None, 4, 40))
 
         # extraction
 
@@ -797,8 +798,8 @@ class PageProcessInit(Frame):
         self.paras_extract.append((5))
 
         # 1005, 1 sec
-        self.steps_extract.append(1005)
-        self.paras_extract.append((5, 2, 1000))
+        self.steps_extract.append(1003)
+        self.paras_extract.append((5, 3, 1000))
 
         # 1002
         self.steps_extract.append(1002)
@@ -872,8 +873,8 @@ class PageProcessInit(Frame):
         self.paras_extract.append((5))
 
         # 1006, 1 sec
-        self.steps_extract.append(1006)
-        self.paras_extract.append((5, 2, 1000))
+        self.steps_extract.append(1003)
+        self.paras_extract.append((5, 4, 1000))
 
         # 1002
         self.steps_extract.append(1002)

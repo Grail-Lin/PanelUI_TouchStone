@@ -162,7 +162,7 @@ class QRCodeReader(COPcbConnector):
 class QRCodeReaderMock(COPcbConnector):
     def __init__(self):
         #super().__init__(target_desc = 'ELMO GMAS')
-        #super().__init__(target_desc = 'USB')
+        super().__init__(target_desc = 'USB')
         self.definePackage()
         #self.connect()
 
@@ -267,7 +267,7 @@ class ModuleBT(COPcbConnector):
     def checkOK(self, ret):
         print("Log: return value: %s" % str(ret))
         ret_array = ret.split(',')
-        if ret_array[3] == 1:
+        if len(ret_array) == 4 and ret_array[3] == '1':
             return True
         if len(ret_array) >= 4:
             return ret_array[-1]
@@ -568,12 +568,12 @@ class ModuleBT(COPcbConnector):
         if pwm1 > 0:
             self.turnOnHeater(timeout, pwm1)
         else:
-            self.turnOffHeater(timeout, pwm1)
+            self.turnOffHeater(timeout)
 
         if pwm2 > 0:
             self.turnOnRHeater(timeout, pwm2)
         else:
-            self.turnOffRHeater(timeout, pwm2)
+            self.turnOffRHeater(timeout)
 
         return
 
@@ -668,13 +668,14 @@ class ModuleBTMock(COPcbConnector):
         return
 
     def sendCmd(self, timeout, cmd_str):
+        print("Log: Mock, sendCmd = %s" % cmd_str)
         return "0,0,0,1"
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
         print("Log: return value: %s" % str(ret))
         ret_array = ret.split(',')
-        if len(ret_array) == 4 and ret_array[3] == 1:
+        if len(ret_array) == 4 and ret_array[3] == '1':
             return True
         if len(ret_array) >= 4:
             return ret_array[-1]

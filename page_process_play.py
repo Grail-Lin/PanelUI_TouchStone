@@ -44,7 +44,7 @@ class PageProcessPlay(Frame):
         self.paras_qpcr = []
 
         self.paras_config = []
-		
+        
         # initial all pcb here
         '''
         self.pcb_a1 = copcb.ModuleA()
@@ -289,8 +289,8 @@ class PageProcessPlay(Frame):
             fill="#7D8CA7",
             font=("Noto Sans", 24 * -1)
         )
-		
-		
+        
+        
 
         # middle of circle
         self.canvas.create_text(
@@ -348,7 +348,7 @@ class PageProcessPlay(Frame):
  
         '''
         1, check current stage
-		2, call current stage pcb
+        2, call current stage pcb
            *todo* perform pcb function
         3, update the remaining time
         4, update bars
@@ -358,24 +358,28 @@ class PageProcessPlay(Frame):
         '''
 
         # check cur_step_num is not the last
-		#     check if need wait
-		#     if not, perform cur_step
-		#     if yes, wait until time count down
+        #     check if need wait
+        #     if not, perform cur_step
+        #     if yes, wait until time count down
         #     perform check system temperature
-		# if yes, go to finish report
+        # if yes, go to finish report
 
         
-
-        if len(self.step_array) > self.cur_step_num:
-            if self.wait_time != None:
-                if time.time() >= self.wait_time:
+        if self.cur_step_num == 0:
+            todo_step = self.step_array[self.cur_step_num]
+            todo_step.doFunc()
+            self.cur_step_num += 1
+        
+        elif len(self.step_array) > self.cur_step_num:
+            if self.step_array[self.cur_step_num-1].wait_time != None:
+                if time.time() >= self.step_array[self.cur_step_num-1].wait_time:
                     # do current step
                     todo_step = self.step_array[self.cur_step_num]
                     todo_step.doFunc()
                     self.cur_step_num += 1
                 else:
-					# check if repeat
-					# do current-1 step
+                    # check if repeat
+                    # do current-1 step
                     todo_step = self.step_array[self.cur_step_num-1]
                     if todo_step.repeat == 1:
                         todo_step.doFunc()
@@ -446,7 +450,7 @@ class PageProcessPlay(Frame):
             number_3 = 0
             number_2 = 0
             number_1 = self.cur_step_num
-		
+        
         self.canvas.itemconfigure(self.text_preext, text="%d / %d STEPS" % (number_1, self.len_preextract))
         self.canvas.itemconfigure(self.text_ext, text="%d / %d STEPS" % (number_2, self.len_extract))
         self.canvas.itemconfigure(self.text_qpcr, text="%d / %d STEPS" % (number_3, self.len_qpcr))
