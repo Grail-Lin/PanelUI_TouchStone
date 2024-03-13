@@ -53,7 +53,10 @@ class CircularProgressbar(object):
     def start(self, interval=100):
         self.interval = interval  # Msec delay between updates.
         #self.increment = self.full_extent / interval
-        self.increment = self.full_extent * self.interval / self.total_time / 1000.0
+        if self.total_time == 0:
+            self.increment = 0
+        else:
+            self.increment = self.full_extent * self.interval / self.total_time / 1000.0
         self.extent = 0
 
         if self.arc_id is None:
@@ -123,9 +126,13 @@ class CircularProgressbar(object):
             self.canvas.after_cancel(self.solve)
         self.running = False
         self.total_time = total_time
-        self.increment = self.full_extent * self.interval / self.total_time / 1000.0
-        #self.extent = 0
-        self.extent = 360.0 * float(current_time) / float(total_time)
+
+        if self.total_time == 0:
+            self.increment = 0
+            self.extent = 0
+        else:
+            self.increment = self.full_extent * self.interval / self.total_time / 1000.0
+            self.extent = 360.0 * float(current_time) / float(total_time)
 
         print("extent: %f" % self.extent)
 

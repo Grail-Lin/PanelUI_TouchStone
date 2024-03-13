@@ -372,6 +372,7 @@ class PageProcessPlay(Frame):
         
         elif len(self.step_array) > self.cur_step_num:
             if self.step_array[self.cur_step_num-1].wait_time != None:
+                print("step_array[%d].wait_time = %d" % (self.cur_step_num-1, self.step_array[self.cur_step_num-1].wait_time))
                 if time.time() >= self.step_array[self.cur_step_num-1].wait_time:
                     # do current step
                     todo_step = self.step_array[self.cur_step_num]
@@ -385,6 +386,8 @@ class PageProcessPlay(Frame):
                         todo_step.doFunc()
                     
             else:
+                print("step_array[%d].wait_time = None" % (self.cur_step_num-1))
+
                 # do current step
                 todo_step = self.step_array[self.cur_step_num]
                 todo_step.doFunc()
@@ -461,7 +464,7 @@ class PageProcessPlay(Frame):
         # self.qpcr_steps = step_array[-self.len_qpcr:]
         rtime = 0
         total_time = self.preextract_bar.total_time
-        for ss in self.step_array[self.len_preextract-number_1:self.len_preextract]:
+        for ss in self.step_array[number_1:self.len_preextract]:
             rtime += ss.rtime
         print("rtime for preextract bar = %d" % rtime)
         self.preextract_bar.reset(total_time, total_time - rtime)

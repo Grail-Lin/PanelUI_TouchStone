@@ -51,7 +51,7 @@ class PCBStep:
         elif self.pcb_id == 901:
             ret = self.pcb.startBLDCMotor(self.para_array[0], self.para_array[1])
             if self.wait_time == None:
-                time.time() + self.para_array[0]
+                self.wait_time = time.time() + self.para_array[0]
         # 902: stopBLDCMotor
         elif self.pcb_id == 902:
             ret = self.pcb.stopBLDCMotor(self.para_array)
@@ -61,7 +61,7 @@ class PCBStep:
 
             # need to wait for count time?
             if self.wait_time == None:
-                time.time() + self.para_array[0]
+                self.wait_time = time.time() + self.para_array[0]
         # 1001: turnOnVacAirPump
         elif self.pcb_id == 1001:
             ret = self.pcb.turnOnVacAirPump(self.para_array)
@@ -89,13 +89,13 @@ class PCBStep:
             ret = self.pcb.controlPIDBothHeater(self.para_array[0], self.para_array[1], self.para_array[2], self.para_array[3])
             repeat = 1
             if self.wait_time == None:
-                time.time() + self.para_array[0]
+                self.wait_time = time.time() + self.para_array[0]
         # 2006: controlPIDTEC
         elif self.pcb_id == 2006:
             ret = self.pcb.controlPIDTEC(self.para_array[0], self.para_array[1], self.para_array[2], self.para_array[3])
             repeat = 1
             if self.wait_time == None:
-                time.time() + self.para_array[0]
+                self.wait_time = time.time() + self.para_array[0]
 
         return ret
 

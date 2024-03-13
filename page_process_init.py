@@ -16,6 +16,8 @@ import page_home
 import page_process_edit
 import page_result_list
 import page_setting
+import page_confirm_start
+
 
 from copic import img_button_play_out, img_button_edit_out, img_button_stop_out
 from copic import img_button_play_off, img_button_edit_off, img_button_stop_off
@@ -492,17 +494,15 @@ class PageProcessInit(Frame):
         # pass the value of process setting
         print("process_status: " + str(self.process_status))
         if self.process_status == 2:
-            #self.controller.frames[page_process_play.PageProcessPlay].process_setting = self.process_setting
-            #self.controller.frames[page_process_play.PageProcessPlay].update_status()
+            self.controller.show_frame(page_confirm_start.PageProcessConfirmStart)
             
+            '''
             self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.start()
             self.controller.frames[page_process_play.PageProcessPlay].extract_bar.start()
             self.controller.frames[page_process_play.PageProcessPlay].qpcr_bar.start()
-            '''
-            self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
-            '''
             self.controller.frames[page_process_play.PageProcessPlay].step()
             self.controller.show_frame(page_process_play.PageProcessPlay)
+            '''
 
     def Cmd_btn_result(self):
         self.controller.frames[page_result_list.PageResultList].fetchResults()
@@ -524,6 +524,21 @@ class PageProcessInit(Frame):
 
         self.paras_config = []
         '''
+        if 1:
+            self.steps_preextract.append(903)
+            self.paras_preextract.append((180, 6000))
+
+            self.steps_preextract.append(803)
+            self.paras_preextract.append((18))
+
+            self.steps_preextract.append(903)
+            self.paras_preextract.append((180, 6000))
+
+            self.steps_preextract.append(803)
+            self.paras_preextract.append((18))
+
+        return
+
         # pre-processing
         # 803
         self.steps_preextract.append(803)
