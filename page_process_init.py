@@ -70,7 +70,8 @@ class PageProcessInit(Frame):
         self.qrcr.initPCB()
 
         # init BT PCB
-        self.btpcb = copcb.ModuleBTMock()
+        #self.btpcb = copcb.ModuleBTMock()
+        self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
         # TODO: 2024/02/21 init PCB Steps
