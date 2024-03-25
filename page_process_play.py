@@ -46,23 +46,6 @@ class PageProcessPlay(Frame):
         self.paras_config = []
         
         # initial all pcb here
-        '''
-        self.pcb_a1 = copcb.ModuleA()
-        self.pcb_a2 = copcb.ModuleA()
-        self.pcb_b1 = copcb.ModuleA()
-        self.pcb_b2 = copcb.ModuleA()
-        self.pcb_b3 = copcb.ModuleA()
-        self.pcb_b4 = copcb.ModuleA()
-        self.pcb_b5 = copcb.ModuleA()
-        self.pcb_b6 = copcb.ModuleA()
-        self.pcb_b7 = copcb.ModuleA()
-        self.pcb_b8 = copcb.ModuleA()
-        self.pcb_c1 = copcb.ModuleA()
-        self.pcb_c2 = copcb.ModuleA()
-        self.pcb_c3 = copcb.ModuleA()
-        '''
-
-        #self.pcb_a.initPCB(10)self
  
         self.step_array = []
 
