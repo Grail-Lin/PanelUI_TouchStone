@@ -60,12 +60,12 @@ TEC_Kd = 5;           # 5 誤差變化率
 # pid1: target = T1, use heater mid temp to control
 pid1 = PID(PID1_Kp, PID1_Ki, PID1_Kd)
 pid1.SetPoint = targetT1
-pid1.setSampleTime(0.1)
+pid1.setSampleTime(1)
 
 # pid2: target = T2, use sample temp to control
 pid2 = PID(PID2_Kp, PID2_Ki, PID2_Kd)
 pid2.SetPoint = targetT2
-pid2.setSampleTime(0.1)
+pid2.setSampleTime(1)
 
 
 class CoThermal:
@@ -74,7 +74,7 @@ class CoThermal:
     '''
     def __init__(self, current_time=None, t1_ofile=None): #, t2_ofile=None, t3_ofile=None):
 
-        self.btpcb = copcb.ModuleBTMock()
+        self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
         # output file
@@ -83,7 +83,7 @@ class CoThermal:
         #self.t3_ofile = t3_ofile if t3_ofile is not None else None
 
         # time
-        self.sample_time = 0.1
+        self.sample_time = 1
         self.current_time = current_time if current_time is not None else time.time()
         self.last_time = self.current_time
         
@@ -106,7 +106,7 @@ class CoThermal:
         self.cur_cycle_time = 0
         self.goal = 0
 
-    def start(self, times = 9000):
+    def start(self, times = 900):
         
 
         for num in range(times):
@@ -123,7 +123,7 @@ class CoThermal:
                 # if the sample temp >= self.T2, self.state_high_ts = 2, goal = num + self.high_pt * 10
                 if temp_s1 >= self.T2:
                     self.state_high_ts = 2
-                    self.goal = num + self.high_pt * 10
+                    self.goal = num + self.high_pt
             elif self.state_high_ts == 2:
                 # use controlPIDBothHeater_spec to control Heater
                 temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, 130, 95, 3)
@@ -140,10 +140,19 @@ class CoThermal:
 
 
             # sleep for 0.1 sec
-            time.sleep(0.1)
+            time.sleep(2)
 
         return
 
+
+    def start2(self, times = 90):
+        for num in range(times):
+            tt = self.btpcb.measureSystem()
+
+            if self.t1_ofile is not None:
+                print("%d\t%f\t%f\t%f\t%f\t%f" % (num, tt, tt, tt, tt, time.time()), file=self.t1_ofile)
+            time.sleep(1)
+        return
 
 t1_path = 't1_output.txt'
 #t2_path = 't2_output.txt'
@@ -158,7 +167,7 @@ try:
     # Let's create an instance
     ntc_sensor = CoThermal(t1_ofile=t1_output_f)#, t2_ofile=t2_output_f, t3_ofile=t3_output_f)
     # and start DAQ
-    ntc_sensor.start(9000)
+    ntc_sensor.start2(180)
     # let's acquire data for 100secs. We could do something else but we just sleep!
     #time.sleep(900)
     # let's stop it
