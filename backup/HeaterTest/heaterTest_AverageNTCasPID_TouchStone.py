@@ -146,12 +146,23 @@ class CoThermal:
 
 
     def start2(self, times = 90):
+        sleeptime = 0.08 # 0.05
         for num in range(times):
+            # query 12v voltage
+            v1 = self.btpcb.get12voltageSystem()
+            # sleep for 0.3/6 = 0.05 ( or 0.5/6 = 0.083)
+            time.sleep(sleeptime)
+            # query 24v voltage
+            v2 = self.btpcb.get24voltageSystem()
+            # sleep for 0.3/6 = 0.05 ( or 0.5/6 = 0.083)
+            time.sleep(sleeptime)
+            # query system temp
             tt = self.btpcb.measureSystem()
 
             if self.t1_ofile is not None:
-                print("%d\t%f\t%f\t%f\t%f\t%f" % (num, tt, tt, tt, tt, time.time()), file=self.t1_ofile)
-            time.sleep(1)
+                print("%d\t%f\t%f\t%f\t%f" % (num, v1, v2, tt, time.time()), file=self.t1_ofile)
+
+            time.sleep(sleeptime)
         return
 
 t1_path = 't1_output.txt'
@@ -167,7 +178,7 @@ try:
     # Let's create an instance
     ntc_sensor = CoThermal(t1_ofile=t1_output_f)#, t2_ofile=t2_output_f, t3_ofile=t3_output_f)
     # and start DAQ
-    ntc_sensor.start2(180)
+    ntc_sensor.start2(200)
     # let's acquire data for 100secs. We could do something else but we just sleep!
     #time.sleep(900)
     # let's stop it

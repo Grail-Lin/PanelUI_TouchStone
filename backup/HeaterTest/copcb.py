@@ -737,10 +737,49 @@ class ModuleBT(COPcbConnector):
         return
 
     def measureSystem(self, timeout = 5):
+        '''
         self.sendCmd(timeout, b'0,1,0,0\n')
         time.sleep(1)
         self.sendCmd(timeout, b'0,3,0,0\n')
         time.sleep(1)
+        '''
+        ret = self.sendCmd(timeout, b'0,5,0,0\n')
+        print("measure Temperature of System ....%s" % str(ret))
+        #return self.checkOK(ret)
+        try:
+            temp = float(ret.split(',')[-1])
+            return temp
+        except:
+            return 0
+
+
+    def get12voltageSystem(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'0,1,0,0\n')
+        print("get voltage of 12V in System ....%s" % str(ret))
+        #return self.checkOK(ret)
+        try:
+            temp = float(ret.split(',')[-1])
+            return temp
+        except:
+            return -1
+
+    def get24voltageSystem(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'0,3,0,0\n')
+        print("get voltage of 24V in System ....%s" % str(ret))
+        #return self.checkOK(ret)
+        try:
+            temp = float(ret.split(',')[-1])
+            return temp
+        except:
+            return -1
+
+    def measureSystem(self, timeout = 5):
+        '''
+        self.sendCmd(timeout, b'0,1,0,0\n')
+        time.sleep(1)
+        self.sendCmd(timeout, b'0,3,0,0\n')
+        time.sleep(1)
+        '''
         ret = self.sendCmd(timeout, b'0,5,0,0\n')
         print("measure Temperature of System ....%s" % str(ret))
         #return self.checkOK(ret)
