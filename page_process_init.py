@@ -24,7 +24,7 @@ from copic import img_button_play_off, img_button_edit_off, img_button_stop_off
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
 from copic import img_button_insert_on, img_button_insert_off
 from copic import img_button_eject_on, img_button_eject_off
-from copic import img_state_aborted, img_state_completed, img_state_not_started
+from copic import img_state_aborted, img_state_completed, img_state_not_started_2, img_co_logo, img_state_inserted
 
 import copcb
 
@@ -147,7 +147,7 @@ class PageProcessInit(Frame):
 
         self.canvas.create_rectangle(
             904.0, 0.0,
-            1024.0, 496.0,
+            1024.0, 600.0,
             fill="#E6EFF4",
             outline="")
 
@@ -165,7 +165,8 @@ class PageProcessInit(Frame):
                                   command=self.Cmd_btn_play,
                                   relief="flat")
         #self.button_play.place(x=938.0, y=140.0, width=52.0, height=52.0)
-        self.button_play.place(x=903.0, y=105.0, width=121.0, height=103.0)
+        #self.button_play.place(x=903.0, y=105.0, width=121.0, height=103.0)
+        self.button_play.place(x=903.0, y=2.0, width=121.0, height=103.0)
 
         self.button_image_stop_off = PhotoImage(data=img_button_stop_off)
         self.button_stop = Button(self, image=self.button_image_stop_off,
@@ -173,14 +174,17 @@ class PageProcessInit(Frame):
                              command=lambda: print("button_6 clicked"),
                              relief="flat")
         #self.button_stop.place(x=938.0, y=243.0, width=52.0, height=52.0)
-        self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
+        #self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
+        self.button_stop.place(x=903.0, y=105.0, width=121.0, height=103.0)
+
         self.button_image_edit_off = PhotoImage(data=img_button_edit_off)
         self.button_edit = Button(self, image=self.button_image_edit_off,
                                   borderwidth=0, highlightthickness=0,
                                   command=self.Cmd_btn_edit,
                                   relief="flat")
         #self.button_edit.place(x=938.0, y=37.0, width=52.0, height=52.0)
-        self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
+        #self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
+        self.button_edit.place(x=903.0, y=208.0, width=121.0, height=103.0)
 
         # cartridge variables
         self.frame_cartridgeID = self.canvas.create_rectangle(381.0, 103.0, 828.0, 189.0,
@@ -285,10 +289,15 @@ class PageProcessInit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
-        self.image_state_not_started = PhotoImage(data=img_state_not_started)
+        self.image_state_not_started = PhotoImage(data=img_state_not_started_2)
+        self.image_state_inserted = PhotoImage(data=img_state_inserted)
         self.image_state_completed = PhotoImage(data=img_state_completed)
         self.image_state_aborted = PhotoImage(data=img_state_aborted)
         self.image_state = self.canvas.create_image(731.0, 47.0, image=self.image_state_not_started)
+
+        # logo
+        self.img_co_logo = PhotoImage(data = img_co_logo)
+        self.canvas.create_image(964.0, 549.0, image=self.img_co_logo)
 
     def update_status(self):
         if self.process_status == 0:
@@ -312,9 +321,9 @@ class PageProcessInit(Frame):
             self.button_eject['command']=0
 
             # update edit/play/stop image
-            self.button_edit['image']=self.button_image_edit_off
-            self.button_play['image']=self.button_image_play_off
-            self.button_stop['image']=self.button_image_stop_off
+            self.button_edit['image']=self.button_image_edit_out
+            self.button_play['image']=self.button_image_play_out
+            self.button_stop['image']=self.button_image_stop_out
 
         elif self.process_status == 1:
             self.canvas.itemconfig(self.image_state, image = self.image_state_completed)
@@ -362,11 +371,11 @@ class PageProcessInit(Frame):
             # update edit/play/stop image
             self.button_edit['image']=self.button_image_edit_out
             self.button_play['image']=self.button_image_play_out
-            self.button_stop['image']=self.button_image_stop_out
+            self.button_stop['image']=self.button_image_stop_on
 
         elif self.process_status == 2:
             # inserted but not process yet
-            self.canvas.itemconfig(self.image_state, image = self.image_state_not_started)
+            self.canvas.itemconfig(self.image_state, image = self.image_state_inserted)
 
             # update frame color
             self.canvas.itemconfig(self.frame_cartridgeID, fill="#FFFFFF")
@@ -387,7 +396,7 @@ class PageProcessInit(Frame):
             # update edit/play/stop image
             self.button_edit['image']=self.button_image_edit_off
             self.button_play['image']=self.button_image_play_off
-            self.button_stop['image']=self.button_image_stop_off
+            self.button_stop['image']=self.button_image_stop_out
 
 
     # btn insert cartridge

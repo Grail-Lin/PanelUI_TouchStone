@@ -504,7 +504,7 @@ class PageResultList(Frame):
         cosql = coutil.COSQLite('data.db')
         self.result_array = cosql.queryPCRResults()
         self.total_result_num = len(self.result_array)
-        self.select_result_num = 0
+        #self.select_result_num = 0
         self.current_page = 0
         self.total_page = math.ceil(self.total_result_num/self.each_page_num)
         self.update()

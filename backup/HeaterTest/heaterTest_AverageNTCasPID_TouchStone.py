@@ -140,13 +140,13 @@ class CoThermal:
 
 
             # sleep for 0.1 sec
-            time.sleep(2)
+            time.sleep(0.2)
 
         return
 
 
     def start2(self, times = 90):
-        sleeptime = 0.08 # 0.05
+        sleeptime = 0.05 # 0.05
         for num in range(times):
             # query 12v voltage
             v1 = self.btpcb.get12voltageSystem()
@@ -178,7 +178,8 @@ try:
     # Let's create an instance
     ntc_sensor = CoThermal(t1_ofile=t1_output_f)#, t2_ofile=t2_output_f, t3_ofile=t3_output_f)
     # and start DAQ
-    ntc_sensor.start2(200)
+    #ntc_sensor.start2(500)
+    ntc_sensor.start(500)
     # let's acquire data for 100secs. We could do something else but we just sleep!
     #time.sleep(900)
     # let's stop it

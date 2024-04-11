@@ -105,6 +105,7 @@ class PageLogin(Frame):
             bd=0,
             bg="#EAEAEA",
             fg="#7E8DA8", # "#17171B",
+            #show="*",
             highlightthickness=0,
             font = ("Noto Sans", 24 * -1),
             textvariable = self.pwd_input
@@ -118,6 +119,7 @@ class PageLogin(Frame):
             height=84.0
         )
         self.entry_2.bind("<1>", self.Focus_entry_pwd)
+        self.entry_2.bind("<FocusIn>", self.Focus_entry_pwd)
 
 
         self.error_password = self.canvas.create_text(

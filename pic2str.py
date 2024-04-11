@@ -96,5 +96,7 @@ if __name__ == '__main__':
 
     #pic2str('img_btn_start_on', r".\assets\button_start_on.png")
     #pic2str('img_btn_start_off', r".\assets\button_start_off.png")
-    pic2str('img_btn_add_user', r".\assets\button_add_user.png")
-
+    #pic2str('img_btn_add_user', r".\assets\button_add_user.png")
+    pic2str('img_state_inserted', r".\assets\frame_process\state_inserted.png")
+    pic2str('img_state_not_started_2', r".\assets\frame_process\state_not_started_2.png")
+    

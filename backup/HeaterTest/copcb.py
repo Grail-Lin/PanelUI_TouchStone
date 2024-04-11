@@ -802,11 +802,10 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
-        time.sleep(2)
+        time.sleep(0.05)
         temp_s2 = self.measureSample1()
-        time.sleep(2)
+        time.sleep(0.05)
         temp_h = self.measureTECcold()
-        time.sleep(2)
 
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)

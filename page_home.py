@@ -11,6 +11,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Frame
 import page_process_init
 import page_result_list
 import page_setting
+import page_result_chart
 
 from copic import img_button_home_on, img_button_process_off, img_button_setting_off, img_button_result_off
 from copic import img_co_logo, img_button_home_result, img_button_home_test
@@ -196,8 +197,17 @@ class PageHome(Frame):
         self.controller.show_frame(page_process_init.PageProcessInit)
 
     def Cmd_btn_result(self):
+        # fetch results
         self.controller.frames[page_result_list.PageResultList].fetchResults()
-        self.controller.show_frame(page_result_list.PageResultList)
+        # show result list
+        # self.controller.show_frame(page_result_list.PageResultList)
+
+        # show the last one result
+        target_result = self.controller.frames[page_result_list.PageResultList].result_array[-1]
+        self.controller.frames[page_result_chart.PageResultChart].pcrresults = target_result
+        self.controller.frames[page_result_chart.PageResultChart].update()
+        self.controller.show_frame(page_result_chart.PageResultChart)
+
 
     def Cmd_btn_setting(self):
         self.controller.show_frame(page_setting.PageSetting)
