@@ -15,6 +15,7 @@ import coutil
 import win_popup_kb
 
 from copic import img_entry_bg, img_button_login_off, img_button_login_on, img_logo
+from copic import img_keyboard
 
 class PageLogin(Frame):
 
@@ -161,6 +162,14 @@ class PageLogin(Frame):
         #    file=self.relative_to_assets("button_1_click.png"))
         self.img_button_login_off = PhotoImage(data=img_button_login_off)
         self.img_button_login_on = PhotoImage(data=img_button_login_on)
+        self.img_keyboard = PhotoImage(data=img_keyboard)
+
+        self.btn_keyboard = Button(self, 
+            image=self.img_keyboard, boardwidth = 0, highlightthickness=0,
+            command = 5,
+            relief="flat",
+            font=("Noto San", 24*-1)
+        )
 
         self.button_1 = Button(self,
             image=self.img_button_login_off,
