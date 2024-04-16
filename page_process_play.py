@@ -14,7 +14,7 @@ import time
 from circle_bar import CircularProgressbar
 
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
-from copic import img_button_stop_off, img_button_edit_off, img_button_play_on
+from copic import img_button_stop_off, img_button_edit_out, img_button_play_on
 import page_result_chart
 
 # PCB module
@@ -181,8 +181,8 @@ class PageProcessPlay(Frame):
                              relief="flat")
         #self.button_stop.place(x=938.0, y=243.0, width=52.0, height=52.0)
         self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
-        self.button_image_edit_off = PhotoImage(data=img_button_edit_off)
-        self.button_edit = Button(self, image=self.button_image_edit_off,
+        self.button_image_edit_out = PhotoImage(data=img_button_edit_out)
+        self.button_edit = Button(self, image=self.button_image_edit_out,
                                   borderwidth=0, highlightthickness=0,
                                   command=0,
                                   relief="flat")

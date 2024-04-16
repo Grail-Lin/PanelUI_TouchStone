@@ -14,6 +14,7 @@ import page_home
 import page_process_play
 import page_result_list
 import page_setting
+import page_process_init
 
 from copic import img_button_opt_high_off, img_button_opt_high_on
 from copic import img_button_opt_low_off, img_button_opt_low_on
@@ -23,7 +24,18 @@ from copic import img_button_opt_normal_off, img_button_opt_normal_on
 from copic import img_button_opt_short_off, img_button_opt_short_on
 from copic import img_button_opt_yes_off, img_button_opt_yes_on
 from copic import img_button_process_on, img_button_result_off, img_button_home_off, img_button_setting_off
-from copic import img_button_play_off, img_button_stop_off, img_button_edit_on
+from copic import img_button_play_out, img_button_stop_out, img_button_edit_on
+from copic import img_co_logo, img_button_return_on
+
+from copic import img_button_opt_0000_off, img_button_opt_0000_on
+from copic import img_button_opt_0002_off, img_button_opt_0002_on
+from copic import img_button_opt_0010_off, img_button_opt_0010_on
+from copic import img_button_opt_500_off, img_button_opt_500_on
+from copic import img_button_opt_1000_off, img_button_opt_1000_on
+from copic import img_button_opt_3000_off, img_button_opt_3000_on
+from copic import img_button_opt_35_off, img_button_opt_35_on
+from copic import img_button_opt_40_off, img_button_opt_40_on
+from copic import img_button_opt_42_off, img_button_opt_42_on
 
 class PageProcessEdit(Frame):
 
@@ -95,8 +107,8 @@ class PageProcessEdit(Frame):
         self.button_image_result_off = PhotoImage(data = img_button_result_off)
         self.button_image_home_off = PhotoImage(data = img_button_home_off)
         self.button_image_setting_off = PhotoImage(data = img_button_setting_off)
-        self.button_image_play_off = PhotoImage(data = img_button_play_off)
-        self.button_image_stop_off = PhotoImage(data = img_button_stop_off)
+        self.button_image_play_out = PhotoImage(data = img_button_play_out)
+        self.button_image_stop_out = PhotoImage(data = img_button_stop_out)
         self.button_image_edit_on = PhotoImage(data = img_button_edit_on)
         
         # add elements here
@@ -183,32 +195,47 @@ class PageProcessEdit(Frame):
             outline="")
 
         self.button_play = Button(self,
-            image=self.button_image_play_off,
+            image=self.button_image_play_out,
             borderwidth=0,
             highlightthickness=0,
-            command=self.Cmd_btn_play,
+            #command=self.Cmd_btn_play,
+            command=lambda: print("button_play clicked"),
             relief="flat"
         )
-        self.button_play.place(
-            x=903.0,
-            y=105.0,
-            width=121.0,
-            height=103.0
-        )
+        #self.button_play.place(x=903.0, y=105.0, width=121.0, height=103.0)
+        self.button_play.place(x=903.0, y=2.0, width=121.0, height=103.0)
+
 
         self.button_stop = Button(self,
-            image=self.button_image_stop_off,
+            image=self.button_image_stop_out,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_6 clicked"),
+            command=lambda: print("button_stop clicked"),
             relief="flat"
         )
-        self.button_stop.place(
-            x=903.0,
-            y=208.0,
-            width=121.0,
-            height=103.0
+        #self.button_stop.place(x=903.0, y=208.0, width=121.0, height=103.0)
+        self.button_stop.place(x=903.0, y=105.0, width=121.0, height=103.0)
+
+        self.button_edit = Button(self,
+            image=self.button_image_edit_on,
+            borderwidth=0,
+            highlightthickness=0,
+            command=0,
+            relief="flat"
         )
+        #self.button_edit.place(x=903.0, y=2.0, width=121.0, height=103.0)
+        self.button_edit.place(x=903.0, y=208.0, width=121.0, height=103.0)
+
+        self.image_return_off = PhotoImage(data=img_button_return_on)
+        self.button_return = Button(self,
+            image=self.image_return_off,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_return,
+            relief="flat"
+        )
+        self.button_return.place(x=903.0, y=311.0, width=120.0, height=103.0)
+
 
         self.canvas.create_text(
             148.0,
@@ -308,7 +335,8 @@ class PageProcessEdit(Frame):
 
 
         self.rbtn_extract_none = Button(self,
-            image=self.img_opt_none_off,
+            #image=self.img_opt_none_off,
+            image=self.img_opt_0000_off,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_extracttime_none,
@@ -323,7 +351,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_extract_short = Button(self,
-            image=self.img_opt_short_on,
+            #image=self.img_opt_short_on,
+            image=self.img_opt_0002_on,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_extracttime_short,
@@ -338,7 +367,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_extract_normal = Button(self,
-            image=self.img_opt_normal_off,
+            #image=self.img_opt_normal_off,
+            image=self.img_opt_0010_off,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_extracttime_normal,
@@ -353,7 +383,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_rpm_low = Button(self,
-            image=self.img_opt_low_on,
+            #image=self.img_opt_low_on,
+            image=self.img_opt_500_on,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_spinrpm_low,
@@ -368,7 +399,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_rpm_medium = Button(self,
-            image=self.img_opt_medium_off,
+            #image=self.img_opt_medium_off,
+            image=self.img_opt_1000_off,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_spinrpm_medium,
@@ -383,7 +415,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_rpm_high = Button(self,
-            image=self.img_opt_high_off,
+            #image=self.img_opt_high_off,
+            image=self.img_opt_3000_off,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_spinrpm_high,
@@ -407,7 +440,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_cycle_none = Button(self,
-            image=self.img_opt_none_off,
+            #image=self.img_opt_none_off,
+            image=self.img_opt_35_off,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_pcrcycle_none,
@@ -422,7 +456,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_cycle_short = Button(self,
-            image=self.img_opt_short_off,
+            #image=self.img_opt_short_off,
+            image=self.img_opt_40_off,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_pcrcycle_short,
@@ -437,7 +472,8 @@ class PageProcessEdit(Frame):
         )
 
         self.rbtn_cycle_normal = Button(self,
-            image=self.img_opt_normal_on,
+            #image=self.img_opt_normal_on,
+            image=self.img_opt_42_on,
             borderwidth=0,
             highlightthickness=0,
             #command=self.Cmd_btn_pcrcycle_normal,
@@ -451,19 +487,6 @@ class PageProcessEdit(Frame):
             height=70.0
         )
 
-        self.button_edit = Button(self,
-            image=self.button_image_edit_on,
-            borderwidth=0,
-            highlightthickness=0,
-            command=0,
-            relief="flat"
-        )
-        self.button_edit.place(
-            x=903.0,
-            y=2.0,
-            width=121.0,
-            height=103.0
-        )
 
         self.canvas.create_text(
             495.0,
@@ -491,6 +514,11 @@ class PageProcessEdit(Frame):
             font=("Noto Sans", 24 * -1)
         )
 
+        # logo
+        self.img_co_logo = PhotoImage(data = img_co_logo)
+        self.canvas.create_image(964.0, 549.0, image=self.img_co_logo)
+
+
     def update_status(self):
         # update the time
         self.canvas.itemconfig(self.id_processtime, text=self.process_setting['processtime'])
@@ -511,43 +539,43 @@ class PageProcessEdit(Frame):
             self.rbtn_precool_yes['image']=self.img_opt_yes_off
 
         if self.process_setting['extracttime'] == 2:
-            self.rbtn_extract_none['image']=self.img_opt_none_off
-            self.rbtn_extract_short['image']=self.img_opt_short_off
-            self.rbtn_extract_normal['image']=self.img_opt_normal_on
+            self.rbtn_extract_none['image']=self.img_opt_0000_off
+            self.rbtn_extract_short['image']=self.img_opt_0002_off
+            self.rbtn_extract_normal['image']=self.img_opt_0010_on
         elif self.process_setting['extracttime'] == 1:
-            self.rbtn_extract_none['image']=self.img_opt_none_off
-            self.rbtn_extract_short['image']=self.img_opt_short_on
-            self.rbtn_extract_normal['image']=self.img_opt_normal_off
+            self.rbtn_extract_none['image']=self.img_opt_0000_off
+            self.rbtn_extract_short['image']=self.img_opt_0002_on
+            self.rbtn_extract_normal['image']=self.img_opt_0010_off
         elif self.process_setting['extracttime'] == 0:
-            self.rbtn_extract_none['image']=self.img_opt_none_on
-            self.rbtn_extract_short['image']=self.img_opt_short_off
-            self.rbtn_extract_normal['image']=self.img_opt_normal_off
+            self.rbtn_extract_none['image']=self.img_opt_0000_on
+            self.rbtn_extract_short['image']=self.img_opt_0002_off
+            self.rbtn_extract_normal['image']=self.img_opt_0010_off
 
         if self.process_setting['spinrpm'] == 2:
-            self.rbtn_rpm_low['image']=self.img_opt_low_off
-            self.rbtn_rpm_medium['image']=self.img_opt_medium_off
-            self.rbtn_rpm_high['image']=self.img_opt_high_on
+            self.rbtn_rpm_low['image']=self.img_opt_500_off
+            self.rbtn_rpm_medium['image']=self.img_opt_1000_off
+            self.rbtn_rpm_high['image']=self.img_opt_3000_on
         elif self.process_setting['spinrpm'] == 1:
-            self.rbtn_rpm_low['image']=self.img_opt_low_off
-            self.rbtn_rpm_medium['image']=self.img_opt_medium_on
-            self.rbtn_rpm_high['image']=self.img_opt_high_off
+            self.rbtn_rpm_low['image']=self.img_opt_500_off
+            self.rbtn_rpm_medium['image']=self.img_opt_1000_on
+            self.rbtn_rpm_high['image']=self.img_opt_3000_off
         elif self.process_setting['spinrpm'] == 0:
-            self.rbtn_rpm_low['image']=self.img_opt_low_on
-            self.rbtn_rpm_medium['image']=self.img_opt_medium_off
-            self.rbtn_rpm_high['image']=self.img_opt_high_off
+            self.rbtn_rpm_low['image']=self.img_opt_500_on
+            self.rbtn_rpm_medium['image']=self.img_opt_1000_off
+            self.rbtn_rpm_high['image']=self.img_opt_3000_off
 
         if self.process_setting['pcrcycle'] == 2:
-            self.rbtn_cycle_none['image']=self.img_opt_none_off
-            self.rbtn_cycle_short['image']=self.img_opt_short_off
-            self.rbtn_cycle_normal['image']=self.img_opt_normal_on
+            self.rbtn_cycle_none['image']=self.img_opt_35_off
+            self.rbtn_cycle_short['image']=self.img_opt_40_off
+            self.rbtn_cycle_normal['image']=self.img_opt_42_on
         elif self.process_setting['pcrcycle'] == 1:
-            self.rbtn_cycle_none['image']=self.img_opt_none_off
-            self.rbtn_cycle_short['image']=self.img_opt_short_on
-            self.rbtn_cycle_normal['image']=self.img_opt_normal_off
+            self.rbtn_cycle_none['image']=self.img_opt_35_off
+            self.rbtn_cycle_short['image']=self.img_opt_40_on
+            self.rbtn_cycle_normal['image']=self.img_opt_42_off
         elif self.process_setting['pcrcycle'] == 0:
-            self.rbtn_cycle_none['image']=self.img_opt_none_on
-            self.rbtn_cycle_short['image']=self.img_opt_short_off
-            self.rbtn_cycle_normal['image']=self.img_opt_normal_off
+            self.rbtn_cycle_none['image']=self.img_opt_35_on
+            self.rbtn_cycle_short['image']=self.img_opt_40_off
+            self.rbtn_cycle_normal['image']=self.img_opt_42_off
 
     def Cmd_btn_preextract_none(self):
         self.process_setting['preextract'] = 0
@@ -595,7 +623,7 @@ class PageProcessEdit(Frame):
 
     def Cmd_btn_home(self):
         self.controller.show_frame(page_home.PageHome)
-
+    '''
     def Cmd_btn_play(self):
         # pass the value of process setting
         if 1:
@@ -606,6 +634,7 @@ class PageProcessEdit(Frame):
             self.controller.frames[page_process_play.PageProcessPlay].preextract_bar.toggle_pause()
 
             self.controller.show_frame(page_process_play.PageProcessPlay)
+    '''
 
     def Cmd_btn_result(self):
         self.controller.frames[page_result_list.PageResultList].fetchResults()
@@ -613,6 +642,11 @@ class PageProcessEdit(Frame):
 
     def Cmd_btn_setting(self):
         self.controller.show_frame(page_setting.PageSetting)
+
+    def Cmd_btn_return(self):
+        # update config
+        # return to Process_init
+        self.controller.show_frame(page_process_init.PageProcessInit)
 
 if __name__ == "__main__":
     window = Tk()
