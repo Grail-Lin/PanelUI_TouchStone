@@ -103,6 +103,27 @@ class PageProcessEdit(Frame):
         self.img_opt_short_on = PhotoImage(data = img_button_opt_short_on)
         self.img_opt_yes_off = PhotoImage(data = img_button_opt_yes_off)
         self.img_opt_yes_on = PhotoImage(data = img_button_opt_yes_on)
+
+        self.img_opt_0000_off = PhotoImage(data = img_button_opt_0000_off)
+        self.img_opt_0000_on = PhotoImage(data = img_button_opt_0000_on)
+        self.img_opt_0002_off = PhotoImage(data = img_button_opt_0002_off)
+        self.img_opt_0002_on = PhotoImage(data = img_button_opt_0002_on)
+        self.img_opt_0010_off = PhotoImage(data = img_button_opt_0010_off)
+        self.img_opt_0010_on = PhotoImage(data = img_button_opt_0010_on)
+        self.img_opt_35_off = PhotoImage(data = img_button_opt_35_off)
+        self.img_opt_35_on = PhotoImage(data = img_button_opt_35_on)
+        self.img_opt_40_off = PhotoImage(data = img_button_opt_40_off)
+        self.img_opt_40_on = PhotoImage(data = img_button_opt_40_on)
+        self.img_opt_42_off = PhotoImage(data = img_button_opt_42_off)
+        self.img_opt_42_on = PhotoImage(data = img_button_opt_42_on)
+        self.img_opt_500_off = PhotoImage(data = img_button_opt_500_off)
+        self.img_opt_500_on = PhotoImage(data = img_button_opt_500_on)
+        self.img_opt_1000_off = PhotoImage(data = img_button_opt_1000_off)
+        self.img_opt_1000_on = PhotoImage(data = img_button_opt_1000_on)
+        self.img_opt_3000_off = PhotoImage(data = img_button_opt_3000_off)
+        self.img_opt_3000_on = PhotoImage(data = img_button_opt_3000_on)
+
+
         self.button_image_process_on = PhotoImage(data = img_button_process_on)
         self.button_image_result_off = PhotoImage(data = img_button_result_off)
         self.button_image_home_off = PhotoImage(data = img_button_home_off)
@@ -110,6 +131,7 @@ class PageProcessEdit(Frame):
         self.button_image_play_out = PhotoImage(data = img_button_play_out)
         self.button_image_stop_out = PhotoImage(data = img_button_stop_out)
         self.button_image_edit_on = PhotoImage(data = img_button_edit_on)
+
         
         # add elements here
 
