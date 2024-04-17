@@ -70,8 +70,8 @@ class PageProcessInit(Frame):
         self.qrcr.initPCB()
 
         # init BT PCB
-        self.btpcb = copcb.ModuleBTMock()
-        #self.btpcb = copcb.ModuleBT()
+        #self.btpcb = copcb.ModuleBTMock()
+        self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
         # TODO: 2024/02/21 init PCB Steps
@@ -402,6 +402,7 @@ class PageProcessInit(Frame):
     # btn insert cartridge
     def Cmd_btn_insert(self):
         # open cartridge
+        print("Process Status = %d" % self.process_status)
         if self.process_status == 0:
             # door closed, not started, no cartridge
             # open door
