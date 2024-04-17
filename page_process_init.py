@@ -268,7 +268,7 @@ class PageProcessInit(Frame):
         self.button_insert = Button(self, image=self.button_image_insert_on,
                                     borderwidth=0, highlightthickness=0,
                                     command=self.Cmd_btn_insert,
-                                    relief="flat")
+                                    relief="flat", activebackground="black")
         self.button_insert.place(
             x=515.0, y=423.0, width=315.0, height=86.0)
 
@@ -277,7 +277,7 @@ class PageProcessInit(Frame):
         self.button_eject = Button(self, image=self.button_image_eject_off,
                                    borderwidth=0, highlightthickness=0,
                                    command=self.Cmd_btn_eject,
-                                   relief="flat")
+                                   relief="flat", activebackground="black")
         self.button_eject.place(x=148.0, y=423.0, width=315.0, height=86.0)
 
         self.canvas.create_text(
