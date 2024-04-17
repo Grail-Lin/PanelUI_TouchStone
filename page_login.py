@@ -165,11 +165,13 @@ class PageLogin(Frame):
         self.img_keyboard = PhotoImage(data=img_keyboard)
 
         self.btn_keyboard = Button(self, 
-            image=self.img_keyboard, boardwidth = 0, highlightthickness=0,
-            command = 5,
+            image=self.img_keyboard, borderwidth = 0, highlightthickness=0,
+            command = self.Cmd_btn_keyboard,
             relief="flat",
             font=("Noto San", 24*-1)
         )
+
+        self.btn_keyboard.place(y=397.0, x=867, width=96.0, height=86.0)
 
         self.button_1 = Button(self,
             image=self.img_button_login_off,
@@ -239,7 +241,7 @@ class PageLogin(Frame):
         #if self.value_vk_on == False:
         #    self.value_vk_on = True
         #    win_popup_kb.popup_keyboard(self)
-        win_popup_kb.popup_keyboard(self)
+        #win_popup_kb.popup_keyboard(self)
 
 
 
@@ -256,8 +258,11 @@ class PageLogin(Frame):
         #if self.value_vk_on == False:
         #    self.value_vk_on = True
         #    win_popup_kb.popup_keyboard(self)
-        win_popup_kb.popup_keyboard(self)
+        #win_popup_kb.popup_keyboard(self)
 
+    def Cmd_btn_keyboard(self):
+        win_popup_kb.popup_keyboard(self)
+        return
 
 
 

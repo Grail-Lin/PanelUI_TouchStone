@@ -113,9 +113,9 @@ if __name__ == '__main__':
     #pic2str('img_button_opt_42_on', r".\assets\frame_process\btn_opt_42_on.png")
     #pic2str('img_button_opt_500_off', r".\assets\frame_process\btn_opt_500_off.png")
     #pic2str('img_button_opt_500_on', r".\assets\frame_process\btn_opt_500_on.png")
-    pic2str('img_button_opt_1000_off', r".\assets\frame_process\btn_opt_1000_off.png")
-    pic2str('img_button_opt_1000_on', r".\assets\frame_process\btn_opt_1000_on.png")
+    #pic2str('img_button_opt_1000_off', r".\assets\frame_process\btn_opt_1000_off.png")
+    #pic2str('img_button_opt_1000_on', r".\assets\frame_process\btn_opt_1000_on.png")
     #pic2str('img_button_opt_3000_off', r".\assets\frame_process\btn_opt_3000_off.png")
     #pic2str('img_button_opt_3000_on', r".\assets\frame_process\btn_opt_3000_on.png")
-    #pic2str('img_keyboard', r".\assets\keyboard.png")
+    pic2str('img_keyboard', r".\assets\keyboard.png")
 
