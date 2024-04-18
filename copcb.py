@@ -103,6 +103,7 @@ class COPcbConnector:  # BT' baud = 9600
     def sendCmd(self, timeout, cmd_str):
         # check if initialized
         if self.state < 1:
+            print("Log: the state < 1, error due to uninit")
             return self.err_uninit
         
         # flush the reading data
@@ -137,6 +138,7 @@ class COPcbConnector:  # BT' baud = 9600
         else:
             ret_string = self.err_decode_fail
         return ret_string.strip()
+
 
     # need to inplement in child class
     #def decode(self, ret_string):
@@ -248,12 +250,58 @@ class ModuleBT(COPcbConnector):
         time.sleep(0.1)
         nowtime = time.time()
 
+        '''
+            loop until return == 1
+                check in_waiting
+                read in_waiting
+                if ,0 continue
+                else return = 1
+
+                if timeout, return
+        '''
+        needReturn = 0
+        while needReturn == 0:
+
+            difftime = time.time() - nowtime
+            if difftime >= timeout:
+                #self.ser.write(self.stop_package)
+                ret_string = self.err_timeout
+                needReturn = 1
+
+            if self.ser.in_waiting > len(self.func_OK_package):
+                data = self.ser.read_all()
+
+                if (data[0:len(self.func_OK_package)] == self.func_OK_package):
+                    try:
+                        ret_string = data[len(self.func_OK_package):].decode("utf-8")
+                        ret_array = ret_string.strip().split(',')
+
+                        if len(ret_array) == 4:
+                            if ret_array[3] != '0':
+                                needReturn = 1
+                        else:
+                            needReturn = 1
+                        
+                    except:
+                        ret_string = self.err_decode_fail
+                        needReturn = 1
+                else:
+                    ret_string = self.err_func_fail
+                    needReturn = 1
+
+
+            time.sleep(0.1)
+
+        return ret_string.strip()
+
+        '''
         while self.ser.in_waiting <= len(self.func_OK_package):
             time.sleep(0.1)
             difftime = time.time() - nowtime
             if difftime >= timeout:
                 self.ser.write(self.stop_package)
                 return self.err_timeout
+
 
         if self.ser.in_waiting > len(self.func_OK_package):
             data = self.ser.read_all()
@@ -269,6 +317,10 @@ class ModuleBT(COPcbConnector):
         else:
             ret_string = self.err_decode_fail
         return ret_string.strip()
+        '''
+
+
+
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
@@ -556,10 +608,8 @@ class ModuleBT(COPcbConnector):
 
     def forceCloseCart(self, timeout = 4):
         ret1 = self.moveCDriver()
-        time.sleep(3)
-        if ret1 == '1':
+        if ret1 == True:
             ret2 = self.closeDoor()
-            time.sleep(1)
             return ret2
         return ret1
 
