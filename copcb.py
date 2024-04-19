@@ -351,7 +351,7 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 2: cup driver
-    def moveCDriver(self, timeout = 3, back = True):
+    def moveCDriver(self, timeout = 10, back = True):
         if back == True:
             ret = self.sendCmd(timeout, b'2,1,%d,0\n' % (timeout*1000))
             print("Move cup driver backward....")
@@ -362,7 +362,7 @@ class ModuleBT(COPcbConnector):
 
 
     # 3: rocker arm
-    def moveRArm(self, timeout = 5, release = True):
+    def moveRArm(self, timeout = 10, release = True):
         if release == True:
             ret = self.sendCmd(timeout, b'3,1,%d,0\n' % (timeout*1000))
             print("Release rocker arm....")
@@ -604,9 +604,11 @@ class ModuleBT(COPcbConnector):
     def insertCart(self, timeout = 60):
         ret = self.sendCmd(timeout, b'20,2,%d,0\n' % (timeout*1000))
         if self.checkOK(ret) == True:
+            print("insert ok")
             return True
         else:
             # force insert
+            print("insert error, forceCloseCart")
             ret = self.forceCloseCart()
             return ret
 
@@ -615,9 +617,15 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     def forceCloseCart(self, timeout = 4):
+        print("moveCDriver")
         ret1 = self.moveCDriver()
+        #time.sleep(5)
+        print(ret1)
         if ret1 == True:
+            print("closeDoor")
             ret2 = self.closeDoor()
+            print(ret2)
+            #time.sleep(1)
             return ret2
         return ret1
 
