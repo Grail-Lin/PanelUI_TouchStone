@@ -22,8 +22,9 @@ import page_confirm_start
 from copic import img_button_play_out, img_button_edit_out, img_button_stop_out
 from copic import img_button_play_off, img_button_edit_off, img_button_stop_off
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
-from copic import img_button_insert_on, img_button_insert_off
-from copic import img_button_eject_on, img_button_eject_off
+from copic import img_button_insert_on, img_button_insert_off, img_button_insert_clicked
+from copic import img_button_eject_on, img_button_eject_off, img_button_eject_clicked
+from copic import img_button_open_on, img_button_open_off, img_button_open_clicked
 from copic import img_state_aborted, img_state_completed, img_state_not_started_2, img_co_logo, img_state_inserted
 
 import copcb
@@ -70,8 +71,8 @@ class PageProcessInit(Frame):
         self.qrcr.initPCB()
 
         # init BT PCB
-        #self.btpcb = copcb.ModuleBTMock()
-        self.btpcb = copcb.ModuleBT()
+        self.btpcb = copcb.ModuleBTMock()
+        #self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
         # TODO: 2024/02/21 init PCB Steps
@@ -272,8 +273,13 @@ class PageProcessInit(Frame):
         self.button_insert.place(
             x=515.0, y=423.0, width=315.0, height=86.0)
 
+        self.button_image_open_on = PhotoImage(data=img_button_open_on)
+        self.button_image_open_off = PhotoImage(data=img_button_open_off)
         self.button_image_eject_on = PhotoImage(data=img_button_eject_on)
         self.button_image_eject_off = PhotoImage(data=img_button_eject_off)
+        self.button_image_open_clicked = PhotoImage(data=img_button_open_clicked)
+        self.button_image_insert_clicked = PhotoImage(data=img_button_insert_clicked)
+        self.button_image_eject_clicked = PhotoImage(data=img_button_eject_clicked)
         self.button_eject = Button(self, image=self.button_image_eject_off,
                                    borderwidth=0, highlightthickness=0,
                                    command=self.Cmd_btn_eject,
@@ -301,6 +307,8 @@ class PageProcessInit(Frame):
 
     def update_status(self):
         if self.process_status == 0:
+            # no cartridge, door is closed
+
             # update status image
             self.canvas.itemconfig(self.image_state, image = self.image_state_not_started)
 
@@ -315,10 +323,12 @@ class PageProcessInit(Frame):
             self.canvas.itemconfig(self.id_processtime, text="")
 
             # update btn image
-            self.button_insert['image']=self.button_image_insert_on
-            self.button_eject['image']=self.button_image_eject_off
-            self.button_insert['command']=self.Cmd_btn_insert
-            self.button_eject['command']=0
+            self.button_insert['image']=self.button_image_insert_off
+            self.button_eject['image']=self.button_image_open_on
+            #self.button_insert['command']=self.Cmd_btn_insert
+            #self.button_eject['command']=0
+            self.button_insert['command']=0
+            self.button_eject['command']=self.Cmd_btn_eject
 
             # update edit/play/stop image
             self.button_edit['image']=self.button_image_edit_out
@@ -326,6 +336,8 @@ class PageProcessInit(Frame):
             self.button_stop['image']=self.button_image_stop_out
 
         elif self.process_status == 1:
+            # pcr completed, door closed, cartridge is inserted
+
             self.canvas.itemconfig(self.image_state, image = self.image_state_completed)
 
             # update frame color
@@ -350,6 +362,8 @@ class PageProcessInit(Frame):
             self.button_stop['image']=self.button_image_stop_out
 
         elif self.process_status == -1:
+            # pcr error, door closed, cartridge is inserted
+
             self.canvas.itemconfig(self.image_state, image = self.image_state_aborted)
 
             # update frame color
@@ -374,7 +388,7 @@ class PageProcessInit(Frame):
             self.button_stop['image']=self.button_image_stop_on
 
         elif self.process_status == 2:
-            # inserted but not process yet
+            # door closed, inserted but not process yet
             self.canvas.itemconfig(self.image_state, image = self.image_state_inserted)
 
             # update frame color
@@ -398,11 +412,38 @@ class PageProcessInit(Frame):
             self.button_play['image']=self.button_image_play_off
             self.button_stop['image']=self.button_image_stop_out
 
+        elif self.process_status == 3:
+            # door opened, waiting for inserting
+            # update status image
+            self.canvas.itemconfig(self.image_state, image = self.image_state_not_started)
+
+            # update frame color
+            self.canvas.itemconfig(self.frame_cartridgeID, fill="#EBEBEB")
+            self.canvas.itemconfig(self.frame_testname, fill="#EBEBEB")
+            self.canvas.itemconfig(self.frame_processtime, fill="#EBEBEB")
+
+            # empty text values
+            self.canvas.itemconfig(self.id_cartridgeID, text=self.str_cartridgeID.get())
+            self.canvas.itemconfig(self.id_testname, text=self.str_testname.get())
+            self.canvas.itemconfig(self.id_processtime, text="")
+
+            # update btn image
+            self.button_insert['image']=self.button_image_insert_on
+            self.button_eject['image']=self.button_image_open_off
+            self.button_insert['command']=self.Cmd_btn_insert
+            self.button_eject['command']=0
+            
+            # update edit/play/stop image
+            self.button_edit['image']=self.button_image_edit_out
+            self.button_play['image']=self.button_image_play_out
+            self.button_stop['image']=self.button_image_stop_out
+
 
     # btn insert cartridge
     def Cmd_btn_insert(self):
         # open cartridge
         print("Process Status = %d" % self.process_status)
+        '''
         if self.process_status == 0:
             # door closed, not started, no cartridge
             # open door
@@ -411,20 +452,22 @@ class PageProcessInit(Frame):
             else:
                 self.process_status = 3
             return
-
-        elif self.process_status == 3:
+        '''
+        if self.process_status == 3:
 
             ret = self.btpcb.insertCart()
             if ret == True:
                 print("Cartridge Inserted")
                 self.process_status = 2
-            elif ret != False:
+            elif ret == "NO_CARTRIDGE_INSERTED":         # 20240422 TODO
                 print("Error: insert cartridge failed, closed directly")
                 self.process_status = 0
+                self.update_status()
                 return
             else:
                 print("Error: close door error....")
                 self.process_status = -1
+                self.update_status()
                 return
 
         # read QR code to get id and test name
@@ -478,7 +521,7 @@ class PageProcessInit(Frame):
         if self.btpcb.ejectCart() != True:
             print("Error: eject cartridge failed")
             return
-        ret = self.btpcb.forceCloseCart()
+        #ret = self.btpcb.forceCloseCart()
 
         # empty id and test name
         self.str_cartridgeID.set("")
@@ -487,7 +530,7 @@ class PageProcessInit(Frame):
 
         self.str_processtime.set("")
 
-        self.process_status = 0
+        self.process_status = 3
         self.update_status()
         return
 

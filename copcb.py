@@ -604,6 +604,9 @@ class ModuleBT(COPcbConnector):
         else:
             # force insert
             ret = self.forceCloseCart()
+            #return ret
+            if ret == True:
+                return "NO_CARTRIDGE_INSERTED"
             return ret
 
     def ejectCart(self, timeout = 60):
