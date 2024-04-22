@@ -269,6 +269,7 @@ class ModuleBT(COPcbConnector):
             if difftime >= timeout:
                 #self.ser.write(self.stop_package)
                 ret_string = self.err_timeout
+                print("noewtime = %f, difftime = %f, timeout = %d" %(nowtime, difftime, timeout))
                 needReturn = 1
 
             if self.ser.in_waiting > len(self.func_OK_package):
@@ -295,6 +296,9 @@ class ModuleBT(COPcbConnector):
 
 
             time.sleep(0.1)
+
+        print(ret_string)
+        print(ret_string.strip())
 
         return ret_string.strip()
 
@@ -339,7 +343,7 @@ class ModuleBT(COPcbConnector):
     # 1: cartridge rotation
     def rotateCart(self, timeout = 10, pos = 0):
         if pos == 0:
-            ret = self.sendCmd(timeout, b'1,1,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'1,1,%d,0\n' % (timeout*1000))
             print("Rotate Cartridge to zero position....")
         else:
             ret = self.sendCmd(timeout, b'1,2,%d,0\n' % pos)
@@ -347,70 +351,70 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 2: cup driver
-    def moveCDriver(self, timeout = 3, back = True):
+    def moveCDriver(self, timeout = 10, back = True):
         if back == True:
-            ret = self.sendCmd(timeout, b'2,1,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'2,1,%d,0\n' % (timeout*1000))
             print("Move cup driver backward....")
         else:
-            ret = self.sendCmd(timeout, b'2,2,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'2,2,%d,0\n' % (timeout*1000))
             print("Move cup driver forward....")
         return self.checkOK(ret)
 
 
     # 3: rocker arm
-    def moveRArm(self, timeout = 5, release = True):
+    def moveRArm(self, timeout = 10, release = True):
         if release == True:
-            ret = self.sendCmd(timeout, b'3,1,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'3,1,%d,0\n' % (timeout*1000))
             print("Release rocker arm....")
         else:
-            ret = self.sendCmd(timeout, b'3,2,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'3,2,%d,0\n' % (timeout*1000))
             print("Contact rocker arm....")
         return self.checkOK(ret)
 
     # 4: optical position
     def moveOPos(self, timeout = 5, up = True):
         if up == True:
-            ret = self.sendCmd(timeout, b'4,1,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'4,1,%d,0\n' % (timeout*1000))
             print("Move optical position up....")
         else:
-            ret = self.sendCmd(timeout, b'4,2,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'4,2,%d,0\n' % (timeout*1000))
             print("Move optical position down....")
         return self.checkOK(ret)
 
 
     # 5: reverses motor
     # 6: door
-    def openDoor(self, timeout = 1):
-        ret = self.sendCmd(timeout, b'6,1,%d,0\n' % timeout*1000)
+    def openDoor(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'6,1,%d,0\n' % (timeout*1000))
         print("Open door....")
         return self.checkOK(ret)
-    def closeDoor(self, timeout = 1):
-        ret = self.sendCmd(timeout, b'6,2,%d,0\n' % timeout*1000)
+    def closeDoor(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'6,2,%d,0\n' % (timeout*1000))
         print("Close door....")
         return self.checkOK(ret)
 
     # 7: Cartridge Roller
     def moveCartRoller(self, timeout = 6, back = True):
         if back == True:
-            ret = self.sendCmd(timeout, b'7,1,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'7,1,%d,0\n' % (timeout*1000))
             print("Move cartridge roller backward....")
         else:
-            ret = self.sendCmd(timeout, b'7,2,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'7,2,%d,0\n' % (timeout*1000))
             print("Move cartridge roller forward....")
         return self.checkOK(ret)
 
 
     # 8: vertical position
     def moveVertPosTop(self, timeout = 36):
-        ret = self.sendCmd(timeout, b'8,1,%d,0\n' % timeout*1000)
+        ret = self.sendCmd(timeout, b'8,1,%d,0\n' % (timeout*1000))
         print("move vertical position to TOP")
         return self.checkOK(ret)
     def moveVertPosMid(self, timeout = 18):
-        ret = self.sendCmd(timeout, b'8,2,%d,0\n' % timeout*1000)
+        ret = self.sendCmd(timeout, b'8,2,%d,0\n' % (timeout*1000))
         print("move vertical position to MID")
         return self.checkOK(ret)
     def moveVertPosBtm(self, timeout = 36):
-        ret = self.sendCmd(timeout, b'8,3,%d,0\n' % timeout*1000)
+        ret = self.sendCmd(timeout, b'8,3,%d,0\n' % (timeout*1000))
         print("move vertical position to BTM")
         return self.checkOK(ret)
 
@@ -418,11 +422,11 @@ class ModuleBT(COPcbConnector):
     def startBLDCMotor(self, timeout = 5, clockwise = True):
         if clockwise == True:
             # clockwise
-            ret = self.sendCmd(timeout, b'9,1,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'9,1,%d,0\n' % (timeout*1000))
             print("turn on BLDC Motor: clockwise....")
         else:
             # counter clockwise
-            ret = self.sendCmd(timeout, b'9,2,%d,0\n' % timeout*1000)
+            ret = self.sendCmd(timeout, b'9,2,%d,0\n' % (timeout*1000))
             print("turn on BLDC Motor: counter clockwise....")
         return self.checkOK(ret)
 
@@ -598,11 +602,13 @@ class ModuleBT(COPcbConnector):
 
     # 20 combo cmd
     def insertCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,2,%d,0\n' % timeout*1000)
+        ret = self.sendCmd(timeout, b'20,2,%d,0\n' % (timeout*1000))
         if self.checkOK(ret) == True:
+            print("insert ok")
             return True
         else:
             # force insert
+            print("insert error, forceCloseCart")
             ret = self.forceCloseCart()
             #return ret
             if ret == True:
@@ -610,13 +616,19 @@ class ModuleBT(COPcbConnector):
             return ret
 
     def ejectCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,1,%d,0\n' % timeout*1000)
+        ret = self.sendCmd(timeout, b'20,1,%d,0\n' % (timeout*1000))
         return self.checkOK(ret)
 
     def forceCloseCart(self, timeout = 4):
+        print("moveCDriver")
         ret1 = self.moveCDriver()
+        #time.sleep(5)
+        print(ret1)
         if ret1 == True:
+            print("closeDoor")
             ret2 = self.closeDoor()
+            print(ret2)
+            #time.sleep(1)
             return ret2
         return ret1
 
@@ -955,11 +967,11 @@ class ModuleBTMock(COPcbConnector):
 
     # 5: reverses motor
     # 6: door
-    def openDoor(self, timeout = 1):
+    def openDoor(self, timeout = 5):
         ret = self.sendCmd(timeout, b'6,1,1000,0\n')
         print("Open door....")
         return self.checkOK(ret)
-    def closeDoor(self, timeout = 1):
+    def closeDoor(self, timeout = 5):
         ret = self.sendCmd(timeout, b'6,2,1000,0\n')
         print("Close door....")
         return self.checkOK(ret)
@@ -1173,24 +1185,30 @@ class ModuleBTMock(COPcbConnector):
 
     # 20 combo cmd
     def insertCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,2,60000,0\n')
+        ret = self.sendCmd(timeout, b'20,2,%d,0\n' % (timeout*1000))
         if self.checkOK(ret) == True:
+            print("insert ok")
             return True
         else:
             # force insert
+            print("insert error, forceCloseCart")
             ret = self.forceCloseCart()
             return ret
 
     def ejectCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,1,60000,0\n')
+        ret = self.sendCmd(timeout, b'20,1,%d,0\n' % (timeout*1000))
         return self.checkOK(ret)
 
     def forceCloseCart(self, timeout = 4):
+        print("moveCDriver")
         ret1 = self.moveCDriver()
-        time.sleep(3)
-        if ret1 == '1':
+        #time.sleep(5)
+        print(ret1)
+        if ret1 == True:
+            print("closeDoor")
             ret2 = self.closeDoor()
-            time.sleep(1)
+            print(ret2)
+            #time.sleep(1)
             return ret2
         return ret1
 

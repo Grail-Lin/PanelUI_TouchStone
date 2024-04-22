@@ -455,7 +455,7 @@ class PageProcessInit(Frame):
         '''
         if self.process_status == 3:
 
-            ret = self.btpcb.insertCart()
+            ret = self.btpcb.insertCart(timeout=20)
             if ret == True:
                 print("Cartridge Inserted")
                 self.process_status = 2
