@@ -15,7 +15,8 @@ root.geometry("500x300+10+10")
 root.resizable(width = True, height = True)
 
 # Variable type Image 'tick'
-tick = PhotoImage(file='tick.png')
+tick = PhotoImage(file='assets/frame_process/button_open_on.png')
+tick_clicked = PhotoImage(file='assets/frame_process/button_open_clicked.png')
 
 def acceptClicked():
     answer = messagebox.showinfo(message='Your answer was accepted!')
@@ -26,5 +27,10 @@ OneP.grid(row=1,column=0)
 
 accept = Button(root, image=tick, bg="white", borderwidth=0, command=acceptClicked)
 accept.grid(row=2,column=0)
+
+accept.bind("<Button-1>", lambda click: accept.configure(image=tick_clicked))
+accept.bind("<ButtonRelease-1>", lambda release: accept.configure(image=tick))
+
+
 
 root.mainloop()

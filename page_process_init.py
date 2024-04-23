@@ -71,8 +71,8 @@ class PageProcessInit(Frame):
         self.qrcr.initPCB()
 
         # init BT PCB
-        #self.btpcb = copcb.ModuleBTMock()
-        self.btpcb = copcb.ModuleBT()
+        self.btpcb = copcb.ModuleBTMock()
+        #self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
         # TODO: 2024/02/21 init PCB Steps
@@ -269,7 +269,7 @@ class PageProcessInit(Frame):
         self.button_insert = Button(self, image=self.button_image_insert_on,
                                     borderwidth=0, highlightthickness=0,
                                     command=self.Cmd_btn_insert,
-                                    relief="flat", activebackground="black")
+                                    relief="flat") #, activebackground="black")
         self.button_insert.place(
             x=515.0, y=423.0, width=315.0, height=86.0)
 
@@ -283,7 +283,7 @@ class PageProcessInit(Frame):
         self.button_eject = Button(self, image=self.button_image_eject_off,
                                    borderwidth=0, highlightthickness=0,
                                    command=self.Cmd_btn_eject,
-                                   relief="flat", activebackground="black")
+                                   relief="flat") #, activebackground="black")
         self.button_eject.place(x=148.0, y=423.0, width=315.0, height=86.0)
 
         self.canvas.create_text(
@@ -304,6 +304,14 @@ class PageProcessInit(Frame):
         # logo
         self.img_co_logo = PhotoImage(data = img_co_logo)
         self.canvas.create_image(964.0, 549.0, image=self.img_co_logo)
+
+        # bind clicked event
+        #accept.bind("<Button-1>", lambda click: accept.configure(image=tick_clicked))
+        #accept.bind("<ButtonRelease-1>", lambda release: accept.configure(image=tick))
+        self.button_insert.bind("<Button-1>", self.Click_btn_insert)
+        self.button_insert.bind("<ButtonRelease-1>", self.Release_btn_insert)
+        self.button_eject.bind("<Button-1>", self.Click_btn_eject)
+        self.button_eject.bind("<ButtonRelease-1>", self.Release_btn_eject)
 
     def update_status(self):
         if self.process_status == 0:
@@ -533,6 +541,28 @@ class PageProcessInit(Frame):
         self.process_status = 3
         self.update_status()
         return
+
+    def Click_btn_insert(self, event):
+        if self.process_status == 3:
+            self.button_insert.configure(image=self.button_image_insert_clicked)
+        return
+    def Release_btn_insert(self, event):
+        if self.process_status == 3:
+            self.button_insert.configure(image=self.button_image_insert_on)
+        return
+    def Click_btn_eject(self, event):
+        if self.process_status == 0:
+            self.button_eject.configure(image=self.button_image_open_clicked)
+        elif self.process_status != 3:
+            self.button_eject.configure(image=self.button_image_eject_clicked)
+        return
+    def Release_btn_eject(self, event):
+        if self.process_status == 0:
+            self.button_eject.configure(image=self.button_image_open_on)
+        elif self.process_status != 3:
+            self.button_eject.configure(image=self.button_image_eject_on)
+        return
+
 
     def Cmd_btn_home(self):
         self.controller.show_frame(page_home.PageHome)
