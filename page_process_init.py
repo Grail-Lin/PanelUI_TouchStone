@@ -621,6 +621,14 @@ class PageProcessInit(Frame):
             self.steps_preextract.append(803)
             self.paras_preextract.append((18))
 
+            # 803
+            self.steps_extract.append(803)
+            self.paras_extract.append((18))
+
+            # 901, cw 12000rpm, 3m
+            self.steps_extract.append(901)
+            self.paras_extract.append((1, True))
+
         return
 
         # pre-processing

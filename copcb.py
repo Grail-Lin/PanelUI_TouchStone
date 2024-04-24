@@ -910,8 +910,14 @@ class ModuleBTMock(COPcbConnector):
         return
 
     def sendCmd(self, timeout, cmd_str):
-        print("Log: Mock, sendCmd = %s" % cmd_str)
-        return "0,0,0,1"
+        print("Log: Mock, timeout = %d, sendCmd = %s" % (timeout, str(cmd_str)))
+
+        cmd_array = cmd_str.decode("utf-8").strip().split(',')
+
+        ret_string = "%s,%s,%s,1" % (cmd_array[0], cmd_array[1], cmd_array[2])
+        print("Log: Mock, ret_string = %s" % (ret_string))
+        time.sleep(timeout)
+        return ret_string
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
