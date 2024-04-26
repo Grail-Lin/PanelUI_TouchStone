@@ -610,13 +610,13 @@ class PageProcessInit(Frame):
         '''
         if 1:
             self.steps_preextract.append(903)
-            self.paras_preextract.append((180, 6000))
+            self.paras_preextract.append((10, 6000))
 
             self.steps_preextract.append(803)
             self.paras_preextract.append((18))
 
             self.steps_preextract.append(903)
-            self.paras_preextract.append((180, 6000))
+            self.paras_preextract.append((10, 6000))
 
             self.steps_preextract.append(803)
             self.paras_preextract.append((18))

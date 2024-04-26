@@ -27,6 +27,8 @@ class PCBStep:
         
 
     def doFunc(self):
+        print("=== pcb_id = %d" % self.pcb_id)
+
         # use pcb_id to do target method
         if self.pcb_id == 0:
             ret = self.pcb.doFunc(10)
@@ -62,6 +64,7 @@ class PCBStep:
             # need to wait for count time?
             if self.wait_time == None:
                 self.wait_time = time.time() + self.para_array[0]
+                print("wait_time = %f" % self.wait_time)
         # 1001: turnOnVacAirPump
         elif self.pcb_id == 1001:
             ret = self.pcb.turnOnVacAirPump(self.para_array)

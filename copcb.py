@@ -916,7 +916,7 @@ class ModuleBTMock(COPcbConnector):
 
         ret_string = "%s,%s,%s,1" % (cmd_array[0], cmd_array[1], cmd_array[2])
         print("Log: Mock, ret_string = %s" % (ret_string))
-        time.sleep(timeout)
+        time.sleep(3)
         return ret_string
 
     # device functions, TODO: error handling

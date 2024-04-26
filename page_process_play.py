@@ -347,21 +347,25 @@ class PageProcessPlay(Frame):
         #     perform check system temperature
         # if yes, go to finish report
 
-        
+        print("==== cur_step_num = %d ====" % self.cur_step_num)
+		
         if self.cur_step_num == 0:
             todo_step = self.step_array[self.cur_step_num]
             todo_step.doFunc()
             self.cur_step_num += 1
         
         elif len(self.step_array) > self.cur_step_num:
+            print("==== step_array(%d) > cur_step_num(%d) ====" % (len(self.step_array), self.cur_step_num))
             if self.step_array[self.cur_step_num-1].wait_time != None:
                 print("step_array[%d].wait_time = %d" % (self.cur_step_num-1, self.step_array[self.cur_step_num-1].wait_time))
                 if time.time() >= self.step_array[self.cur_step_num-1].wait_time:
+                    print("time.time() > wait_time, time.time() = %f" % time.time())
                     # do current step
                     todo_step = self.step_array[self.cur_step_num]
                     todo_step.doFunc()
                     self.cur_step_num += 1
                 else:
+                    print("step_array[%d].wait_time = %d" % (self.cur_step_num-1, self.step_array[self.cur_step_num-1].wait_time))
                     # check if repeat
                     # do current-1 step
                     todo_step = self.step_array[self.cur_step_num-1]
@@ -375,53 +379,9 @@ class PageProcessPlay(Frame):
                 todo_step = self.step_array[self.cur_step_num]
                 todo_step.doFunc()
                 self.cur_step_num += 1
-
-
-        '''
-        if len(self.step_array) > self.cur_step_num:
-            self.step_array[self.cur_step_num].rtime -= 1
-            self.cur_step_ctime += 1
-            if self.step_array[self.cur_step_num].rtime <= 0:
-                # check if need to do next step
-                # *todo* use multi thread to 
-
-                self.step_array[self.cur_step_num].doFunc()
-                print("cur_step_num: " + str(self.cur_step_num))
-                self.cur_step_ctime = 0
-                if self.step_array[self.cur_step_num].rtime <= 0:
-                    # next step
-                    if self.cur_step_num == 0:
-                        self.canvas.itemconfigure(self.text_preext, text="1 / 2 STEPS")
-                    elif self.cur_step_num == 1:
-                        self.canvas.itemconfigure(self.text_preext, text="2 / 2 STEPS")
-                    elif self.cur_step_num == 2:
-                        self.canvas.itemconfigure(self.text_ext, text="1 / 8 STEPS")
-                    elif self.cur_step_num == 3:
-                        self.canvas.itemconfigure(self.text_ext, text="2 / 8 STEPS")
-                    elif self.cur_step_num == 4:
-                        self.canvas.itemconfigure(self.text_ext, text="3 / 8 STEPS")
-                    elif self.cur_step_num == 5:
-                        self.canvas.itemconfigure(self.text_ext, text="4 / 8 STEPS")
-                    elif self.cur_step_num == 6:
-                        self.canvas.itemconfigure(self.text_ext, text="5 / 8 STEPS")
-                    elif self.cur_step_num == 7:
-                        self.canvas.itemconfigure(self.text_ext, text="6 / 8 STEPS")
-                    elif self.cur_step_num == 8:
-                        self.canvas.itemconfigure(self.text_ext, text="7 / 8 STEPS")
-                    elif self.cur_step_num == 9:
-                        self.canvas.itemconfigure(self.text_ext, text="8 / 8 STEPS")
-
-                    self.cur_step_num += 1
-                    if len(self.step_array) > self.cur_step_num:
-                        self.step_array[self.cur_step_num].doFunc()
-                        self.cur_step_ctime = 0
-                    else: # no more step
-                        self.finish_all()
-            elif self.cur_step_ctime == 5:
-                # check status
-                self.step_array[self.cur_step_num].doFunc()
-                self.cur_step_ctime = 0
-        '''
+        else:
+            # finish processing
+            # generate results
         # update STEPS
 
         if self.cur_step_num > (self.len_preextract+self.len_extract):
