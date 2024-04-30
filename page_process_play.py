@@ -15,7 +15,7 @@ from circle_bar import CircularProgressbar
 
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
 from copic import img_button_stop_off, img_button_edit_out, img_button_play_on
-import page_result_chart
+import page_result_chart, page_process_init
 
 # PCB module
 import copcb
@@ -369,6 +369,7 @@ class PageProcessPlay(Frame):
                     # check if repeat
                     # do current-1 step
                     todo_step = self.step_array[self.cur_step_num-1]
+                    todo_step.rtime -= 1
                     if todo_step.repeat == 1:
                         todo_step.doFunc()
                     
@@ -382,6 +383,11 @@ class PageProcessPlay(Frame):
         else:
             # finish processing
             # generate results
+            self.canvas.after_cancel(self.play_after)
+            self.controller.frames[page_process_init.PageProcessInit].process_status = 1
+            self.controller.frames[page_process_init.PageProcessInit].update_status()
+            self.controller.show_frame(page_process_init.PageProcessInit)
+            return
         # update STEPS
 
         if self.cur_step_num > (self.len_preextract+self.len_extract):
@@ -409,21 +415,21 @@ class PageProcessPlay(Frame):
         total_time = self.preextract_bar.total_time
         for ss in self.step_array[number_1:self.len_preextract]:
             rtime += ss.rtime
-        print("rtime for preextract bar = %d" % rtime)
+        print("array number = %d:%d, rtime for preextract bar = %d" % (number_1, self.len_preextract, rtime))
         self.preextract_bar.reset(total_time, total_time - rtime)
 
         rtime = 0
         total_time = self.extract_bar.total_time
-        for ss in self.step_array[self.len_preextract+self.len_extract-number_2:self.len_preextract+self.len_extract]:
+        for ss in self.step_array[self.len_preextract+number_2:self.len_preextract+self.len_extract]:
             rtime += ss.rtime
-        print("rtime for extract bar = %d" % rtime)
+        print("array number = %d:%d, rtime for extract bar = %d" % (self.len_preextract+number_2, self.len_preextract+self.len_extract, rtime))
         self.extract_bar.reset(total_time, total_time - rtime)
 
         rtime = 0
         total_time = self.qpcr_bar.total_time
-        for ss in self.step_array[-self.len_qpcr+number_3:]:
+        for ss in self.step_array[self.len_preextract+self.len_extract+number_3:]:
             rtime += ss.rtime
-        print("rtime for qpcr bar = %d" % rtime)
+        print("array number = %d:, rtime for qpcr bar = %d" % (self.len_preextract+self.len_extract+number_3, rtime))
         self.qpcr_bar.reset(total_time, total_time - rtime)
 
         """Increment extent and update arc and label displaying how much completed."""
@@ -453,6 +459,9 @@ class PageProcessPlay(Frame):
         self.len_extract = len(steps_extract)
         self.len_qpcr = len(steps_qpcr)
 
+        print("step len of preextract: %d" % self.len_preextract)
+        print("step len of extract: %d" % self.len_extract)
+        print("step len of qpcr: %d" % self.len_qpcr)
 
         # parsing preextract
         for ii in range(self.len_preextract):
