@@ -680,7 +680,7 @@ class ModuleBT(COPcbConnector):
                 pid_p1.SetPoint = p1_target_temp
                 #pid_p1.setSampleTime(0.01)
                 pid_p1.update(temp_h)
-                targetPwm = pid_1.output        
+                targetPwm = pid_p1.output        
                 targetPwm = max(min( targetPwm, 100.0 ), 0.0)
                 targetPwm = targetPwm / 100.0
                 print("phase 1, targetPwm = %f" % targetPwm)
@@ -710,7 +710,7 @@ class ModuleBT(COPcbConnector):
         # get temp from plate (TEC Cold)
         # todo: calculate PID for pwm/pwm
         pid_p2.update(temp_s1)
-        targetPwm = pid_2.output        
+        targetPwm = pid_p2.output        
         targetPwm = max(min( targetPwm, 100.0 ), 0.0)
         targetPwm = targetPwm / 100.0
         print("targetPwm = %f" % targetPwm)
@@ -788,7 +788,7 @@ class ModuleBT(COPcbConnector):
         #return self.checkOK(ret)
         return float(ret.split(',')[-1])
 
-    def readTemp_spec(self, timeout = 20)
+    def readTemp_spec(self, timeout = 20):
         temp_s1 = self.measureSample1()
         temp_s2 = self.measureSample2()
         temp_h = self.measureTECcold()
@@ -821,7 +821,7 @@ class ModuleBT(COPcbConnector):
                 pid_p1.SetPoint = p1_target_temp
                 #pid_p1.setSampleTime(0.01)
                 pid_p1.update(temp_h)
-                targetPwm = pid_1.output        
+                targetPwm = pid_p1.output        
                 targetPwm = max(min( targetPwm, 100.0 ), 0.0)
                 targetPwm = targetPwm / 100.0
                 print("phase 1, targetPwm = %f" % targetPwm)
@@ -851,7 +851,7 @@ class ModuleBT(COPcbConnector):
         # get temp from plate (TEC Cold)
         # todo: calculate PID for pwm/pwm
         pid_p2.update(temp_s1)
-        targetPwm = pid_2.output        
+        targetPwm = pid_p2.output        
         targetPwm = max(min( targetPwm, 100.0 ), 0.0)
         targetPwm = targetPwm / 100.0
         print("targetPwm = %f" % targetPwm)
