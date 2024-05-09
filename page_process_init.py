@@ -20,11 +20,12 @@ import page_confirm_start
 
 
 from copic import img_button_play_out, img_button_edit_out, img_button_stop_out
-from copic import img_button_play_off, img_button_edit_off, img_button_stop_off
+from copic import img_button_play_off, img_button_edit_off, img_button_stop_off, img_button_stop_on
 from copic import img_button_process_on, img_button_home_off, img_button_result_off, img_button_setting_off
 from copic import img_button_insert_on, img_button_insert_off, img_button_insert_clicked
 from copic import img_button_eject_on, img_button_eject_off, img_button_eject_clicked
 from copic import img_button_open_on, img_button_open_off, img_button_open_clicked
+from copic import img_button_close_on, img_button_close_off, img_button_close_clicked
 from copic import img_state_aborted, img_state_completed, img_state_not_started_2, img_co_logo, img_state_inserted
 
 import copcb
@@ -106,6 +107,7 @@ class PageProcessInit(Frame):
         self.button_image_play_out = PhotoImage(data=img_button_play_out)
         self.button_image_edit_out = PhotoImage(data=img_button_edit_out)
         self.button_image_stop_out = PhotoImage(data=img_button_stop_out)
+        self.button_image_stop_on = PhotoImage(data=img_button_stop_on)
 
         self.canvas.create_rectangle(120.0, 0.0, 904.0, 600.0, fill="#F9F9F9", outline="")
 
@@ -280,6 +282,12 @@ class PageProcessInit(Frame):
         self.button_image_open_clicked = PhotoImage(data=img_button_open_clicked)
         self.button_image_insert_clicked = PhotoImage(data=img_button_insert_clicked)
         self.button_image_eject_clicked = PhotoImage(data=img_button_eject_clicked)
+
+        self.button_image_close_on = PhotoImage(data=img_button_close_on)
+        self.button_image_close_off = PhotoImage(data=img_button_close_off)
+        self.button_image_close_clicked = PhotoImage(data=img_button_close_clicked)
+
+
         self.button_eject = Button(self, image=self.button_image_eject_off,
                                    borderwidth=0, highlightthickness=0,
                                    command=self.Cmd_btn_eject,
@@ -437,9 +445,9 @@ class PageProcessInit(Frame):
 
             # update btn image
             self.button_insert['image']=self.button_image_insert_on
-            self.button_eject['image']=self.button_image_open_off
+            self.button_eject['image']=self.button_image_close_on
             self.button_insert['command']=self.Cmd_btn_insert
-            self.button_eject['command']=0
+            self.button_eject['command']=self.Cmd_btn_eject
             
             # update edit/play/stop image
             self.button_edit['image']=self.button_image_edit_out
@@ -493,6 +501,9 @@ class PageProcessInit(Frame):
         temp_string = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(10)) + " Test"
         self.str_testname.set(temp_string)
 
+        # 20240502, rotate cartridge to fit the teeth
+        self.btpcb.rotateCart(timeout = 10, pos = 30)
+        self.btpcb.rotateCart(timeout = 10, pos = 0)
 
         # init all step setting
         self.init_process_steps()
@@ -524,8 +535,17 @@ class PageProcessInit(Frame):
         return
     # btn eject cartridge
     def Cmd_btn_eject(self):
-        # open cartridge
-        
+        # close door, if process_status == 3
+        if self.process_status == 3:
+            if self.btpcb.forceCloseCart() != True:
+                print("Error: close door failed")
+                return
+            self.process_status = 0
+            self.update_status()
+            return
+
+        #else:
+        # open door        
         if self.btpcb.ejectCart() != True:
             print("Error: eject cartridge failed")
             return

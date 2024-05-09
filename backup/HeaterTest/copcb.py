@@ -103,6 +103,7 @@ class COPcbConnector:  # BT' baud = 9600
     def sendCmd(self, timeout, cmd_str):
         # check if initialized
         if self.state < 1:
+            print("Log: the state < 1, error due to uninit")
             return self.err_uninit
         
         # flush the reading data
@@ -137,6 +138,7 @@ class COPcbConnector:  # BT' baud = 9600
         else:
             ret_string = self.err_decode_fail
         return ret_string.strip()
+
 
     # need to inplement in child class
     #def decode(self, ret_string):
@@ -245,15 +247,69 @@ class ModuleBT(COPcbConnector):
         # send start cmd
         print("CMD String: %s" % str(cmd_str))
         self.ser.write(cmd_str)
+        cmd_array = cmd_str.decode("utf-8").strip().split(',')
+
         time.sleep(0.1)
         nowtime = time.time()
 
+
+        '''
+            loop until return == 1
+                check in_waiting
+                read in_waiting
+                if ,0 continue
+                else return = 1
+
+                if timeout, return
+        '''
+        needReturn = 0
+        while needReturn == 0:
+
+            difftime = time.time() - nowtime
+            if difftime >= timeout:
+                #self.ser.write(self.stop_package)
+                ret_string = self.err_timeout
+                print("noewtime = %f, difftime = %f, timeout = %d" %(nowtime, difftime, timeout))
+                needReturn = 1
+
+            if self.ser.in_waiting > len(self.func_OK_package):
+                data = self.ser.read_all()
+
+                if (data[0:len(self.func_OK_package)] == self.func_OK_package):
+                    try:
+                        ret_string = data[len(self.func_OK_package):].decode("utf-8")
+                        ret_array = ret_string.strip().split(',')
+
+                        if len(ret_array) == 4:
+                            if ret_array[0] == cmd_array[0] and ret_array[1] == cmd_array[1]:
+                                if ret_array[3] != '0':
+                                    needReturn = 1
+                        else:
+                            needReturn = 1
+                        
+                    except:
+                        ret_string = self.err_decode_fail
+                        needReturn = 1
+                else:
+                    ret_string = self.err_func_fail
+                    needReturn = 1
+
+
+            time.sleep(0.1)
+
+        print(ret_string)
+        print(ret_string.strip())
+
+        return ret_string.strip()
+
+        '''
         while self.ser.in_waiting <= len(self.func_OK_package):
             time.sleep(0.1)
             difftime = time.time() - nowtime
             if difftime >= timeout:
                 self.ser.write(self.stop_package)
                 return self.err_timeout
+
 
         if self.ser.in_waiting > len(self.func_OK_package):
             data = self.ser.read_all()
@@ -269,6 +325,10 @@ class ModuleBT(COPcbConnector):
         else:
             ret_string = self.err_decode_fail
         return ret_string.strip()
+        '''
+
+
+
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
@@ -283,7 +343,7 @@ class ModuleBT(COPcbConnector):
     # 1: cartridge rotation
     def rotateCart(self, timeout = 10, pos = 0):
         if pos == 0:
-            ret = self.sendCmd(timeout, b'1,1,10000,0\n')
+            ret = self.sendCmd(timeout, b'1,1,%d,0\n' % (timeout*1000))
             print("Rotate Cartridge to zero position....")
         else:
             ret = self.sendCmd(timeout, b'1,2,%d,0\n' % pos)
@@ -291,70 +351,70 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 2: cup driver
-    def moveCDriver(self, timeout = 3, back = True):
+    def moveCDriver(self, timeout = 10, back = True):
         if back == True:
-            ret = self.sendCmd(timeout, b'2,1,3000,0\n')
+            ret = self.sendCmd(timeout, b'2,1,%d,0\n' % (timeout*1000))
             print("Move cup driver backward....")
         else:
-            ret = self.sendCmd(timeout, b'2,2,3000,0\n')
+            ret = self.sendCmd(timeout, b'2,2,%d,0\n' % (timeout*1000))
             print("Move cup driver forward....")
         return self.checkOK(ret)
 
 
     # 3: rocker arm
-    def moveRArm(self, timeout = 5, release = True):
+    def moveRArm(self, timeout = 10, release = True):
         if release == True:
-            ret = self.sendCmd(timeout, b'3,1,2000,0\n')
+            ret = self.sendCmd(timeout, b'3,1,%d,0\n' % (timeout*1000))
             print("Release rocker arm....")
         else:
-            ret = self.sendCmd(timeout, b'3,2,2000,0\n')
+            ret = self.sendCmd(timeout, b'3,2,%d,0\n' % (timeout*1000))
             print("Contact rocker arm....")
         return self.checkOK(ret)
 
     # 4: optical position
     def moveOPos(self, timeout = 5, up = True):
         if up == True:
-            ret = self.sendCmd(timeout, b'4,1,2000,0\n')
+            ret = self.sendCmd(timeout, b'4,1,%d,0\n' % (timeout*1000))
             print("Move optical position up....")
         else:
-            ret = self.sendCmd(timeout, b'4,2,2000,0\n')
+            ret = self.sendCmd(timeout, b'4,2,%d,0\n' % (timeout*1000))
             print("Move optical position down....")
         return self.checkOK(ret)
 
 
     # 5: reverses motor
     # 6: door
-    def openDoor(self, timeout = 1):
-        ret = self.sendCmd(timeout, b'6,1,1000,0\n')
+    def openDoor(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'6,1,%d,0\n' % (timeout*1000))
         print("Open door....")
         return self.checkOK(ret)
-    def closeDoor(self, timeout = 1):
-        ret = self.sendCmd(timeout, b'6,2,1000,0\n')
+    def closeDoor(self, timeout = 5):
+        ret = self.sendCmd(timeout, b'6,2,%d,0\n' % (timeout*1000))
         print("Close door....")
         return self.checkOK(ret)
 
     # 7: Cartridge Roller
     def moveCartRoller(self, timeout = 6, back = True):
         if back == True:
-            ret = self.sendCmd(timeout, b'7,1,6000,0\n')
+            ret = self.sendCmd(timeout, b'7,1,%d,0\n' % (timeout*1000))
             print("Move cartridge roller backward....")
         else:
-            ret = self.sendCmd(timeout, b'7,2,6000,0\n')
+            ret = self.sendCmd(timeout, b'7,2,%d,0\n' % (timeout*1000))
             print("Move cartridge roller forward....")
         return self.checkOK(ret)
 
 
     # 8: vertical position
     def moveVertPosTop(self, timeout = 36):
-        ret = self.sendCmd(timeout, b'8,1,36000,0\n')
+        ret = self.sendCmd(timeout, b'8,1,%d,0\n' % (timeout*1000))
         print("move vertical position to TOP")
         return self.checkOK(ret)
     def moveVertPosMid(self, timeout = 18):
-        ret = self.sendCmd(timeout, b'8,2,18000,0\n')
+        ret = self.sendCmd(timeout, b'8,2,%d,0\n' % (timeout*1000))
         print("move vertical position to MID")
         return self.checkOK(ret)
     def moveVertPosBtm(self, timeout = 36):
-        ret = self.sendCmd(timeout, b'8,3,36000,0\n')
+        ret = self.sendCmd(timeout, b'8,3,%d,0\n' % (timeout*1000))
         print("move vertical position to BTM")
         return self.checkOK(ret)
 
@@ -362,11 +422,11 @@ class ModuleBT(COPcbConnector):
     def startBLDCMotor(self, timeout = 5, clockwise = True):
         if clockwise == True:
             # clockwise
-            ret = self.sendCmd(timeout, b'9,1,5000,0\n')
+            ret = self.sendCmd(timeout, b'9,1,%d,0\n' % (timeout*1000))
             print("turn on BLDC Motor: clockwise....")
         else:
             # counter clockwise
-            ret = self.sendCmd(timeout, b'9,2,5000,0\n')
+            ret = self.sendCmd(timeout, b'9,2,%d,0\n' % (timeout*1000))
             print("turn on BLDC Motor: counter clockwise....")
         return self.checkOK(ret)
 
@@ -441,11 +501,7 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'12,4,0,0\n')
         print("measure sample 1....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
 
     # 13: reserves heater
@@ -463,11 +519,7 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'13,4,0,0\n')
         print("measure sample 2....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
     # 14: TEC
     def turnOnTEC(self, timeout = 5, pwm = 5):
@@ -484,21 +536,13 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'14,4,0,0\n')
         print("measure TEC cold side....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
     def measureTEChot(self, timeout = 5):
         ret = self.sendCmd(timeout, b'14,5,0,0\n')
         print("measure TEC hot side....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
 
     # 15: Water Cooler Fan
@@ -526,21 +570,13 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'15,5,0,0\n')
         print("measure WaterIn....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
     def measureWaterOut(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,6,0,0\n')
         print("measure WaterOut....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
 
     # 16: system dissipation fan
@@ -566,24 +602,33 @@ class ModuleBT(COPcbConnector):
 
     # 20 combo cmd
     def insertCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,2,60000,0\n')
+        ret = self.sendCmd(timeout, b'20,2,%d,0\n' % (timeout*1000))
         if self.checkOK(ret) == True:
+            print("insert ok")
             return True
         else:
             # force insert
+            print("insert error, forceCloseCart")
             ret = self.forceCloseCart()
+            #return ret
+            if ret == True:
+                return "NO_CARTRIDGE_INSERTED"
             return ret
 
     def ejectCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,1,60000,0\n')
+        ret = self.sendCmd(timeout, b'20,1,%d,0\n' % (timeout*1000))
         return self.checkOK(ret)
 
     def forceCloseCart(self, timeout = 4):
+        print("moveCDriver")
         ret1 = self.moveCDriver()
-        time.sleep(3)
-        if ret1 == '1':
+        #time.sleep(5)
+        print(ret1)
+        if ret1 == True:
+            print("closeDoor")
             ret2 = self.closeDoor()
-            time.sleep(1)
+            print(ret2)
+            #time.sleep(1)
             return ret2
         return ret1
 
@@ -619,12 +664,13 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
+        temp_s2 = self.measureSample2()
+        temp_h = self.measureTECcold()
+
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)
 
         if self.heaterPhase == 1:
-            temp_h = self.measureTECcold()
-
             if temp_s1 >= p2_target_temp:
                 self.heaterPhase = 2
             elif temp_h >= p1_target_temp:
@@ -634,7 +680,7 @@ class ModuleBT(COPcbConnector):
                 pid_p1.SetPoint = p1_target_temp
                 #pid_p1.setSampleTime(0.01)
                 pid_p1.update(temp_h)
-                targetPwm = pid_p1.output        
+                targetPwm = pid_1.output        
                 targetPwm = max(min( targetPwm, 100.0 ), 0.0)
                 targetPwm = targetPwm / 100.0
                 print("phase 1, targetPwm = %f" % targetPwm)
@@ -664,7 +710,7 @@ class ModuleBT(COPcbConnector):
         # get temp from plate (TEC Cold)
         # todo: calculate PID for pwm/pwm
         pid_p2.update(temp_s1)
-        targetPwm = pid_p2.output        
+        targetPwm = pid_2.output        
         targetPwm = max(min( targetPwm, 100.0 ), 0.0)
         targetPwm = targetPwm / 100.0
         print("targetPwm = %f" % targetPwm)
@@ -737,59 +783,16 @@ class ModuleBT(COPcbConnector):
         return
 
     def measureSystem(self, timeout = 5):
-        '''
-        self.sendCmd(timeout, b'0,1,0,0\n')
-        time.sleep(1)
-        self.sendCmd(timeout, b'0,3,0,0\n')
-        time.sleep(1)
-        '''
         ret = self.sendCmd(timeout, b'0,5,0,0\n')
         print("measure Temperature of System ....%s" % str(ret))
         #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
+        return float(ret.split(',')[-1])
 
-
-    def get12voltageSystem(self, timeout = 5):
-        ret = self.sendCmd(timeout, b'0,1,0,0\n')
-        print("get voltage of 12V in System ....%s" % str(ret))
-        #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return -1
-
-    def get24voltageSystem(self, timeout = 5):
-        ret = self.sendCmd(timeout, b'0,3,0,0\n')
-        print("get voltage of 24V in System ....%s" % str(ret))
-        #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return -1
-
-    def measureSystem(self, timeout = 5):
-        '''
-        self.sendCmd(timeout, b'0,1,0,0\n')
-        time.sleep(1)
-        self.sendCmd(timeout, b'0,3,0,0\n')
-        time.sleep(1)
-        '''
-        ret = self.sendCmd(timeout, b'0,5,0,0\n')
-        print("measure Temperature of System ....%s" % str(ret))
-        #return self.checkOK(ret)
-        try:
-            temp = float(ret.split(',')[-1])
-            return temp
-        except:
-            return 0
-
-
+    def readTemp_spec(self, timeout = 20)
+        temp_s1 = self.measureSample1()
+        temp_s2 = self.measureSample2()
+        temp_h = self.measureTECcold()
+        return temp_h, temp_s1, temp_s2
 
     def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3):
         # mode = 1 means heater only
@@ -802,17 +805,13 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
-        time.sleep(0.05)
-        temp_s2 = self.measureSample1()
-        time.sleep(0.05)
+        temp_s2 = self.measureSample2()
         temp_h = self.measureTECcold()
 
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)
 
         if self.heaterPhase == 1:
-            
-
             if temp_s1 >= p2_target_temp:
                 self.heaterPhase = 2
             elif temp_h >= p1_target_temp:
@@ -822,9 +821,9 @@ class ModuleBT(COPcbConnector):
                 pid_p1.SetPoint = p1_target_temp
                 #pid_p1.setSampleTime(0.01)
                 pid_p1.update(temp_h)
-                targetPwm = pid_p1.output        
+                targetPwm = pid_1.output        
                 targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-                targetPwm = targetPwm * 20.0/ 100.0
+                targetPwm = targetPwm / 100.0
                 print("phase 1, targetPwm = %f" % targetPwm)
 
         
@@ -842,7 +841,7 @@ class ModuleBT(COPcbConnector):
                     pwm1 = 0
                     pwm2 = 0
 
-                    #ret = self.controlBothHeater(timeout, pwm1, pwm2)
+                    ret = self.controlBothHeater(timeout, pwm1, pwm2)
                 return temp_h, temp_s1, temp_s2, targetPwm
 
         # else: # self.heaterPhase == 2 or 4
@@ -852,9 +851,9 @@ class ModuleBT(COPcbConnector):
         # get temp from plate (TEC Cold)
         # todo: calculate PID for pwm/pwm
         pid_p2.update(temp_s1)
-        targetPwm = pid_p2.output        
+        targetPwm = pid_2.output        
         targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-        targetPwm = targetPwm * 20.0/ 100.0
+        targetPwm = targetPwm / 100.0
         print("targetPwm = %f" % targetPwm)
 
         
@@ -872,7 +871,7 @@ class ModuleBT(COPcbConnector):
             pwm1 = 0
             pwm2 = 0
 
-        #ret = self.controlBothHeater(timeout, pwm1, pwm2)
+        ret = self.controlBothHeater(timeout, pwm1, pwm2)
 
         return temp_h, temp_s1, temp_s2, targetPwm
 
@@ -914,8 +913,14 @@ class ModuleBTMock(COPcbConnector):
         return
 
     def sendCmd(self, timeout, cmd_str):
-        print("Log: Mock, sendCmd = %s" % cmd_str)
-        return "0,0,0,1"
+        print("Log: Mock, timeout = %d, sendCmd = %s" % (timeout, str(cmd_str)))
+
+        cmd_array = cmd_str.decode("utf-8").strip().split(',')
+
+        ret_string = "%s,%s,%s,1" % (cmd_array[0], cmd_array[1], cmd_array[2])
+        print("Log: Mock, ret_string = %s" % (ret_string))
+        time.sleep(3)
+        return ret_string
 
     # device functions, TODO: error handling
     def checkOK(self, ret):
@@ -971,11 +976,11 @@ class ModuleBTMock(COPcbConnector):
 
     # 5: reverses motor
     # 6: door
-    def openDoor(self, timeout = 1):
+    def openDoor(self, timeout = 5):
         ret = self.sendCmd(timeout, b'6,1,1000,0\n')
         print("Open door....")
         return self.checkOK(ret)
-    def closeDoor(self, timeout = 1):
+    def closeDoor(self, timeout = 5):
         ret = self.sendCmd(timeout, b'6,2,1000,0\n')
         print("Close door....")
         return self.checkOK(ret)
@@ -1189,24 +1194,30 @@ class ModuleBTMock(COPcbConnector):
 
     # 20 combo cmd
     def insertCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,2,60000,0\n')
+        ret = self.sendCmd(timeout, b'20,2,%d,0\n' % (timeout*1000))
         if self.checkOK(ret) == True:
+            print("insert ok")
             return True
         else:
             # force insert
+            print("insert error, forceCloseCart")
             ret = self.forceCloseCart()
             return ret
 
     def ejectCart(self, timeout = 60):
-        ret = self.sendCmd(timeout, b'20,1,60000,0\n')
+        ret = self.sendCmd(timeout, b'20,1,%d,0\n' % (timeout*1000))
         return self.checkOK(ret)
 
     def forceCloseCart(self, timeout = 4):
+        print("moveCDriver")
         ret1 = self.moveCDriver()
-        time.sleep(3)
-        if ret1 == '1':
+        #time.sleep(5)
+        print(ret1)
+        if ret1 == True:
+            print("closeDoor")
             ret2 = self.closeDoor()
-            time.sleep(1)
+            print(ret2)
+            #time.sleep(1)
             return ret2
         return ret1
 

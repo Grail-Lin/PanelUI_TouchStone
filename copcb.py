@@ -664,12 +664,13 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
+        temp_s2 = self.measureSample2()
+        temp_h = self.measureTECcold()
+
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)
 
         if self.heaterPhase == 1:
-            temp_h = self.measureTECcold()
-
             if temp_s1 >= p2_target_temp:
                 self.heaterPhase = 2
             elif temp_h >= p1_target_temp:
@@ -787,7 +788,11 @@ class ModuleBT(COPcbConnector):
         #return self.checkOK(ret)
         return float(ret.split(',')[-1])
 
-
+    def readTemp_spec(self, timeout = 20)
+        temp_s1 = self.measureSample1()
+        temp_s2 = self.measureSample2()
+        temp_h = self.measureTECcold()
+        return temp_h, temp_s1, temp_s2
 
     def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3):
         # mode = 1 means heater only
@@ -800,15 +805,13 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
-        temp_s2 = self.measureSample1()
+        temp_s2 = self.measureSample2()
         temp_h = self.measureTECcold()
 
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)
 
         if self.heaterPhase == 1:
-            
-
             if temp_s1 >= p2_target_temp:
                 self.heaterPhase = 2
             elif temp_h >= p1_target_temp:

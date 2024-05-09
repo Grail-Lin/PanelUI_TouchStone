@@ -14,7 +14,9 @@ import page_setting
 import page_result_chart
 
 from copic import img_button_home_on, img_button_process_off, img_button_setting_off, img_button_result_off
-from copic import img_co_logo, img_button_home_result, img_button_home_test
+from copic import img_co_logo, img_button_home_result, img_button_home_test, img_button_shutdown
+
+import os
 
 class PageHome(Frame):
 
@@ -190,6 +192,23 @@ class PageHome(Frame):
         self.canvas.create_image(964.0, 549.0, image=self.img_co_logo)
 
 
+        # shutdown btn
+        self.img_button_shotdown = PhotoImage(data = img_button_shutdown)
+        self.button_shutdown = Button(self,
+            image=self.img_button_shotdown,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.Cmd_btn_shutdown,
+            bg="#FFFFFF",
+            relief="flat"
+        )
+        self.button_shutdown.place(
+            x=0.0,
+            y=394.0,
+            width=120.0,
+            height=103.0
+        )        
+
     def Cmd_btn_process(self):
         # need to check if there is cartridge inside
         #self.controller.frames[page_process_init.PageProcessInit].status = 0
@@ -211,6 +230,9 @@ class PageHome(Frame):
 
     def Cmd_btn_setting(self):
         self.controller.show_frame(page_setting.PageSetting)
+
+    def Cmd_btn_shutdown(self):
+        os.system("shutdown -s -t 0")
 
 if __name__ == "__main__":
     window = Tk()

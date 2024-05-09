@@ -276,6 +276,7 @@ class PageProcessPlay(Frame):
         
 
         # middle of circle
+        '''
         self.canvas.create_text(
             427.0,
             21.0, #29.0,
@@ -301,7 +302,7 @@ class PageProcessPlay(Frame):
             fill="#17171B",
             font=("Noto Sans", 24 * -1)
         )
-
+        '''
         #self.canvas.after(1000, self.step)
 
 
@@ -433,10 +434,10 @@ class PageProcessPlay(Frame):
         self.qpcr_bar.reset(total_time, total_time - rtime)
 
         """Increment extent and update arc and label displaying how much completed."""
-        remain_time = self.preextract_bar.remain_time + self.extract_bar.remain_time + self.qpcr_bar.remain_time
-        remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
+        #remain_time = self.preextract_bar.remain_time + self.extract_bar.remain_time + self.qpcr_bar.remain_time
+        #remain_time_str = time.strftime("%M:%S", time.gmtime(remain_time))
 
-        self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
+        #self.canvas.itemconfigure(self.remain_time_id, text=remain_time_str)
 
         self.play_after = self.canvas.after(1000, self.step)
 
