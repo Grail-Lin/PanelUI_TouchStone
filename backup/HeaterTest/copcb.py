@@ -501,7 +501,13 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'12,4,0,0\n')
         print("measure sample 1....%s" % str(ret))
         #return self.checkOK(ret)
-        return float(ret.split(',')[-1])
+        #return float(ret.split(',')[-1])
+        try:
+            ret_value = float(ret.split(',')[-1])
+        except:
+            time.sleep(0.05)
+            return self.measureSample1(timeout)
+        return ret_value
 
 
     # 13: reserves heater
@@ -519,7 +525,13 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'13,4,0,0\n')
         print("measure sample 2....%s" % str(ret))
         #return self.checkOK(ret)
-        return float(ret.split(',')[-1])
+        #return float(ret.split(',')[-1])
+        try:
+            ret_value = float(ret.split(',')[-1])
+        except:
+            time.sleep(0.05)
+            return self.measureSample2(timeout)
+        return ret_value
 
     # 14: TEC
     def turnOnTEC(self, timeout = 5, pwm = 5):
@@ -536,13 +548,22 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'14,4,0,0\n')
         print("measure TEC cold side....%s" % str(ret))
         #return self.checkOK(ret)
-        return float(ret.split(',')[-1])
+        try:
+            ret_value = float(ret.split(',')[-1])
+        except:
+            time.sleep(0.05)
+            return self.measureTECcold(timeout)
+        return ret_value
 
     def measureTEChot(self, timeout = 5):
         ret = self.sendCmd(timeout, b'14,5,0,0\n')
         print("measure TEC hot side....%s" % str(ret))
-        #return self.checkOK(ret)
-        return float(ret.split(',')[-1])
+        try:
+            ret_value = float(ret.split(',')[-1])
+        except:
+            time.sleep(0.05)
+            return self.measureTEChot(timeout)
+        return ret_value
 
 
     # 15: Water Cooler Fan
@@ -643,13 +664,17 @@ class ModuleBT(COPcbConnector):
         # turn on heater
         if pwm1 > 0:
             self.turnOnHeater(timeout, pwm1)
+            time.sleep(0.05)
         else:
             self.turnOffHeater(timeout)
+            time.sleep(0.05)
 
         if pwm2 > 0:
             self.turnOnRHeater(timeout, pwm2)
+            time.sleep(0.05)
         else:
             self.turnOffRHeater(timeout)
+            time.sleep(0.05)
 
         return
 
@@ -664,8 +689,11 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
+        time.sleep(0.05)
         temp_s2 = self.measureSample2()
+        time.sleep(0.05)
         temp_h = self.measureTECcold()
+        time.sleep(0.05)
 
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)
@@ -700,7 +728,7 @@ class ModuleBT(COPcbConnector):
                     pwm1 = 0
                     pwm2 = 0
 
-                    ret = self.controlBothHeater(timeout, pwm1, pwm2)
+                ret = self.controlBothHeater(timeout, pwm1, pwm2)
                 return ret
 
         # else: # self.heaterPhase == 2 or 4
@@ -790,11 +818,14 @@ class ModuleBT(COPcbConnector):
 
     def readTemp_spec(self, timeout = 20):
         temp_s1 = self.measureSample1()
+        time.sleep(0.05)
         temp_s2 = self.measureSample2()
+        time.sleep(0.05)
         temp_h = self.measureTECcold()
+        time.sleep(0.05)
         return temp_h, temp_s1, temp_s2
 
-    def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3):
+    def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3, pwm_amf = 5):
         # mode = 1 means heater only
         # mode = 2 means r heater only
         # mode = 3 means both heater
@@ -805,8 +836,11 @@ class ModuleBT(COPcbConnector):
         # use pid_2 to calculate pwm for heater
 
         temp_s1 = self.measureSample1()
+        time.sleep(0.05)
         temp_s2 = self.measureSample2()
+        time.sleep(0.05)
         temp_h = self.measureTECcold()
+        time.sleep(0.05)
 
         pid_p2.SetPoint = p2_target_temp
         #pid_p2.setSampleTime(0.01)
@@ -823,7 +857,7 @@ class ModuleBT(COPcbConnector):
                 pid_p1.update(temp_h)
                 targetPwm = pid_p1.output        
                 targetPwm = max(min( targetPwm, 100.0 ), 0.0)
-                targetPwm = targetPwm / 100.0
+                targetPwm = pwm_amf * targetPwm / 100.0
                 print("phase 1, targetPwm = %f" % targetPwm)
 
         
@@ -841,7 +875,7 @@ class ModuleBT(COPcbConnector):
                     pwm1 = 0
                     pwm2 = 0
 
-                    ret = self.controlBothHeater(timeout, pwm1, pwm2)
+                ret = self.controlBothHeater(timeout, pwm1, pwm2)
                 return temp_h, temp_s1, temp_s2, targetPwm
 
         # else: # self.heaterPhase == 2 or 4
