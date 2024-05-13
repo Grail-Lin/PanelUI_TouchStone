@@ -33,7 +33,7 @@ PORT = 'COM3'
 b_USE_TEC = False
 targetT1 = 130
 targetT2 = 95
-ptHighT = 30
+ptHighT = 60
 
 PID1_Kp = 10
 PID1_Ki = 1
@@ -72,8 +72,9 @@ class CoThermal:
     '''
         use relay to control heat with Arduino
     '''
-    def __init__(self, current_time=None, t1_ofile=None): #, t2_ofile=None, t3_ofile=None):
+    def __init__(self, current_time=None, amp = 5.0, t1_ofile=None): #, t2_ofile=None, t3_ofile=None):
 
+        self.amp = amp
         self.btpcb = copcb.ModuleBT()
         self.btpcb.initPCB()
 
@@ -114,7 +115,7 @@ class CoThermal:
             if self.state_high_ts == 1:
                 print("state_high_ts = %d" % self.state_high_ts)
                 # use controlPIDBothHeater_spec to control Heater
-                temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, 15.0)
+                temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, self.amp)
                 #def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3):
                 # return t1, t2, t3, pwm
                 # need to return value for output
@@ -127,19 +128,20 @@ class CoThermal:
             elif self.state_high_ts == 2:
                 print("state_high_ts = %d" % self.state_high_ts)
                 # use controlPIDBothHeater_spec to control Heater
-                temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, 15.0)
+                temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, self.amp)
                 # need to return value for output
                 if self.t1_ofile is not None:
                     print("%d\t%f\t%f\t%f\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, pwm, time.time()), file=self.t1_ofile)
                 # if num == goal, self.state_high_ts = 3
                 if time.time() >= self.goal:
                     self.state_high_ts = 3
+                    self.btpcb.controlBothHeater(20, 0, 0)
             else:
                 print("state_high_ts = %d" % self.state_high_ts)
                 # record temp only
                 temp_h, temp_s1, temp_s2 = self.btpcb.readTemp_spec(20)
                 if self.t1_ofile is not None:
-                    print("%d\t%f\t%f\t%f\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, pwm, time.time()), file=self.t1_ofile)
+                    print("%d\t%f\t%f\t%f\t0\t%f" % (num, temp_h, temp_s1, temp_s2, time.time()), file=self.t1_ofile)
 
 
             # sleep for 0.1 sec
@@ -168,14 +170,14 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output.txt'
+t1_path = 't1_output_20240513_bias150_60s.txt'
+ampify = 150.0
 
 try: 
     t1_output_f = open(t1_path, 'w')
-
     print("Let's print data from Arduino's analog pins for 100secs.")
     # Let's create an instance
-    ntc_sensor = CoThermal(t1_ofile=t1_output_f)#, t2_ofile=t2_output_f, t3_ofile=t3_output_f)
+    ntc_sensor = CoThermal(amp = ampify, t1_ofile=t1_output_f)#, t2_ofile=t2_output_f, t3_ofile=t3_output_f)
     # and start DAQ
     #ntc_sensor.start2(500)
     ntc_sensor.start(600)    # 0.2 sec * 900 = 180 sec = 3 min

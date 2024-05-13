@@ -7,7 +7,7 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t1_output.txt"]
+filelist = ["t1_output_20240513_bias150_120s.txt"]
 
 for f in filelist:
 #if 1:
