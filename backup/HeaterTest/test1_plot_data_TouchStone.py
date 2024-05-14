@@ -75,6 +75,7 @@ for f in filelist:
     ax2.plot(time_list, pwm_list, color = 'blue', linewidth = 1)
 
     # 用 savefig 儲存圖片, 用 show 顯示圖片
+    fig.suptitle(f[:-3])
     fig.savefig(f[:-3]+'png')
     fig.show()
     
@@ -86,9 +87,20 @@ for f in filelist:
         if ts1_list[ii] >= 95:
             first_95 = ii
             break
+    # highest temp
+    cur_temp = 0
+    high_temp = 0
+    for jj in range(1, len(time_list)):
+        if ts1_list[jj] > cur_temp:
+            high_temp = jj
+            cur_temp = ts1_list[jj]
+
     # initial temp
     print("num = 0, th = %f, ts1 = %f, ts2 = %f" % (th_list[0], ts1_list[0], ts2_list[0]))
-    print("num = %d, th = %f, ts1 = %f, ts2 = %f" % (first_95, th_list[first_95], ts1_list[first_95], ts2_list[first_95]))
+    print("num = %d, th = %f, ts1 = %f, ts2 = %f, time = %f" % (first_95, th_list[first_95], ts1_list[first_95], ts2_list[first_95], time_list[first_95]))
+    heat_rate = (ts1_list[first_95]-ts1_list[0])/time_list[first_95]
+    print("heat rate = %f" % heat_rate)
+    print("num = %d, th = %f, ts1 = %f, ts2 = %f, time = %f" % (high_temp, th_list[high_temp], ts1_list[high_temp], ts2_list[high_temp], time_list[high_temp]))
     # first 95 time + 30s
     # end temp
 
