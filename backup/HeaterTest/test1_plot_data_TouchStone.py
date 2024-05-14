@@ -7,7 +7,21 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t1_output_20240513_bias150_120s.txt"]
+filelist = ["t1_output_20240513_bias10.txt", 
+            "t1_output_20240513_bias15.txt",
+            "t1_output_20240513_bias25.txt",
+            "t1_output_20240513_bias50.txt",
+            "t1_output_20240513_bias75.txt",
+            "t1_output_20240513_bias100.txt",
+            "t1_output_20240513_bias125.txt",
+            "t1_output_20240513_bias150.txt",
+            "t1_output_20240513_bias175.txt",
+            "t1_output_20240513_bias200.txt",
+            "t1_output_20240513_bias225.txt",
+            "t1_output_20240513_bias250.txt",
+            "t1_output_20240513_bias150_60s.txt",
+            "t1_output_20240513_bias150_120s.txt",
+            "t1_output_20240513_bias250_60s.txt"]
 
 for f in filelist:
 #if 1:
@@ -22,6 +36,18 @@ for f in filelist:
     timet_list = content[:, 5]
     time_list = timet_list - timet_list[0]
 	
+    # clip
+    '''
+    clip_num = 150
+    num_list = num_list[:clip_num]
+    th_list = th_list[:clip_num]
+    ts1_list = ts1_list[:clip_num]
+    ts2_list = ts2_list[:clip_num]
+    pwm_list = pwm_list[:clip_num]
+    timet_list = timet_list[:clip_num]
+    time_list = time_list[:clip_num]
+    '''
+
     plt.plot(time_list, th_list)
     
     # 建立繪圖物件 fig, 大小為 12 * 4.5, 內有 1 列 2 欄的小圖, 兩圖共用 x 軸和 y 軸
@@ -52,3 +78,18 @@ for f in filelist:
     fig.savefig(f[:-3]+'png')
     fig.show()
     
+    # show some value
+    print("==== %s ====" % f)
+    # first 95 time
+    first_95 = 0
+    for ii in range(len(time_list)):
+        if ts1_list[ii] >= 95:
+            first_95 = ii
+            break
+    # initial temp
+    print("num = 0, th = %f, ts1 = %f, ts2 = %f" % (th_list[0], ts1_list[0], ts2_list[0]))
+    print("num = %d, th = %f, ts1 = %f, ts2 = %f" % (first_95, th_list[first_95], ts1_list[first_95], ts2_list[first_95]))
+    # first 95 time + 30s
+    # end temp
+
+	
