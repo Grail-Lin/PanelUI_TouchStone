@@ -7,21 +7,10 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t1_output_20240513_bias10.txt", 
-            "t1_output_20240513_bias15.txt",
-            "t1_output_20240513_bias25.txt",
-            "t1_output_20240513_bias50.txt",
-            "t1_output_20240513_bias75.txt",
-            "t1_output_20240513_bias100.txt",
-            "t1_output_20240513_bias125.txt",
-            "t1_output_20240513_bias150.txt",
-            "t1_output_20240513_bias175.txt",
-            "t1_output_20240513_bias200.txt",
-            "t1_output_20240513_bias225.txt",
-            "t1_output_20240513_bias250.txt",
-            "t1_output_20240513_bias150_60s.txt",
-            "t1_output_20240513_bias150_120s.txt",
-            "t1_output_20240513_bias250_60s.txt"]
+filelist = [
+            #"t1_output_20240513_bias150_60s.txt",
+            "t1_output_20240513_bias150_120s.txt"]
+            #"t1_output_20240513_bias250_60s.txt"]
 
 for f in filelist:
 #if 1:
@@ -92,10 +81,10 @@ for f in filelist:
             high_temp = jj
             cur_temp = ts1_list[jj]
 
-    high_pt = 30
+    high_pt = 120
     end_95 = 0
     for kk in range(first_95, len(time_list)):
-        if time_list[kk] >= time_list[first_95] + 30:
+        if time_list[kk] >= time_list[first_95] + high_pt:
             end_95 = kk
             break
 

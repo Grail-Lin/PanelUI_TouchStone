@@ -33,7 +33,91 @@ PORT = 'COM3'
 b_USE_TEC = False
 targetT1 = 130
 targetT2 = 95
-ptHighT = 60
+ptHighT = 30
+
+'''
+# 1
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 0.3
+PID2_Kd = 1.8
+
+# 2
+PID1_Kp = 20
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 0.3
+PID2_Kd = 1.8
+
+# 3
+PID1_Kp = 30
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 0.3
+PID2_Kd = 1.8
+
+# 4
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 20
+PID2_Ki = 0.3
+PID2_Kd = 1.8
+
+# 5
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 30
+PID2_Ki = 0.3
+PID2_Kd = 1.8
+
+# 6
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 1
+PID2_Kd = 1.8
+
+# 7
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 5
+PID2_Kd = 1.8
+
+# 8
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 0.3
+PID2_Kd = 4
+
+# 9
+PID1_Kp = 10
+PID1_Ki = 1
+PID1_Kd = 1
+
+PID2_Kp = 9.1
+PID2_Ki = 0.3
+PID2_Kd = 0.9
+
+'''
 
 PID1_Kp = 10
 PID1_Ki = 1
@@ -170,8 +254,8 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240513_bias150_60s.txt'
-ampify = 150.0
+t1_path = 't1_output_20240516_bias200_30s.txt'
+ampify = 200.0
 
 try: 
     t1_output_f = open(t1_path, 'w')
