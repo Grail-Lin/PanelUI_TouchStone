@@ -7,21 +7,8 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t1_output_20240513_bias10.txt", 
-            "t1_output_20240513_bias15.txt",
-            "t1_output_20240513_bias25.txt",
-            "t1_output_20240513_bias50.txt",
-            "t1_output_20240513_bias75.txt",
-            "t1_output_20240513_bias100.txt",
-            "t1_output_20240513_bias125.txt",
-            "t1_output_20240513_bias150.txt",
-            "t1_output_20240513_bias175.txt",
-            "t1_output_20240513_bias200.txt",
-            "t1_output_20240513_bias225.txt",
-            "t1_output_20240513_bias250.txt",
-            "t1_output_20240513_bias150_60s.txt",
-            "t1_output_20240513_bias150_120s.txt",
-            "t1_output_20240513_bias250_60s.txt"]
+filelist = ["t1_output_20240516_bias200_30s_100_10_10_200_03_18.txt", 
+            "t1_output_20240516_bias200_30s_200_10_10_91_03_18.txt"]
 
 for f in filelist:
 #if 1:
