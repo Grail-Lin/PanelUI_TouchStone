@@ -123,7 +123,7 @@ PID1_Kp = 10
 PID1_Ki = 1
 PID1_Kd = 1
 
-PID2_Kp = 9.1
+PID2_Kp = 20
 PID2_Ki = 0.3
 PID2_Kd = 1.8
 
@@ -254,7 +254,7 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240516_bias200_30s.txt'
+t1_path = 't1_output_20240516_bias200_30s_100_10_10_200_03_18.txt'
 ampify = 200.0
 
 try: 
