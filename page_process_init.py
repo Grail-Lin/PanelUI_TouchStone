@@ -502,6 +502,7 @@ class PageProcessInit(Frame):
         self.str_testname.set(temp_string)
 
         # 20240502, rotate cartridge to fit the teeth
+        self.btpcb.moveVertPosMid()
         self.btpcb.rotateCart(timeout = 10, pos = 30)
         self.btpcb.rotateCart(timeout = 10, pos = 0)
 
