@@ -123,9 +123,9 @@ PID1_Kp = 10
 PID1_Ki = 1
 PID1_Kd = 1
 
-PID2_Kp = 200
-PID2_Ki = 20
-PID2_Kd = 5
+PID2_Kp = 9.1
+PID2_Ki = 0.3
+PID2_Kd = 1.8
 
 '''
 P = 10
@@ -199,12 +199,12 @@ class CoThermal:
             if self.state_high_ts == 1:
                 print("state_high_ts = %d" % self.state_high_ts)
                 # use controlPIDBothHeater_spec to control Heater
-                temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, self.amp)
+                temp_h, temp_s1, temp_s2, pwm, temp_w = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, self.amp)
                 #def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3):
                 # return t1, t2, t3, pwm
                 # need to return value for output
                 if self.t1_ofile is not None:
-                    print("%d\t%f\t%f\t%f\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, pwm, time.time()), file=self.t1_ofile)
+                    print("%d\t%f\t%f\t%f\t%f\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, pwm, time.time(), temp_w), file=self.t1_ofile)
                 # if the sample temp >= self.T2, self.state_high_ts = 2, goal = num + self.high_pt * 10
                 if temp_s1 >= self.T2:
                     self.state_high_ts = 2
@@ -212,10 +212,10 @@ class CoThermal:
             elif self.state_high_ts == 2:
                 print("state_high_ts = %d" % self.state_high_ts)
                 # use controlPIDBothHeater_spec to control Heater
-                temp_h, temp_s1, temp_s2, pwm = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, self.amp)
+                temp_h, temp_s1, temp_s2, pwm, temp_w = self.btpcb.controlPIDBothHeater_spec(20, self.pid1, self.pid2, targetT1, targetT2, 3, self.amp)
                 # need to return value for output
                 if self.t1_ofile is not None:
-                    print("%d\t%f\t%f\t%f\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, pwm, time.time()), file=self.t1_ofile)
+                    print("%d\t%f\t%f\t%f\t%f\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, pwm, time.time(), temp_w), file=self.t1_ofile)
                 # if num == goal, self.state_high_ts = 3
                 if time.time() >= self.goal:
                     self.state_high_ts = 3
@@ -223,9 +223,9 @@ class CoThermal:
             else:
                 print("state_high_ts = %d" % self.state_high_ts)
                 # record temp only
-                temp_h, temp_s1, temp_s2 = self.btpcb.readTemp_spec(20)
+                temp_h, temp_s1, temp_s2, temp_w = self.btpcb.readTemp_spec(20)
                 if self.t1_ofile is not None:
-                    print("%d\t%f\t%f\t%f\t0\t%f" % (num, temp_h, temp_s1, temp_s2, time.time()), file=self.t1_ofile)
+                    print("%d\t%f\t%f\t%f\t0\t%f\t%f" % (num, temp_h, temp_s1, temp_s2, time.time(), temp_w), file=self.t1_ofile)
 
 
             # sleep for 0.1 sec
@@ -254,7 +254,7 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240521_bias200_30s_100_10_10_200_20_5.txt'
+t1_path = 't1_output_20240527_2_bias200_30s_100_10_10_91_03_18.txt'
 ampify = 200.0
 
 try: 
@@ -264,7 +264,7 @@ try:
     ntc_sensor = CoThermal(amp = ampify, t1_ofile=t1_output_f)#, t2_ofile=t2_output_f, t3_ofile=t3_output_f)
     # and start DAQ
     #ntc_sensor.start2(500)
-    ntc_sensor.start(600)    # 0.2 sec * 900 = 180 sec = 3 min
+    ntc_sensor.start(300)    # 0.2 sec * 900 = 180 sec = 3 min
     # let's acquire data for 100secs. We could do something else but we just sleep!
     print("finished")
 

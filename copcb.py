@@ -591,14 +591,23 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'15,5,0,0\n')
         print("measure WaterIn....%s" % str(ret))
         #return self.checkOK(ret)
-        return float(ret.split(',')[-1])
+        try:
+            ret_value = float(ret.split(',')[-1])
+        except:
+            time.sleep(0.05)
+            return self.measureWaterIn(timeout)
+        return ret_value
 
     def measureWaterOut(self, timeout = 5):
         ret = self.sendCmd(timeout, b'15,6,0,0\n')
         print("measure WaterOut....%s" % str(ret))
         #return self.checkOK(ret)
-        return float(ret.split(',')[-1])
-
+        try:
+            ret_value = float(ret.split(',')[-1])
+        except:
+            time.sleep(0.05)
+            return self.measureWaterOut(timeout)
+        return ret_value
 
     # 16: system dissipation fan
     def turnOnSDFan(self, timeout = 5):
@@ -823,7 +832,10 @@ class ModuleBT(COPcbConnector):
         time.sleep(0.05)
         temp_h = self.measureTECcold()
         time.sleep(0.05)
-        return temp_h, temp_s1, temp_s2
+        temp_w = self.measureTECcold()
+        time.sleep(0.05)
+
+        return temp_h, temp_s1, temp_s2, temp_w
 
     def controlPIDBothHeater_spec(self, timeout = 20, pid_p1 = None, pid_p2 = None, p1_target_temp = 130, p2_target_temp = 95, mode = 3, pwm_amf = 5):
         # mode = 1 means heater only
@@ -840,6 +852,8 @@ class ModuleBT(COPcbConnector):
         temp_s2 = self.measureSample2()
         time.sleep(0.05)
         temp_h = self.measureTECcold()
+        time.sleep(0.05)
+        temp_w = self.measureWaterIn()
         time.sleep(0.05)
 
         pid_p2.SetPoint = p2_target_temp
@@ -876,7 +890,7 @@ class ModuleBT(COPcbConnector):
                     pwm2 = 0
 
                 ret = self.controlBothHeater(timeout, pwm1, pwm2)
-                return temp_h, temp_s1, temp_s2, targetPwm
+                return temp_h, temp_s1, temp_s2, targetPwm, temp_w
 
         # else: # self.heaterPhase == 2 or 4
         # use pid_p2
@@ -907,7 +921,7 @@ class ModuleBT(COPcbConnector):
 
         ret = self.controlBothHeater(timeout, pwm1, pwm2)
 
-        return temp_h, temp_s1, temp_s2, targetPwm
+        return temp_h, temp_s1, temp_s2, targetPwm, temp_w
 
 
 
