@@ -507,7 +507,7 @@ class PageProcessInit(Frame):
         self.btpcb.rotateCart(timeout = 10, pos = 0)
 
         # init all step setting
-        self.init_process_steps()
+        self.init_process_steps(temp_string)
         all_steps_setting = []
         self.controller.frames[page_process_play.PageProcessPlay].initial_step_array(self.btpcb, all_steps_setting, 
             self.steps_preextract, self.paras_preextract, 
@@ -616,7 +616,7 @@ class PageProcessInit(Frame):
     def Cmd_btn_setting(self):
         self.controller.show_frame(page_setting.PageSetting)
 
-    def init_process_steps(self):
+    def init_process_steps(self, qr_ret):
         # load from DB in the future
         '''
         self.steps_preextract = []
@@ -629,7 +629,9 @@ class PageProcessInit(Frame):
 
         self.paras_config = []
         '''
-        if 1:
+        if 0:
+            # 
+        else:
             self.steps_preextract.append(903)
             self.paras_preextract.append((10, 6000))
 

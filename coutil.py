@@ -266,6 +266,14 @@ class COSQLite:
 
         return ret_users
 
+    def queryQRCode(self, qrcode_str):
+        self.cursor.execute('SELECT * from QRCODEDATA where QRCODE="%s"' % (qrcode_str))
+        if self.cursor.fetchone():
+            return True
+
+        return ret_qrcode
+
+
     def queryPCRResults(self):
         ret_results = []
         self.cursor.execute('SELECT * from PCRRESULT')
