@@ -832,7 +832,7 @@ class ModuleBT(COPcbConnector):
         time.sleep(0.05)
         temp_h = self.measureTECcold()
         time.sleep(0.05)
-        temp_w = self.measureTECcold()
+        temp_w = self.measureWaterIn()
         time.sleep(0.05)
 
         return temp_h, temp_s1, temp_s2, temp_w
