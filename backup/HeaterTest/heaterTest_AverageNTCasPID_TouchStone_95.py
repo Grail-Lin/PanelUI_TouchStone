@@ -254,8 +254,8 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240607_2_bias200_30s_100_10_10_91_03_18.txt'
-ampify = 200.0
+t1_path = 't1_output_20240607_bias175_30s_100_10_10_91_03_18.txt'
+ampify = 175.0
 
 try: 
     t1_output_f = open(t1_path, 'w')
