@@ -31,7 +31,7 @@ PORT = 'COM3'
 #PORT = Arduino.AUTODETECT
 
 b_USE_TEC = False
-targetT1 = 130
+targetT1 = 110
 targetT2 = 95
 ptHighT = 30
 
@@ -254,8 +254,8 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240607_bias175_30s_100_10_10_91_03_18.txt'
-ampify = 175.0
+t1_path = 't1_output_20240612_bias200_30s_110_100_10_10_95_91_03_18_40uloil.txt'
+ampify = 200.0
 
 try: 
     t1_output_f = open(t1_path, 'w')

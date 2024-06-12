@@ -7,8 +7,10 @@ import numpy as np
 from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
-filelist = ["t1_output_20240612_bias200_30s_110_100_10_10_95_91_03_18_40uloil.txt", 
-            "t1_output_20240612_bias200_30s_110_100_10_10_95_91_03_18_40ulwater.txt"]
+filelist = [
+            "t1_output_20240612_bias200_30s_110_100_10_10_95_91_03_18_40ulwater.txt",
+            "t1_output_20240612_bias200_30s_110_100_10_10_95_91_03_18_40uloil.txt"]
+            #"t1_output_20240513_bias250_60s.txt"]
 
 for f in filelist:
 #if 1:
@@ -22,6 +24,7 @@ for f in filelist:
     pwm_list = content[:, 4] * 24.0/250.0
     timet_list = content[:, 5]
     time_list = timet_list - timet_list[0]
+    tw_list = content[:, 6]    # well
 	
     # clip
     '''
@@ -46,12 +49,14 @@ for f in filelist:
     ax1.set_ylabel('temp. (C)', fontsize = 16)
     #ax1.grid(color = 'red', linestyle = '--', linewidth = 1)
     ax1.set_ylim(0, 200)
-    ax1.plot(time_list, th_list, color = 'blue', linewidth = 1)
-    ax1.plot(time_list, ts1_list, color = 'green', linewidth = 1)
-    ax1.plot(time_list, ts2_list, color = 'purple', linewidth = 1)
+    ax1.plot(time_list, th_list, color = 'blue', linewidth = 1, label='heater')
+    ax1.plot(time_list, ts1_list, color = 'green', linewidth = 1, label = 'sample1')
+    ax1.plot(time_list, ts2_list, color = 'purple', linewidth = 1, label = 'sample2')
+    ax1.plot(time_list, tw_list, color = 'orange', linewidth = 1, label = 'well')
+    ax1.legend()
 	
     ax1.hlines(95,0,400,color="red")
-    ax1.hlines(th_list[0],0,400,color="red")
+    #ax1.hlines(th_list[0],0,400,color="red")
 #    ax1.vlines(250,0,200,color="green")
 	
 
@@ -82,7 +87,7 @@ for f in filelist:
     high_pt = 30
     end_95 = 0
     for kk in range(first_95, len(time_list)):
-        if time_list[kk] >= time_list[first_95] + 30:
+        if time_list[kk] >= time_list[first_95] + high_pt:
             end_95 = kk
             break
 
@@ -97,19 +102,24 @@ for f in filelist:
 
 
     # initial temp
-    print("Init: num = 0, th = %f, ts1 = %f, ts2 = %f" % (th_list[0], ts1_list[0], ts2_list[0]))
-    print("To95: num = %d, th = %f, ts1 = %f, ts2 = %f, time = %f" % (first_95, th_list[first_95], ts1_list[first_95], ts2_list[first_95], time_list[first_95]))
-    print("End95: num = %d, th = %f, ts1 = %f, ts2 = %f, time = %f" % (end_95, th_list[end_95], ts1_list[end_95], ts2_list[end_95], time_list[end_95]))
+    print("Init: num = 0, th = %f, ts1 = %f, ts2 = %f, tw = %f" % (th_list[0], ts1_list[0], ts2_list[0], tw_list[0]))
+    print("To95: num = %d, th = %f, ts1 = %f, ts2 = %f, tw = %f, time = %f" % (first_95, th_list[first_95], ts1_list[first_95], ts2_list[first_95], tw_list[first_95], time_list[first_95]))
+    print("End95: num = %d, th = %f, ts1 = %f, ts2 = %f, tw = %f, time = %f" % (end_95, th_list[end_95], ts1_list[end_95], ts2_list[end_95], tw_list[end_95], time_list[end_95]))
     heat_rate = (ts1_list[first_95]-ts1_list[0])/time_list[first_95]
     print("heat rate = %f" % heat_rate)
-    print("Highest: num = %d, th = %f, ts1 = %f, ts2 = %f, time = %f" % (high_temp, th_list[high_temp], ts1_list[high_temp], ts2_list[high_temp], time_list[high_temp]))
+    print("Highest: num = %d, th = %f, ts1 = %f, ts2 = %f, tw = %f, time = %f" % (high_temp, th_list[high_temp], ts1_list[high_temp], ts2_list[high_temp], tw_list[high_temp], time_list[high_temp]))
     # first 95 time + 30s
     # end temp
-    ax1.text(time_list[first_95], 175, '(%f, %f)' % (time_list[first_95], ts1_list[first_95]), {'color': 'green'})
-    ax1.text(time_list[first_95], 125, '(%f, %f)' % (time_list[first_95], ts2_list[first_95]), {'color': 'purple'})
-    ax1.text(time_list[end_95], 175, '(%f, %f)' % (time_list[end_95], ts1_list[end_95]), {'color': 'green'})
-    ax1.text(time_list[end_95], 125, '(%f, %f)' % (time_list[end_95], ts2_list[end_95]), {'color': 'purple'})
+    ax1.text(time_list[first_95], 175, 's1(%f, %f)' % (time_list[first_95], ts1_list[first_95]), {'color': 'green'})
+    ax1.text(time_list[end_95], 175, 's1(%f, %f)' % (time_list[end_95], ts1_list[end_95]), {'color': 'green'})
+
+    ax1.text(time_list[first_95], 125, 's2(%f, %f)' % (time_list[first_95], ts2_list[first_95]), {'color': 'purple'})
+    ax1.text(time_list[end_95], 125, 's2(%f, %f)' % (time_list[end_95], ts2_list[end_95]), {'color': 'purple'})
+
+    ax1.text(time_list[first_95], 75, 'w(%f, %f)' % (time_list[first_95], tw_list[first_95]), {'color': 'orange'})
+    ax1.text(time_list[end_95], 75, 'w(%f, %f)' % (time_list[end_95], tw_list[end_95]), {'color': 'orange'})
     
+
 
     # 用 savefig 儲存圖片, 用 show 顯示圖片
     fig.suptitle(f[:-3])
