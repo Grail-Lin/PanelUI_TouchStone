@@ -254,7 +254,7 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240612_bias200_30s_110_100_10_10_95_91_03_18_40uloil.txt'
+t1_path = 't1_output_20240613_bias200_30s_110_100_10_10_95_91_03_18_40uloil.txt'
 ampify = 200.0
 
 try: 
