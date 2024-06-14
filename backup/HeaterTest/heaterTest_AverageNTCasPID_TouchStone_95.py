@@ -31,7 +31,7 @@ PORT = 'COM3'
 #PORT = Arduino.AUTODETECT
 
 b_USE_TEC = False
-targetT1 = 110
+targetT1 = 130
 targetT2 = 95
 ptHighT = 30
 
@@ -254,7 +254,7 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240613_bias200_30s_110_100_10_10_95_91_03_18_40uloil.txt'
+t1_path = 't1_output_20240614_bias200_30s_130_100_10_10_95_91_03_18_40uloil.txt'
 ampify = 200.0
 
 try: 
