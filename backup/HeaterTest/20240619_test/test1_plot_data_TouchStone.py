@@ -8,10 +8,9 @@ from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
 filelist = [
-            "t1_output_20240614_bias200_30s_130_100_10_10_95_91_03_18_40uloil.txt"]
-			#,
-            #"t1_output_20240613_bias200_30s_120_100_10_10_95_91_03_18_40uloil.txt",
-            #"t1_output_20240613_bias200_30s_130_100_10_10_95_91_03_18_40uloil.txt"]
+            "t1_output_20240619_bias200_30s_130_100_10_10_95_91_03_18_40uloil.txt",
+            "t1_output_20240619_bias200_30s_130_100_10_10_110_91_03_18_40uloil.txt",
+            "t1_output_20240619_bias200_30s_130_100_10_10_120_91_03_18_40uloil.txt"]
             #"t1_output_20240513_bias250_60s.txt"]
 
 for f in filelist:
