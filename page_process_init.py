@@ -494,7 +494,14 @@ class PageProcessInit(Frame):
                 +'-'+''.join(random.choice(string.digits) for x in range(4))       \
                 +'-'+''.join(random.choice(string.digits) for x in range(4))
         else:
+            # use qr code string to load db
             temp_string = ret
+            ret_array = ret.split(":")
+            pacode = ret_array[-1]
+            prcode = ret_array[-2]
+            self.load_steps_from_DB(pacode, prcode)
+
+
 
         self.str_cartridgeID.set(temp_string)
 
