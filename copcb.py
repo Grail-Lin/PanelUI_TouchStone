@@ -717,6 +717,7 @@ class ModuleBT(COPcbConnector):
                 pid_p1.SetPoint = p1_target_temp
                 #pid_p1.setSampleTime(0.01)
                 pid_p1.update(temp_h)
+                pid_p2.update(temp_s1)
                 targetPwm = pid_p1.output        
                 targetPwm = max(min( targetPwm, 100.0 ), 0.0)
                 targetPwm = targetPwm / 100.0
