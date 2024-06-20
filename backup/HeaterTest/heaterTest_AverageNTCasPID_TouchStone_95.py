@@ -32,7 +32,7 @@ PORT = 'COM3'
 
 b_USE_TEC = False
 targetT1 = 130
-targetT2 = 120
+targetT2 = 95
 ptHighT = 30
 
 '''
@@ -254,8 +254,8 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240619_bias200_30s_130_100_10_10_120_91_03_18_40uloil.txt'
-ampify = 200.0
+t1_path = 't1_output_20240620_bias250_30s_130_100_10_10_95_91_03_18_40uloil.txt'
+ampify = 250.0
 
 try: 
     t1_output_f = open(t1_path, 'w')

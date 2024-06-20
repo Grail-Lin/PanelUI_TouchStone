@@ -8,9 +8,9 @@ from scipy.interpolate import BSpline, make_interp_spline #  Switched to BSpline
 
 
 filelist = [
-            "t1_output_20240619_bias200_30s_130_100_10_10_95_91_03_18_40uloil.txt",
-            "t1_output_20240619_bias200_30s_130_100_10_10_110_91_03_18_40uloil.txt",
-            "t1_output_20240619_bias200_30s_130_100_10_10_120_91_03_18_40uloil.txt"]
+            #"t1_output_20240620_bias250_30s_130_100_10_10_95_91_03_18_40uloil.txt",
+            #"t1_output_20240619_bias200_30s_130_100_10_10_110_91_03_18_40uloil.txt",
+            "t1_output_20240620_bias250_30s_130_100_10_10_95_91_03_18_40uloil.txt"]
             #"t1_output_20240513_bias250_60s.txt"]
 
 for f in filelist:
@@ -120,6 +120,7 @@ for f in filelist:
     ax1.text(time_list[first_95], 75, 'w(%f, %f)' % (time_list[first_95], tw_list[first_95]), {'color': 'orange'})
     ax1.text(time_list[end_95], 75, 'w(%f, %f)' % (time_list[end_95], tw_list[end_95]), {'color': 'orange'})
     
+    ax1.grid()
 
 
     # 用 savefig 儲存圖片, 用 show 顯示圖片
