@@ -33,8 +33,8 @@ PORT = 'COM3'
 b_USE_TEC = False
 dangerTemp1 = 200     # turn on Pump
 dangerTemp2 = 250     # turn on TEC
-targetT1 = 130
-targetT2 = 95
+targetT1 = 170
+targetT2 = 130
 ptHighT = 30
 
 PID1_Kp = 10
@@ -259,7 +259,6 @@ class CoThermal:
 
             # sleep for 0.1 sec
             time.sleep(0.2)
-
         return
 
     def checkDanger(self, tempNow):
@@ -306,7 +305,7 @@ class CoThermal:
             time.sleep(sleeptime)
         return
 
-t1_path = 't1_output_20240620_bias250_30s_130_100_10_10_95_91_03_18_40uloil.txt'
+t1_path = 't1_output_20240704_bias250_30s_170_100_10_10_130_91_03_18_40uloil.txt'
 ampify = 250.0
 
 try: 
