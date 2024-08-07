@@ -12,7 +12,13 @@ from GradientFrame import GradientFrame                       # add for gradient
 
 import page_home
 import coutil
-import win_popup_kb
+
+import platform
+
+if platform.system() == "Windows":
+    import win_popup_kb as popup_kb
+else:
+    import linux_popup_kb as popup_kb
 
 from copic import img_entry_bg, img_button_login_off, img_button_login_on, img_logo
 from copic import img_keyboard
@@ -202,7 +208,7 @@ class PageLogin(Frame):
         # close kb
         if self.value_vk_on == True:
             self.value_vk_on = False
-            win_popup_kb.popup_keyboard(self)
+            popup_kb.popup_keyboard(self)
 
 
         # get uname and pwd
@@ -261,7 +267,7 @@ class PageLogin(Frame):
         #win_popup_kb.popup_keyboard(self)
 
     def Cmd_btn_keyboard(self):
-        win_popup_kb.popup_keyboard(self)
+        popup_kb.popup_keyboard(self)
         return
 
 
