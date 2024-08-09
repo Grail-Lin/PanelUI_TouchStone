@@ -1,0 +1,20 @@
+# ~/.profile: executed by Bourne-compatible login shells.
+
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+	XDG_RUNTIME_DIR="/tmp/$(id -u)-runtime-dir"
+
+	mkdir -pm 0700 "$XDG_RUNTIME_DIR"
+	export XDG_RUNTIME_DIR
+fi
+
+if [ -z "$DISPLAY" ]; then
+	DISPLAY=":0"
+fi
+
+mesg n 2> /dev/null || true

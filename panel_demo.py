@@ -12,6 +12,7 @@ from page_result_list import PageResultList
 from page_result_log import PageResultLog
 from page_setting import PageSetting
 from page_confirm_start import PageProcessConfirmStart
+import os
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -68,5 +69,6 @@ class tkinterApp(tk.Tk):
 
 
 if __name__ == "__main__":
+    os.environ["DISPLAY"]=":0"
     app = tkinterApp()
     app.mainloop()

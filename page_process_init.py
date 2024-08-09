@@ -636,9 +636,7 @@ class PageProcessInit(Frame):
 
         self.paras_config = []
         '''
-        if 0:
-            # 
-        else:
+        if 1:
             self.steps_preextract.append(903)
             self.paras_preextract.append((10, 6000))
 

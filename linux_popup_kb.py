@@ -1,14 +1,16 @@
-import win32gui
+'''
 from ctypes import HRESULT
 from ctypes.wintypes import HWND
 from comtypes import IUnknown, GUID, COMMETHOD
 import comtypes.client
+'''
 import os
 
 
 def popup_keyboard(a):
-	toggle_tabtip()
-	
+    print("popup keyboard")
+    #toggle_tabtip()
+'''	
 class ITipInvocation(IUnknown):
 	_iid_ = GUID("{37c994e7-432b-4834-a2f7-dce1f13b834b}")
 	_methods_ = [COMMETHOD([], HRESULT, "Toggle", (['in'], HWND, "hwndDesktop"))]
@@ -33,3 +35,5 @@ def popup_tabtip():
 		comtypes.CoUninitialize()
 	except OSError as e:
 		os.system(r'"C:\Program Files\Common Files\microsoft shared\ink\tabtip.exe"')
+
+'''
