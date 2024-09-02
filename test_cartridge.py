@@ -41,6 +41,8 @@ def doCmd(pcb, state):
             print("Error: close door error....")
     elif state == 2:
         pcb.moveRArm(timeout = 10, release = False)
+    elif state == 2:
+        pcb.moveRArm(timeout = 10, release = False)
     elif state == 3:
         pcb.rotateCart(timeout = 10, pos = 0)
     elif state == 4:
@@ -56,19 +58,19 @@ def doCmd(pcb, state):
     elif state == 9:
         pcb.moveRArm(timeout = 10, release = True)
     elif state == 10:
-        pcb.setBLDCMotorRPM(timeout = 10, rpm = 1000)
-        pcb.startBLDCMotor(timeout = 5, clockwise = True)
+        pcb.startBLDCMotor(timeout = 5, clockwise = True, rpm = 66)
+        pcb.setBLDCMotorRPM(timeout = 10, rpm = 3000)
     elif state == 11:
         pcb.stopBLDCMotor()
     elif state == 12:
-        pcb.setBLDCMotorRPM(timeout = 10, rpm = 1000)
-        pcb.startBLDCMotor(timeout = 5, clockwise = False)
+        pcb.startBLDCMotor(timeout = 5, clockwise = False, rpm = 66)
+        pcb.setBLDCMotorRPM(timeout = 10, rpm = 3000)
     elif state == 13:
         pcb.stopBLDCMotor()
 
 
 # initial pcb
-btpcb = copcb.ModuleMock()
+btpcb = copcb.ModuleBT()
 btpcb.initPCB()
 
 cur_state = -1
