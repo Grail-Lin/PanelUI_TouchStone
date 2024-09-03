@@ -419,14 +419,14 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     # 9: BLDC Motor
-    def startBLDCMotor(self, timeout = 5, clockwise = True):
+    def startBLDCMotor(self, timeout = 5, clockwise = True, rpm = 66):
         if clockwise == True:
             # clockwise
-            ret = self.sendCmd(timeout, b'9,1,%d,0\n' % (timeout*1000))
+            ret = self.sendCmd(timeout, b'9,1,%d,0\n' % (rpm))
             print("turn on BLDC Motor: clockwise....")
         else:
             # counter clockwise
-            ret = self.sendCmd(timeout, b'9,2,%d,0\n' % (timeout*1000))
+            ret = self.sendCmd(timeout, b'9,2,%d,0\n' % (rpm))
             print("turn on BLDC Motor: counter clockwise....")
         return self.checkOK(ret)
 
