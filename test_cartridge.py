@@ -7,16 +7,21 @@ def showCmd():
     print("    [1] insert cartridge and move to the bottom position")
     print("    [2] move in rocker arm")
     print("    [3] rotate to pos 0")
-    print("    [4] rotate to pos 60")
-    print("    [5] rotate to pos 90")
-    print("    [6] rotate to pos 120")
-    print("    [7] rotate to pos 180")
-    print("    [8] rotate to pos 300")
+    print("    [4] rotate to pos 1")
+    print("    [5] rotate to pos 2")
+    print("    [6] rotate to pos 3")
+    print("    [7] rotate to pos 4")
+    print("    [8] rotate to pos 5")
     print("    [9] move out rocker arm")
     print("    [10] BLDC clockwise to 1000 RPM")
     print("    [11] BLDC stop")
     print("    [12] BLDC counter clockwise to 1000 RPM")
     print("    [13] BLDC stop")
+    print("    [t] Vertical Top")
+    print("    [m] Vertical Mid")
+    print("    [b] Vertical Btm")
+    print("    [o] Cup Driver Move Out")
+    print("    [i] Cup Driver Move In")
     print("==== key in 'done' will exit the program ====")
 
 def showCurState(state):
@@ -37,34 +42,34 @@ def doCmd(pcb, state):
             # TODO: move to btn
         elif ret == "NO_CARTRIDGE_INSERTED":         # 20240422 TODO
             print("Error: insert cartridge failed, closed directly")
+            pcb.forceCloseCart()
         else:
             print("Error: close door error....")
-    elif state == 2:
-        pcb.moveRArm(timeout = 10, release = False)
+            pcb.forceCloseCart()
     elif state == 2:
         pcb.moveRArm(timeout = 10, release = False)
     elif state == 3:
         pcb.rotateCart(timeout = 10, pos = 0)
     elif state == 4:
-        pcb.rotateCart(timeout = 10, pos = 60)
+        pcb.rotateCart(timeout = 10, pos = 1)
     elif state == 5:
-        pcb.rotateCart(timeout = 10, pos = 90)
+        pcb.rotateCart(timeout = 10, pos = 2)
     elif state == 6:
-        pcb.rotateCart(timeout = 10, pos = 120)
+        pcb.rotateCart(timeout = 10, pos = 3)
     elif state == 7:
-        pcb.rotateCart(timeout = 10, pos = 180)
+        pcb.rotateCart(timeout = 10, pos = 4)
     elif state == 8:
-        pcb.rotateCart(timeout = 10, pos = 300)
+        pcb.rotateCart(timeout = 10, pos = 5)
     elif state == 9:
         pcb.moveRArm(timeout = 10, release = True)
     elif state == 10:
-        pcb.startBLDCMotor(timeout = 5, clockwise = True, rpm = 66)
-        pcb.setBLDCMotorRPM(timeout = 10, rpm = 3000)
+        pcb.startBLDCMotor(rpm = 66, clockwise = True)
+        #pcb.setBLDCMotorRPM(timeout = 10, rpm = 66)
     elif state == 11:
         pcb.stopBLDCMotor()
     elif state == 12:
-        pcb.startBLDCMotor(timeout = 5, clockwise = False, rpm = 66)
-        pcb.setBLDCMotorRPM(timeout = 10, rpm = 3000)
+        pcb.startBLDCMotor(rpm = 66, clockwise = False)
+        #pcb.setBLDCMotorRPM(timeout = 10, rpm = 66)
     elif state == 13:
         pcb.stopBLDCMotor()
 
@@ -88,14 +93,26 @@ while True:
     num = input("input> ")
     if num == 'done':
         break
+    elif num == 't':
+        btpcb.moveVertPosTop()
+    elif num == 'm':
+        btpcb.moveVertPosMid()
+    elif num == 'b':
+        btpcb.moveVertPosBtm()
+    elif num == 'o':
+        btpcb.moveCDriver(timeout = 0.05, back = False)
+    elif num == 'i':
+        btpcb.moveCDriver(timeout = 0.05, back = True)
+
     elif num == '':
         cur_state += 1
         if cur_state >= 14:
             cur_state -= 14
+        doCmd(btpcb, cur_state)
     else:
         cur_state = int(num)
+        doCmd(btpcb, cur_state)
 
-    doCmd(btpcb, cur_state)
     #number_list.append(cur_state)
  
 # Printing the list of numbers
