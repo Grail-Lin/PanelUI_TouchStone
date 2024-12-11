@@ -20,8 +20,9 @@ def showCmd():
     print("    [t] Vertical Top")
     print("    [m] Vertical Mid")
     print("    [b] Vertical Btm")
-    print("    [o] Cup Driver Move Out")
-    print("    [i] Cup Driver Move In")
+    print("    [o] Cup Driver Move Out 0.05 s")
+    print("    [i] Cup Driver Move In 0.05 s")
+    print("    [s] QRCode Reader Scan")
     print("==== key in 'done' will exit the program ====")
 
 def showCurState(state):
@@ -78,6 +79,12 @@ def doCmd(pcb, state):
 btpcb = copcb.ModuleBT()
 btpcb.initPCB()
 
+# inital qrcr
+qrcr = copcb.QRCodeReader()
+qrcr.initPCB()
+
+# initial qrcodereader
+
 cur_state = -1
 
 # show command log
@@ -103,7 +110,9 @@ while True:
         btpcb.moveCDriver(timeout = 0.05, back = False)
     elif num == 'i':
         btpcb.moveCDriver(timeout = 0.05, back = True)
-
+    elif num == 's':
+        ret = qrcr.scan()
+        print("==== QRCodeReader Scan Result = %s" % ret)
     elif num == '':
         cur_state += 1
         if cur_state >= 14:
