@@ -23,6 +23,7 @@ def showCmd():
     print("    [o] Cup Driver Move Out 0.05 s")
     print("    [i] Cup Driver Move In 0.05 s")
     print("    [s] QRCode Reader Scan")
+    print("    [v] Cartridge Vibration")
     print("==== key in 'done' will exit the program ====")
 
 def showCurState(state):
@@ -113,6 +114,8 @@ while True:
     elif num == 's':
         ret = qrcr.scan()
         print("==== QRCodeReader Scan Result = %s" % ret)
+    elif num == 'v':
+        btpcb.vibrateCart(totaltime = 60)
     elif num == '':
         cur_state += 1
         if cur_state >= 14:

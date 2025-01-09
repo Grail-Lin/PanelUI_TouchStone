@@ -327,9 +327,6 @@ class ModuleBT(COPcbConnector):
         return ret_string.strip()
         '''
 
-
-
-
     # device functions, TODO: error handling
     def checkOK(self, ret):
         print("Log: return value: %s" % str(ret))
@@ -347,7 +344,12 @@ class ModuleBT(COPcbConnector):
             print("Rotate Cartridge to zero position....")
         else:
             ret = self.sendCmd(timeout, b'1,2,%d,0\n' % pos)
-            print("Not Ready: Rotate Cartridge to %d position...." % pos)
+            print("Rotate Cartridge to %d position...." % pos)
+        return self.checkOK(ret)
+
+    def vibrateCart(self, timeout = 10, totaltime = 120):
+        ret = self.sendCmd(timeout, b'1,5,%d,0\n' % (totaltime*1000))
+        print("Vibrate Cartridge for %n sec...." % totaltime)
         return self.checkOK(ret)
 
     # 2: cup driver
@@ -457,16 +459,21 @@ class ModuleBT(COPcbConnector):
 
     # 10: vacuum air pump
     def turnOnVacAirPump(self, timeout = 5):
-        ret = self.sendCmd(timeout, b'10,1,0,0\n')
+        ret = self.sendCmd(timeout, b'10,11,0,0\n')
         print("Not Ready: turn on Vacuum Air Pump....")
         return self.checkOK(ret)
     def turnOffVacAirPump(self, timeout = 5):
-        ret = self.sendCmd(timeout, b'10,2,0,0\n')
+        ret = self.sendCmd(timeout, b'10,12,0,0\n')
         print("Not Ready: turn off Vacuum Air Pump....")
         return self.checkOK(ret)
 
     def setVacAirPump(self, timeout = 5, number = 1, time=100):
-        ret = self.sendCmd(timeout, b'10,%d,%d,0\n' % (number+2, time))
+        if number < 1:
+            number = 1
+        if number > 8:
+            number = 8
+            
+        ret = self.sendCmd(timeout, b'10,%d,%d,0\n' % (number, time))
         print("Not Ready: set Vacuum Air Pump....")
         return self.checkOK(ret)
 
@@ -480,12 +487,12 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'11,2,0,0\n')
         print("Not Ready: turn off reserves Vacuum Air Pump....")
         return self.checkOK(ret)
-
-    def setRVacAirPump(self, timeout = 5, number = 1, time=100):
-        ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
-        print("Not Ready: set reserves Vacuum Air Pump....")
-        return self.checkOK(ret)
-
+    
+    #def setRVacAirPump(self, timeout = 5, number = 1, time=100):
+    #    ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
+    #    print("Not Ready: set reserves Vacuum Air Pump....")
+    #    return self.checkOK(ret)
+    
     # 12: heater, pwm = 0~250
     def turnOnHeater(self, timeout = 5, pwm = 5):
         ret = self.sendCmd(timeout, b'12,1,%d,0\n' % pwm)
