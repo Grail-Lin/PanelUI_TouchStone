@@ -25,6 +25,7 @@ def showCmd():
     print("    [s] QRCode Reader Scan")
     print("    [v] Cartridge Vibration")
     print("    [2-4] Add EtOH, mix")
+    print("    [test] test all leds")
     print("==== key in 'done' will exit the program ====")
 
 def showCurState(state):
@@ -75,6 +76,30 @@ def doCmd(pcb, state):
         #pcb.setBLDCMotorRPM(timeout = 10, rpm = 66)
     elif state == 13:
         pcb.stopBLDCMotor()
+
+def testLEDs(pcb):
+    # 2-4.4 turn on L-pump
+    pcb.turnOnVacAirPump(timeout = 5)
+    # 2-4.6 turn on V-pump
+    pcb.turnOnRVacAirPump(timeout = 5)
+    # 2-4.7 open valve 4
+    pcb.setVacAirPump(timeout = 5, number = 1, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 2, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 3, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 4, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 5, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 6, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 7, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number = 8, time = 3000)
+    pcb.turnOffVacAirPump(timeout = 5)
+    pcb.turnOffRVacAirPump(timeout = 5)
+    return
+
+def testLEDs2(pcb):
+    # 2-4.4 turn on L-pump
+    pcb.turnOnVacAirPump(timeout = 5)
+    return
+
 
 # 2-4, Add EtOH, mix
 def etoh(pcb):
@@ -318,9 +343,9 @@ def add_elu_buffer(pcb):
 btpcb = copcb.ModuleBT()
 btpcb.initPCB()
 
-# inital qrcr
-qrcr = copcb.QRCodeReader()
-qrcr.initPCB()
+# inital qrcr0
+#qrcr = copcb.QRCodeReader()
+#qrcr.initPCB()
 
 # initial qrcodereader
 
@@ -350,12 +375,16 @@ while True:
     elif num == 'i':
         btpcb.moveCDriver(timeout = 0.05, back = True)
     elif num == 's':
-        ret = qrcr.scan()
+        #ret = qrcr.scan()
         print("==== QRCodeReader Scan Result = %s" % ret)
     elif num == 'v':
         btpcb.vibrateCart(totaltime = 60)
     elif num == '2-4':
-        etoh()
+        etoh(btpcb)
+    elif num == 'test':
+        testLEDs(btpcb)
+    elif num == 'test2':
+        testLEDs2(btpcb)
 
     elif num == '':
         cur_state += 1
