@@ -17,10 +17,10 @@ if __name__ == '__main__':
     print("QRcode Data String = %s" % data)
 
     filename = "default_QRcode.png"
-    filename2 = "default_QRcode_54x54.png"
+    filename2 = "default_QRcode_81x81.png"
     if len(sys.argv) > 2:
         filename = sys.argv[2] + ".png"
-        filename2 = sys.argv[2] + "_54x54.png"
+        filename2 = sys.argv[2] + "_81x81.png"
 
     # Creating an instance of QRCode class
     qr = qrcode.QRCode(version = 1,
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     img.save(filename)
 
-    resize = (54, 54)
+    resize = (81, 81)
     img = img.resize(resize)
     img.save(filename2)
 
