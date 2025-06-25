@@ -83,14 +83,19 @@ def testLEDs(pcb):
     # 2-4.6 turn on V-pump
     pcb.turnOnRVacAirPump(timeout = 5)
     # 2-4.7 open valve 4
-    pcb.setVacAirPump(timeout = 5, number = 1, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 2, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 3, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 4, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 5, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 6, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 7, time = 3000)
-    pcb.setVacAirPump(timeout = 5, number = 8, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 1, number2 = 1, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 1, number2 = 2, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 1, number2 = 3, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 1, number2 = 4, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 1, number2 = 5, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 1, number2 = 6, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 2, number2 = 1, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 2, number2 = 2, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 2, number2 = 3, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 2, number2 = 4, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 2, number2 = 5, time = 3000)
+    pcb.setVacAirPump(timeout = 5, number1 = 2, number2 = 6, time = 3000)
+
     pcb.turnOffVacAirPump(timeout = 5)
     pcb.turnOffRVacAirPump(timeout = 5)
     return

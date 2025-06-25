@@ -459,21 +459,25 @@ class ModuleBT(COPcbConnector):
 
     # 10: vacuum air pump
     def turnOnVacAirPump(self, timeout = 5):
-        ret = self.sendCmd(timeout, b'10,11,0,0\n')
+        ret = self.sendCmd(timeout, b'10,1,0,0\n')
         print("Not Ready: turn on Vacuum Air Pump....")
         return self.checkOK(ret)
     def turnOffVacAirPump(self, timeout = 5):
-        ret = self.sendCmd(timeout, b'10,12,0,0\n')
+        ret = self.sendCmd(timeout, b'10,2,0,0\n')
         print("Not Ready: turn off Vacuum Air Pump....")
         return self.checkOK(ret)
 
-    def setVacAirPump(self, timeout = 5, number = 1, time=100):
-        if number < 1:
-            number = 1
-        if number > 8:
-            number = 8
+    def setVacAirPump(self, timeout = 5, number1 = 1, number2 = 1, time=100):
+        if number1 < 1:
+            number1 = 1
+        if number1 > 2:
+            number1 = 2
+        if number2 < 1:
+            number2 = 1
+        if number2 > 6:
+            number2 = 6
             
-        ret = self.sendCmd(timeout, b'10,%d,%d,0\n' % (number, time))
+        ret = self.sendCmd(timeout, b'10,%d,%d,0\n' % (10*number1+number2, time))
         print("Not Ready: set Vacuum Air Pump....")
         return self.checkOK(ret)
 
@@ -487,12 +491,12 @@ class ModuleBT(COPcbConnector):
         ret = self.sendCmd(timeout, b'11,2,0,0\n')
         print("Not Ready: turn off reserves Vacuum Air Pump....")
         return self.checkOK(ret)
-    
-    #def setRVacAirPump(self, timeout = 5, number = 1, time=100):
-    #    ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
-    #    print("Not Ready: set reserves Vacuum Air Pump....")
-    #    return self.checkOK(ret)
-    
+    '''
+    def setRVacAirPump(self, timeout = 5, number = 1, time=100):
+        ret = self.sendCmd(timeout, b'11,%d,%d,0\n' % (number+2, time))
+        print("Not Ready: set reserves Vacuum Air Pump....")
+        return self.checkOK(ret)
+    '''
     # 12: heater, pwm = 0~250
     def turnOnHeater(self, timeout = 5, pwm = 5):
         ret = self.sendCmd(timeout, b'12,1,%d,0\n' % pwm)
