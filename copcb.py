@@ -468,12 +468,12 @@ class ModuleBT(COPcbConnector):
         return self.checkOK(ret)
 
     def setVacAirPump(self, timeout = 5, number1 = 1, number2 = 1, time=100):
-        if number1 < 1:
-            number1 = 1
+        if number1 < 0:
+            number1 = 0
         if number1 > 2:
             number1 = 2
-        if number2 < 1:
-            number2 = 1
+        if number2 < 0:
+            number2 = 0
         if number2 > 6:
             number2 = 6
             
